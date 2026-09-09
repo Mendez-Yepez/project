@@ -1,5 +1,5 @@
 // Configuración de Supabase (Reemplaza con tus credenciales de tu proyecto)
-const SUPABASE_URL ='https://fzvjhdeodahtxoolxzxx.supabase.co';
+const SUPABASE_URL ='https://fzvjhdeodahtxoolxzxx.supabase.co'; 
 const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
