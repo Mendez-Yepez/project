@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscripción a Cursos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f7f6; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; max-width: 700px; margin: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { color: #1a365d; border-bottom: 2px solid #3182ce; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
+        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #3182ce; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 20px; }
+        button:hover { background: #2b6cb0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Formulario de Inscripción</h2>
+    <form id="formInscripcion">
+        
+        <div class="form-group">
+            <label for="cursoSelect">Seleccione el Curso:</label>
+            <select id="cursoSelect" required>
+                <option value="">Cargando cursos...</option>
+            </select>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Número de Identificación:</label>
+                <input type="text" id="identificacion" required>
+            </div>
+            <div class="form-group">
+                <label>Nacionalidad:</label>
+                <input type="text" id="nacionalidad" required>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Nombres:</label>
+                <input type="text" id="nombres" required>
+            </div>
+            <div class="form-group">
+                <label>Apellidos:</label>
+                <input type="text" id="apellidos" required>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" required>
+            </div>
+            <div class="form-group">
+                <label>Sexo:</label>
+                <select id="sexo" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="tel" id="telefono" required>
+            </div>
+            <div class="form-group">
+                <label>WhatsApp:</label>
+                <input type="tel" id="whatsapp" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Correo Electrónico:</label>
+            <input type="email" id="correo" required>
+        </div>
+
+        <div class="form-group">
+            <label>Dirección:</label>
+            <input type="text" id="direccion" required>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Municipio / Ciudad:</label>
+                <input type="text" id="municipio" required>
+            </div>
+            <div class="form-group">
+                <label>Estado:</label>
+                <input type="text" id="estado" required>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Ocupación:</label>
+                <input type="text" id="ocupacion" required>
+            </div>
+            <div class="form-group">
+                <label>Nivel Educativo:</label>
+                <input type="text" id="nivelEducativo" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Institución donde estudia o trabaja:</label>
+            <input type="text" id="institucion" required>
+        </div>
+
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
+
+        <div class="form-group">
+            <label>Foto tipo Carnet:</label>
+            <input type="file" id="fotoCarnet" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+            <label>Foto de la Cédula:</label>
+            <input type="file" id="fotoCedula" accept="image/*,.pdf" required>
+        </div>
+
+        <div class="form-group">
+            <label>Comprobante de Pago:</label>
+            <input type="file" id="comprobantePago" accept="image/*,.pdf" required>
+        </div>
+
+        <button type="submit" id="btnEnviar">Enviar Inscripción</button>
+    </form>
+</div>
+
+<!-- SDK de Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
