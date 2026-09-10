@@ -1,10 +1,10 @@
 // Configuración de Supabase (Reemplaza con tus credenciales de tu proyecto)
-const SUPABASE_URL ='https://fzvjhdeodahtxoolxzxx.supabase.co'; 
+const SUPABASE_URL ='https://fzvjhdeodahtxoolxzkx.supabase.co'; 
 const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 1. Cargar los cursos al abrir la página
+// 1. Cargar los cursos al abrir la página  
 async function cargarCursos() {
     const { data, error } = await supabaseClient.from('cursos').select('id, nombre');
     const select = document.getElementById('cursoSelect');
@@ -24,7 +24,7 @@ async function cargarCursos() {
     });
 }
 
-// 2. Función auxiliar para subir archivos a Supabase Storage
+
 async function subirArchivo(file, carpeta) {
     const fileName = `${Date.now()}_${file.name}`;
     const { data, error } = await supabaseClient.storage
@@ -33,7 +33,6 @@ async function subirArchivo(file, carpeta) {
 
     if (error) throw error;
 
-    // Obtener la URL pública del archivo subido
     const { data: publicUrlData } = supabaseClient.storage
         .from('documentos-inscripcion')
         .getPublicUrl(data.path);
@@ -41,7 +40,6 @@ async function subirArchivo(file, carpeta) {
     return publicUrlData.publicUrl;
 }
 
-// 3. Manejar el envío del formulario
 document.getElementById('formInscripcion').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btnEnviar = document.getElementById('btnEnviar');
