@@ -47,39 +47,76 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
     // ==========================================
     // VALIDACIONES DE CAMPOS
     // ==========================================
-    const cedula = document.getElementById('identificacion').value;
-    const nombres = document.getElementById('nombres').value;
-    const apellidos = document.getElementById('apellidos').value;
-    const telefono = document.getElementById('telefono').value;
-    const whatsapp = document.getElementById('whatsapp').value;
-    const municipio = document.getElementById('municipio').value;
-    const ocupacion = document.getElementById('ocupacion').value;
-    const institucion = document.getElementById('institucion').value;
+    // Capturar valores
+    const cedula = document.getElementById('identificacion').value.trim();
+    const nacionalidad = document.getElementById('nacionalidad').value;
+    const nombres = document.getElementById('nombres').value.trim();
+    const apellidos = document.getElementById('apellidos').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const municipio = document.getElementById('municipio').value.trim();
+    const ocupacion = document.getElementById('ocupacion').value.trim();
+    const institucion = document.getElementById('institucion').value.trim();
 
     // Expresiones regulares
     const soloNumeros = /^[0-9]+$/;
     const soloLetrasYEspacios = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
+    // ==========================================
+    // NUEVAS REGLAS DE VALIDACIÓN
+    // ==========================================
+
+    // 1. Validación de Cédula según Nacionalidad y tamaño
     if (!soloNumeros.test(cedula)) {
         alert('La Cédula de Identidad solo debe contener números.');
         document.getElementById('identificacion').focus();
         return;
     }
 
+    if (nacionalidad === 'Venezolana') {
+        // Cédula venezolana típica (ej. 6 a 8 dígitos)
+        if (cedula.length < 6 || cedula.length > 8) {
+            alert('Para nacionalidad Venezolana, la cédula debe tener entre 6 y 8 dígitos.');
+            document.getElementById('identificacion').focus();
+            return;
+        }
+    } else if (nacionalidad === 'Extranjero') {
+        // Cédula de extranjero / pasaporte (suele ser más grande, ej. mayor a 8 o hasta 12 dígitos)
+        if (cedula.length < 7 || cedula.length > 15) {
+            alert('Para extranjeros, la cédula o documento debe ser válido (entre 7 y 15 dígitos).');
+            document.getElementById('identificacion').focus();
+            return;
+        }
+    }
+
+    // 2. Validación de Nombres y Apellidos (Máximo 20 caracteres)
+    if (!soloLetrasYEspacios.test(nombres) || !soloLetrasYEspacios.test(apellidos)) {
+        alert('Los Nombres y Apellidos solo deben contener letras.');
+        return;
+    }
+
+    if (nombres.length > 20 || apellidos.length > 20) {
+        alert('Los Nombres y Apellidos no pueden tener más de 20 caracteres cada uno.');
+        return;
+    }
+
+    // 3. Validación de Teléfonos (Solo números y longitud coherente, ej. mínimo 10, máximo 15)
     if (!soloNumeros.test(telefono) || !soloNumeros.test(whatsapp)) {
         alert('Los campos de Teléfono y WhatsApp solo deben contener números.');
         return;
     }
 
-    if (!soloLetrasYEspacios.test(nombres) || !soloLetrasYEspacios.test(apellidos)) {
-        alert('Los Nombres y Apellidos no deben contener números ni caracteres especiales.');
+    if (telefono.length < 10 || telefono.length > 15 || whatsapp.length < 10 || whatsapp.length > 15) {
+        alert('El número de teléfono o WhatsApp debe tener una longitud válida (entre 10 y 15 dígitos).');
         return;
     }
 
+    // 4. Otros campos de texto
     if (!soloLetrasYEspacios.test(municipio) || !soloLetrasYEspacios.test(ocupacion) || !soloLetrasYEspacios.test(institucion)) {
         alert('Los campos de Municipio, Ocupación e Institución no deben contener números ni caracteres especiales.');
         return;
     }
+    // ==========================================
     // ==========================================
 
     btnEnviar.disabled = true;
