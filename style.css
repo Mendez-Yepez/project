@@ -1,70 +1,81 @@
- body { 
-            font-family: Arial, sans-serif; 
-            margin: 40px; 
-            background: #f4f7f6; 
-        }
-        .form-container {   
-            background: white; 
-            padding: 30px; 
-            border-radius: 8px; 
-            max-width: 700px; 
-            margin: auto; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            border-top: 5px solid #2b5278;
-        }
-        .logo-container { 
-            text-align: center;   
-            margin-bottom: 20px; 
-        }
-        .logo-container svg { 
-            width: 120px; 
-            height: 120px; 
-        }
-        h2 { 
-            color: #2b5278; /* Azul principal del logo */
-            border-bottom: 2px solid #8b263e; /* Vinotinto del logo */
-            padding-bottom: 10px; 
-            text-align: center; 
-        }
-        .form-group { 
-            margin-bottom: 15px; 
-        }
-        label { 
-            display: block; 
-            font-weight: bold; 
-            margin-bottom: 5px; 
-            color: #2b5278; /* Sincronizado con el azul del logo */
-        }
-        input, select, textarea { 
-            width: 100%; 
-            padding: 8px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-        }
-        /* Cambio de color al hacer clic en los inputs */
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #2b5278;
-            box-shadow: 0 0 5px rgba(43, 82, 120, 0.3);
-        }
-        button { 
-            background: #8b263e; /* Vinotinto característico del logo */
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            font-size: 16px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            width: 100%; 
-            margin-top: 20px; 
-            transition: background 0.3s ease;
-        }
-        button:hover { 
-            background: #6d1e31; /* Un vinotinto más oscuro para el efecto hover */
-        }
-        .grid-2 { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-        }
+body { 
+    font-family: Arial, sans-serif; 
+    margin: 40px; 
+    background: #f4f7f6; 
+}
+
+.form-container {   
+    background: white; 
+    padding: 30px; 
+    border-radius: 8px; 
+    max-width: 700px; 
+    margin: auto; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    border-top: 5px solid #2b5278;
+}
+
+.logo-container { 
+    text-align: center;   
+    margin-bottom: 20px; 
+}
+
+.logo-container svg { 
+    width: 120px; 
+    height: 120px; 
+}
+
+h2 { 
+    color: #2b5278; /* Azul principal del logo */
+    border-bottom: 2px solid #8b263e; /* Vinotinto del logo */
+    padding-bottom: 10px; 
+    text-align: center; 
+}
+
+.form-group { 
+    margin-bottom: 15px; 
+}
+
+label { 
+    display: block; 
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    color: #2b5278; /* Sincronizado con el azul del logo */
+}
+
+input, select, textarea { 
+    width: 100%; 
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    box-sizing: border-box; 
+}
+
+/* Cambio de color al hacer clic en los inputs */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #2b5278;
+    box-shadow: 0 0 5px rgba(43, 82, 120, 0.3);
+}
+
+button { 
+    background: #8b263e; /* Vinotinto característico del logo */
+    color: white; 
+    border: none; 
+    padding: 12px 20px; 
+    font-size: 16px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    width: 100%; 
+    margin-top: 20px; 
+    transition: background 0.3s ease;
+}
+
+button:hover { 
+    background: #6d1e31; /* Un vinotinto más oscuro para el efecto hover */
+}
+
+.grid-2 { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+}
