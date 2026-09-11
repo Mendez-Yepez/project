@@ -1,207 +1,471 @@
 <!DOCTYPE html>
-<html lang="es"q>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Inscripción a Cursos - CEIC</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscripción a Cursos - CEIC</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+      --primary-blue: #2b547e;
+      --accent-red: #800000;
+      --glass-bg: rgba(255, 255, 255, 0.82);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --input-bg: rgba(0, 0, 0, 0.04);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --divider-color: rgba(0, 0, 0, 0.1);
+      --section-header-bg: rgba(43, 84, 126, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    .form-container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: clamp(1.2rem, 4vw, 2.5rem);
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .logo-badge {
+      width: clamp(80px, 15vw, 110px);
+      height: clamp(80px, 15vw, 110px);
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-badge svg {
+      width: 100%;
+      height: 100%;
+      transform: scale(1.05);
+    }
+
+    .title {
+      color: var(--text-main);
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--section-header-bg);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary-blue);
+      color: var(--text-main);
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      font-weight: 700;
+      margin: 1.8rem 0 1.2rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .section-header svg {
+      stroke: var(--primary-blue);
+      flex-shrink: 0;
+    }
+
+    .section-header:first-of-type {
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+      width: 100%;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .grid-3-custom {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .form-label {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      background: var(--input-bg);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-field option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 10px rgba(43, 84, 126, 0.3);
+    }
+
+    .file-card {
+      background: var(--input-bg);
+      border: 1px dashed rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+    }
+
+    input[type="file"].input-field-file {
+      display: block;
+      width: 100%;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+      background: var(--primary-blue);
+      color: #ffffff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 0.8rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: background 0.3s ease;
+    }
+
+    input[type="file"]::-webkit-file-upload-button:hover {
+      background: #3b6b9e;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--accent-red), #5a0000);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(128, 0, 0, 0.3);
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(128, 0, 0, 0.5);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 480px) {
+      input[type="file"]::-webkit-file-upload-button {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="form-container">
-    <!-- Logotipo SVG Nítido del CEIC -->
+  <div class="form-container">
     <div class="logo-container">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-            <circle cx="250" cy="250" r="230" fill="none" stroke="#2b5278" stroke-width="16" />
-            <line x1="90" y1="130" x2="130" y2="130" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-            <line x1="90" y1="150" x2="130" y2="150" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-            <line x1="370" y1="130" x2="410" y2="130" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-            <line x1="370" y1="150" x2="410" y2="150" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-            <g transform="translate(180, 85) scale(0.7)">
-                <path d="M 30 0 L 80 0 C 80 40 60 70 30 90 C 0 70 -20 40 -20 0 Z" fill="#2b5278" />
-                <path d="M 30 0 L 80 0 C 80 40 60 70 30 90 Z" fill="#8b263e" />
-                <path d="M 35 15 L 60 15 M 35 30 L 65 30 M 35 45 L 55 45" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
-            </g>
-            <g transform="translate(195, 155) scale(0.6)">
-                <path d="M 30 30 C 15 25 0 30 -15 35 L -15 75 C 0 70 15 65 30 70 Z" fill="#8b263e" />
-                <path d="M 30 30 C 45 25 60 30 75 35 L 75 75 C 60 70 45 65 30 70 Z" fill="#8b263e" />
-                <path d="M 30 30 L 30 70" stroke="#ffffff" stroke-width="4" />
-            </g>
-            <g transform="translate(285, 95) scale(0.8)">
-                <polygon points="50,15 10,40 90,40" fill="#2b5278" />
-                <rect x="15" y="40" width="70" height="8" fill="#2b5278" />
-                <rect x="22" y="52" width="8" height="35" fill="#2b5278" />
-                <rect x="38" y="52" width="8" height="35" fill="#2b5278" />
-                <rect x="54" y="52" width="8" height="35" fill="#2b5278" />
-                <rect x="70" y="52" width="8" height="35" fill="#2b5278" />
-                <rect x="10" y="89" width="80" height="8" fill="#2b5278" />
-            </g>
-            <text x="250" y="275" font-family="Georgia, 'Times New Roman', serif" font-size="115" font-weight="bold" fill="#000000" text-anchor="middle" letter-spacing="4">CEIC</text>
-            <text x="250" y="340" font-family="Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1a202c" text-anchor="middle" letter-spacing="0.5">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</text>
+      <div class="logo-badge">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="185" fill="none" stroke="#2B547E" stroke-width="18" />
+          <path d="M 140 70 Q 160 70 160 90 L 160 110 Q 160 135 140 145 Q 120 135 120 110 L 120 90 Q 120 70 140 70 Z" fill="#800000" />
+          <path d="M 140 70 Q 160 70 160 90 L 160 110 Q 160 135 140 145 Z" fill="#2B547E" />
+          <path d="M 130 95 L 150 85 M 130 108 L 152 97 M 130 120 L 152 110" stroke="white" stroke-width="3" stroke-linecap="round" />
+          <path d="M 230 100 L 260 85 L 290 100 Z" fill="#2B547E" />
+          <rect x="232" y="100" width="56" height="6" fill="#2B547E" />
+          <circle cx="260" cy="94" r="3" fill="white" />
+          <rect x="237" y="110" width="6" height="25" fill="#2B547E" />
+          <rect x="248" y="110" width="6" height="25" fill="#2B547E" />
+          <rect x="259" y="110" width="6" height="25" fill="#2B547E" />
+          <rect x="270" y="110" width="6" height="25" fill="#2B547E" />
+          <rect x="281" y="110" width="6" height="25" fill="#2B547E" />
+          <rect x="232" y="137" width="56" height="5" fill="#2B547E" />
+          <path d="M 180 135 Q 190 128 200 135 Q 210 128 220 135 L 220 160 Q 210 153 200 160 Q 190 153 180 160 Z" fill="#800000" />
+          <path d="M 200 135 L 200 160" stroke="white" stroke-width="2" />
+          <line x1="80" y1="145" x2="110" y2="145" stroke="#000" stroke-width="5" />
+          <line x1="80" y1="155" x2="110" y2="155" stroke="#000" stroke-width="5" />
+          <line x1="290" y1="145" x2="320" y2="145" stroke="#000" stroke-width="5" />
+          <line x1="290" y1="155" x2="320" y2="155" stroke="#000" stroke-width="5" />
+          <text x="200" y="255" font-family="'Times New Roman', Times, serif" font-weight="bold" font-size="95" fill="#000" text-anchor="middle" letter-spacing="2">CEIC</text>
+          <text x="200" y="288" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11.5" fill="#111" text-anchor="middle" letter-spacing="0.5">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</text>
         </svg>
+      </div>
     </div>
 
-    <h2>Formulario de Inscripción</h2>
+    <h2 class="title">Formulario de Inscripción</h2>
+
     <form id="formInscripcion">
-        
+
+      <!-- SECCIÓN 1: SELECCIÓN DE CURSO -->
+      <div class="section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+        <span>Oferta Académica</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="cursoSelect">Curso a Inscribir:</label>
+        <select id="cursoSelect" class="input-field" required>
+          <option value="">Cargando cursos...</option>
+        </select>
+      </div>
+
+      <!-- SECCIÓN 2: DATOS PERSONALES -->
+      <div class="section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Datos Personales</span>
+      </div>
+
+      <div class="grid-3-custom">
         <div class="form-group">
-            <label for="cursoSelect">Seleccione el Curso:</label>
-            <select id="cursoSelect" required>
-                <option value="">Cargando cursos...</option>
-            </select>
+          <label class="form-label" for="nacionalidad">Nacionalidad:</label>
+          <select id="nacionalidad" class="input-field" required>
+            <option value="">Seleccione...</option>
+            <option value="Venezolana">Venezolana</option>
+            <option value="Extranjero">Extranjero</option>
+          </select>
         </div>
-        
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Nombres:</label>
-                <input type="text" id="nombres" class="form-control" maxlength="20" required>
-            </div>
-            <div class="form-group">
-                <label>Apellidos:</label>
-                <input type="text" id="apellidos" class="form-control" maxlength="20" required>
-            </div>
-        </div>
-
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Cédula de Identidad:</label>
-                <input type="text" id="identificacion" class="form-control" maxlength="10" required>
-            </div>
-            <div class="form-group">
-                <label>Nacionalidad:</label>
-                <select id="nacionalidad" required>
-                    <option value="">Seleccione...</option>
-                    <option value="Venezolana">Venezolana</option>
-                    <option value="Extranjero">Extranjero
-                    </option>
-                    <!-- Agregar más opciones según sea necesario -->
-                </select>
-            </div>
-        </div>
-
-        
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Fecha de Nacimiento:</label>
-                <input type="date" id="fechaNacimiento" required>
-            </div>
-            <div class="form-group">
-                <label>Sexo:</label>
-                <select id="sexo" required>
-                    <option value="">Seleccione...</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Teléfono:</label>
-                <input type="tel" id="telefono" class="form-control" maxlength="11" required>
-            </div>
-            <div class="form-group">
-                <label>WhatsApp:</label>
-                <input type="tel" id="whatsapp" class="form-control" maxlength="11" required>
-            </div>
-        </div>
-
         <div class="form-group">
-            <label>Correo Electrónico:</label>
-            <input type="email" id="correo" required>
+          <label class="form-label" for="identificacion">N° de Identificación / Cédula:</label>
+          <input type="text" id="identificacion" class="input-field" maxlength="10" pattern="[0-9]+" title="Los datos no son válidos: En la Cédula de Identidad solo se permiten números" placeholder="Ej: 25123456" required>
         </div>
-
         <div class="form-group">
-            <label>Dirección:</label>
-            <input type="text" id="direccion" required>
+          <label class="form-label" for="sexo">Sexo:</label>
+          <select id="sexo" class="input-field" required>
+            <option value="">Seleccione...</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+          </select>
         </div>
+      </div>
 
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Municipio / Ciudad:</label>
-                <input type="text" id="municipio" required>
-            </div>
-            <div class="form-group">
-                <label>Estado:</label>
-                <select id="estado" required>
-                    <option value="">Seleccione un estado...</option>
-                    <option value="Amazonas">Amazonas</option>
-                    <option value="Anzoátegui">Anzoátegui</option>
-                    <option value="Apure">Apure</option>
-                    <option value="Aragua">Aragua</option>
-                    <option value="Barinas">Barinas</option>
-                    <option value="Bolívar">Bolívar</option>
-                    <option value="Carabobo">Carabobo</option>
-                    <option value="Cojedes">Cojedes</option>
-                    <option value="Delta Amacuro">Delta Amacuro</option>
-                    <option value="Distrito Capital">Distrito Capital</option>
-                    <option value="Falcón">Falcón</option>
-                    <option value="Guárico">Guárico</option>
-                    <option value="Lara">Lara</option>
-                    <option value="Mérida">Mérida</option>
-                    <option value="Miranda">Miranda</option>
-                    <option value="Monagas">Monagas</option>
-                    <option value="Nueva Esparta">Nueva Esparta</option>
-                    <option value="Portuguesa">Portuguesa</option>
-                    <option value="Sucre">Sucre</option>
-                    <option value="Táchira">Táchira</option>
-                    <option value="Trujillo">Trujillo</option>
-                    <option value="La Guaira">La Guaira</option>
-                    <option value="Yaracuy">Yaracuy</option>
-                    <option value="Zulia">Zulia</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label>Ocupación:</label>
-                <input type="text" id="ocupacion" required>
-            </div>
-            <div class="form-group">
-                <label>Nivel Educativo:</label>
-                <select id="nivelEducativo" required>
-                    <option value="">Seleccione nivel...</option>
-                    <option value="Primaria">Primaria</option>
-                    <option value="Bachillerato / Secundaria">Bachillerato / Secundaria</option>
-                    <option value="Técnico Medio / Superior">Técnico Medio / Superior</option>
-                    <option value="Universitario (En curso)">Universitario (En curso)</option>
-                    <option value="Universitario (Graduado)">Universitario (Graduado)</option>
-                    <option value="Postgrado">Postgrado</option>
-                </select>
-            </div>
-        </div>
-
+      <div class="grid-2">
         <div class="form-group">
-            <label>Institución donde estudia o trabaja:</label>
-            <input type="text" id="institucion" required>
+          <label class="form-label" for="nombres">Nombres:</label>
+          <input type="text" id="nombres" class="input-field" maxlength="20" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En los Nombres solo se permiten letras" required>
         </div>
-
-        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
-
         <div class="form-group">
-            <label>Foto tipo Carnet:</label>
-            <input type="file" id="fotoCarnet" accept="image/*" required>
+          <label class="form-label" for="apellidos">Apellidos:</label>
+          <input type="text" id="apellidos" class="input-field" maxlength="20" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En los Apellidos solo se permiten letras" required>
         </div>
+      </div>
 
+      <div class="form-group">
+        <label class="form-label" for="fechaNacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fechaNacimiento" class="input-field" required>
+      </div>
+
+      <!-- SECCIÓN 3: UBICACIÓN Y CONTACTO -->
+      <div class="section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <span>Información de Contacto y Ubicación</span>
+      </div>
+
+      <div class="grid-2">
         <div class="form-group">
-            <label>Foto de la Cédula:</label>
-            <input type="file" id="fotoCedula" accept="image/*,.pdf" required>
+          <label class="form-label" for="telefono">Teléfono Principal:</label>
+          <input type="tel" id="telefono" class="input-field" maxlength="11" pattern="[0-9]+" title="Los datos no son válidos: En Teléfono solo se permiten números" placeholder="04123456789" required>
         </div>
-
         <div class="form-group">
-            <label>Comprobante de Pago:</label>
-            <input type="file" id="comprobantePago" accept="image/*,.pdf" required>
+          <label class="form-label" for="whatsapp">WhatsApp:</label>
+          <input type="tel" id="whatsapp" class="input-field" maxlength="11" pattern="[0-9]+" title="Los datos no son válidos: En WhatsApp solo se permiten números" placeholder="04123456789" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="correo">Correo Electrónico:</label>
+        <input type="email" id="correo" class="input-field" placeholder="ejemplo@correo.com" required>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="estado">Estado:</label>
+          <select id="estado" class="input-field" required>
+            <option value="">Seleccione un estado...</option>
+            <option value="Amazonas">Amazonas</option>
+            <option value="Anzoátegui">Anzoátegui</option>
+            <option value="Apure">Apure</option>
+            <option value="Aragua">Aragua</option>
+            <option value="Barinas">Barinas</option>
+            <option value="Bolívar">Bolívar</option>
+            <option value="Carabobo">Carabobo</option>
+            <option value="Cojedes">Cojedes</option>
+            <option value="Delta Amacuro">Delta Amacuro</option>
+            <option value="Distrito Capital">Distrito Capital</option>
+            <option value="Falcón">Falcón</option>
+            <option value="Guárico">Guárico</option>
+            <option value="Lara">Lara</option>
+            <option value="Mérida">Mérida</option>
+            <option value="Miranda">Miranda</option>
+            <option value="Monagas">Monagas</option>
+            <option value="Nueva Esparta">Nueva Esparta</option>
+            <option value="Portuguesa">Portuguesa</option>
+            <option value="Sucre">Sucre</option>
+            <option value="Táchira">Táchira</option>
+            <option value="Trujillo">Trujillo</option>
+            <option value="La Guaira">La Guaira</option>
+            <option value="Yaracuy">Yaracuy</option>
+            <option value="Zulia">Zulia</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="municipio">Municipio / Ciudad:</label>
+          <input type="text" id="municipio" class="input-field" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En Municipio / Ciudad solo se permiten letras" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="direccion">Dirección Habitación (Habitación/Sector/Calle):</label>
+        <input type="text" id="direccion" class="input-field" required>
+      </div>
+
+      <!-- SECCIÓN 4: INFORMACIÓN ACADÉMICA / LABORAL -->
+      <div class="section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <span>Perfil Académico y Laboral</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="nivelEducativo">Nivel Educativo de Instrucción:</label>
+          <select id="nivelEducativo" class="input-field" required>
+            <option value="">Seleccione nivel...</option>
+            <option value="Primaria">Primaria</option>
+            <option value="Bachillerato / Secundaria">Bachillerato / Secundaria</option>
+            <option value="Técnico Medio / Superior">Técnico Medio / Superior</option>
+            <option value="Universitario (En curso)">Universitario (En curso)</option>
+            <option value="Universitario (Graduado)">Universitario (Graduado)</option>
+            <option value="Postgrado">Postgrado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ocupacion">Ocupación Actual:</label>
+          <input type="text" id="ocupacion" class="input-field" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="institucion">Institución o Empresa donde Estudia / Trabaja:</label>
+        <input type="text" id="institucion" class="input-field" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En Institución solo se permiten letras" placeholder="Indique el nombre del centro educativo o laboral" required>
+      </div>
+
+      <!-- SECCIÓN 5: REQUISITOS Y COMPROBANTES -->
+      <div class="section-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span>Documentación Digital Requerida</span>
+      </div>
+
+      <div class="grid-3">
+        <div class="form-group file-card">
+          <label class="form-label" for="fotoCarnet">Foto tipo Carnet:</label>
+          <input type="file" id="fotoCarnet" class="input-field-file" accept="image/*" required>
         </div>
 
-        <button type="submit" id="btnEnviar">Enviar Inscripción</button>
+        <div class="form-group file-card">
+          <label class="form-label" for="fotoCedula">Foto Cédula Identidad:</label>
+          <input type="file" id="fotoCedula" class="input-field-file" accept="image/*,.pdf" required>
+        </div>
+
+        <div class="form-group file-card">
+          <label class="form-label" for="comprobantePago">Comprobante de Pago:</label>
+          <input type="file" id="comprobantePago" class="input-field-file" accept="image/*,.pdf" required>
+        </div>
+      </div>
+
+      <button type="submit" id="btnEnviar" class="submit-btn">Enviar Inscripción</button>
     </form>
-</div>
+  </div>
 
-<!-- SDK de Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="inscripcion.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="inscripcion.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const soloLetras = (e) => {
+        e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      };
+
+      const soloNumeros = (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      };
+
+      document.getElementById('nombres').addEventListener('input', soloLetras);
+      document.getElementById('apellidos').addEventListener('input', soloLetras);
+      document.getElementById('municipio').addEventListener('input', soloLetras);
+      document.getElementById('institucion').addEventListener('input', soloLetras);
+
+      document.getElementById('identificacion').addEventListener('input', soloNumeros);
+      document.getElementById('telefono').addEventListener('input', soloNumeros);
+      document.getElementById('whatsapp').addEventListener('input', soloNumeros);
+    });
+  </script>
+
 </body>
 </html>
