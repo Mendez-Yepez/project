@@ -1,210 +1,202 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es"q>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscripción a Cursos - CEIC</title>
-    <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="style.css">
+  
 </head>
-<body class="bg-light py-5">
+<body>
 
-<div class="container">
-    <div class="form-container shadow-sm p-4 p-md-5 bg-white rounded">
+<div class="form-container">
+    <!-- Logotipo SVG Nítido del CEIC -->
+    <div class="logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+            <circle cx="250" cy="250" r="230" fill="none" stroke="#2b5278" stroke-width="16" />
+            <line x1="90" y1="130" x2="130" y2="130" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
+            <line x1="90" y1="150" x2="130" y2="150" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
+            <line x1="370" y1="130" x2="410" y2="130" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
+            <line x1="370" y1="150" x2="410" y2="150" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
+            <g transform="translate(180, 85) scale(0.7)">
+                <path d="M 30 0 L 80 0 C 80 40 60 70 30 90 C 0 70 -20 40 -20 0 Z" fill="#2b5278" />
+                <path d="M 30 0 L 80 0 C 80 40 60 70 30 90 Z" fill="#8b263e" />
+                <path d="M 35 15 L 60 15 M 35 30 L 65 30 M 35 45 L 55 45" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
+            </g>
+            <g transform="translate(195, 155) scale(0.6)">
+                <path d="M 30 30 C 15 25 0 30 -15 35 L -15 75 C 0 70 15 65 30 70 Z" fill="#8b263e" />
+                <path d="M 30 30 C 45 25 60 30 75 35 L 75 75 C 60 70 45 65 30 70 Z" fill="#8b263e" />
+                <path d="M 30 30 L 30 70" stroke="#ffffff" stroke-width="4" />
+            </g>
+            <g transform="translate(285, 95) scale(0.8)">
+                <polygon points="50,15 10,40 90,40" fill="#2b5278" />
+                <rect x="15" y="40" width="70" height="8" fill="#2b5278" />
+                <rect x="22" y="52" width="8" height="35" fill="#2b5278" />
+                <rect x="38" y="52" width="8" height="35" fill="#2b5278" />
+                <rect x="54" y="52" width="8" height="35" fill="#2b5278" />
+                <rect x="70" y="52" width="8" height="35" fill="#2b5278" />
+                <rect x="10" y="89" width="80" height="8" fill="#2b5278" />
+            </g>
+            <text x="250" y="275" font-family="Georgia, 'Times New Roman', serif" font-size="115" font-weight="bold" fill="#000000" text-anchor="middle" letter-spacing="4">CEIC</text>
+            <text x="250" y="340" font-family="Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1a202c" text-anchor="middle" letter-spacing="0.5">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</text>
+        </svg>
+    </div>
+
+    <h2>Formulario de Inscripción</h2>
+    <form id="formInscripcion">
         
-        <!-- Logotipo SVG Nítido del CEIC -->
-        <div class="logo-container text-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" class="img-fluid" style="width: 120px; height: 120px;">
-                <circle cx="250" cy="250" r="230" fill="none" stroke="#2b5278" stroke-width="16" />
-                <line x1="90" y1="130" x2="130" y2="130" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-                <line x1="90" y1="150" x2="130" y2="150" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-                <line x1="370" y1="130" x2="410" y2="130" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-                <line x1="370" y1="150" x2="410" y2="150" stroke="#1a202c" stroke-width="8" stroke-linecap="round" />
-                <g transform="translate(180, 85) scale(0.7)">
-                    <path d="M 30 0 L 80 0 C 80 40 60 70 30 90 C 0 70 -20 40 -20 0 Z" fill="#2b5278" />
-                    <path d="M 30 0 L 80 0 C 80 40 60 70 30 90 Z" fill="#8b263e" />
-                    <path d="M 35 15 L 60 15 M 35 30 L 65 30 M 35 45 L 55 45" stroke="#ffffff" stroke-width="5" stroke-linecap="round" />
-                </g>
-                <g transform="translate(195, 155) scale(0.6)">
-                    <path d="M 30 30 C 15 25 0 30 -15 35 L -15 75 C 0 70 15 65 30 70 Z" fill="#8b263e" />
-                    <path d="M 30 30 C 45 25 60 30 75 35 L 75 75 C 60 70 45 65 30 70 Z" fill="#8b263e" />
-                    <path d="M 30 30 L 30 70" stroke="#ffffff" stroke-width="4" />
-                </g>
-                <g transform="translate(285, 95) scale(0.8)">
-                    <polygon points="50,15 10,40 90,40" fill="#2b5278" />
-                    <rect x="15" y="40" width="70" height="8" fill="#2b5278" />
-                    <rect x="22" y="52" width="8" height="35" fill="#2b5278" />
-                    <rect x="38" y="52" width="8" height="35" fill="#2b5278" />
-                    <rect x="54" y="52" width="8" height="35" fill="#2b5278" />
-                    <rect x="70" y="52" width="8" height="35" fill="#2b5278" />
-                    <rect x="10" y="89" width="80" height="8" fill="#2b5278" />
-                </g>
-                <text x="250" y="275" font-family="Georgia, 'Times New Roman', serif" font-size="115" font-weight="bold" fill="#000000" text-anchor="middle" letter-spacing="4">CEIC</text>
-                <text x="250" y="340" font-family="Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1a202c" text-anchor="middle" letter-spacing="0.5">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</text>
-            </svg>
+        <div class="form-group">
+            <label for="cursoSelect">Seleccione el Curso:</label>
+            <select id="cursoSelect" required>
+                <option value="">Cargando cursos...</option>
+            </select>
         </div>
 
-        <h2 class="mb-4">Formulario de Inscripción</h2>
-        
-        <form id="formInscripcion" novalidate>
-            
-            <div class="form-group mb-3">
-                <label for="cursoSelect" class="form-label">Seleccione el Curso:</label>
-                <select id="cursoSelect" class="form-select" required>
-                    <option value="">Cargando cursos...</option>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Cédula de Identidad:</label>
+                <input type="text" id="identificacion" required>
+            </div>
+            <div class="form-group">
+                <label>Nacionalidad:</label>
+                <select id="nacionalidad" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Venezolana">Venezolana</option>
+                    <option value="Extranjero">Extranjero
+                    </option>
+                    <!-- Agregar más opciones según sea necesario -->
                 </select>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Cédula de Identidad:</label>
-                    <input type="text" id="identificacion" class="form-control" required>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Nacionalidad:</label>
-                    <select id="nacionalidad" class="form-select" required>
-                        <option value="">Seleccione...</option>
-                        <option value="Venezolana">Venezolana</option>
-                        <option value="Extranjero">Colombiana</option>
-                    </select>
-                </div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Nombres:</label>
+                <input type="text" id="nombres" required>
             </div>
-
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Nombres:</label>
-                    <input type="text" id="nombres" class="form-control" required>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Apellidos:</label>
-                    <input type="text" id="apellidos" class="form-control" required>
-                </div>
+            <div class="form-group">
+                <label>Apellidos:</label>
+                <input type="text" id="apellidos" required>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Fecha de Nacimiento:</label>
-                    <input type="date" id="fechaNacimiento" class="form-control" required>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Sexo:</label>
-                    <select id="sexo" class="form-select" required>
-                        <option value="">Seleccione...</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                    </select>
-                </div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" required>
             </div>
-
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Teléfono:</label>
-                    <input type="tel" id="telefono" class="form-control" required>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">WhatsApp:</label>
-                    <input type="tel" id="whatsapp" class="form-control" required>
-                </div>
+            <div class="form-group">
+                <label>Sexo:</label>
+                <select id="sexo" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group mb-3">
-                <label class="form-label">Correo Electrónico:</label>
-                <input type="email" id="correo" class="form-control" required>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="tel" id="telefono" required>
             </div>
-
-            <div class="form-group mb-3">
-                <label class="form-label">Dirección:</label>
-                <input type="text" id="direccion" class="form-control" required>
+            <div class="form-group">
+                <label>WhatsApp:</label>
+                <input type="tel" id="whatsapp" required>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Municipio / Ciudad:</label>
-                    <input type="text" id="municipio" class="form-control" required>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Estado:</label>
-                    <select id="estado" class="form-select" required>
-                        <option value="">Seleccione un estado...</option>
-                        <option value="Amazonas">Amazonas</option>
-                        <option value="Anzoátegui">Anzoátegui</option>
-                        <option value="Apure">Apure</option>
-                        <option value="Aragua">Aragua</option>
-                        <option value="Barinas">Barinas</option>
-                        <option value="Bolívar">Bolívar</option>
-                        <option value="Carabobo">Carabobo</option>
-                        <option value="Cojedes">Cojedes</option>
-                        <option value="Delta Amacuro">Delta Amacuro</option>
-                        <option value="Distrito Capital">Distrito Capital</option>
-                        <option value="Falcón">Falcón</option>
-                        <option value="Guárico">Guárico</option>
-                        <option value="Lara">Lara</option>
-                        <option value="Mérida">Mérida</option>
-                        <option value="Miranda">Miranda</option>
-                        <option value="Monagas">Monagas</option>
-                        <option value="Nueva Esparta">Nueva Esparta</option>
-                        <option value="Portuguesa">Portuguesa</option>
-                        <option value="Sucre">Sucre</option>
-                        <option value="Táchira">Táchira</option>
-                        <option value="Trujillo">Trujillo</option>
-                        <option value="La Guaira">La Guaira</option>
-                        <option value="Yaracuy">Yaracuy</option>
-                        <option value="Zulia">Zulia</option>
-                    </select>
-                </div>
+        <div class="form-group">
+            <label>Correo Electrónico:</label>
+            <input type="email" id="correo" required>
+        </div>
+
+        <div class="form-group">
+            <label>Dirección:</label>
+            <input type="text" id="direccion" required>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Municipio / Ciudad:</label>
+                <input type="text" id="municipio" required>
             </div>
-
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Ocupación:</label>
-                    <input type="text" id="ocupacion" class="form-control" required>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label class="form-label">Nivel Educativo:</label>
-                    <select id="nivelEducativo" class="form-select" required>
-                        <option value="">Seleccione nivel...</option>
-                        <option value="Primaria">Primaria</option>
-                        <option value="Bachillerato / Secundaria">Bachillerato / Secundaria</option>
-                        <option value="Técnico Medio / Superior">Técnico Medio / Superior</option>
-                        <option value="Universitario (En curso)">Universitario (En curso)</option>
-                        <option value="Universitario (Graduado)">Universitario (Graduado)</option>
-                        <option value="Postgrado">Postgrado</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Estado:</label>
+                <select id="estado" required>
+                    <option value="">Seleccione un estado...</option>
+                    <option value="Amazonas">Amazonas</option>
+                    <option value="Anzoátegui">Anzoátegui</option>
+                    <option value="Apure">Apure</option>
+                    <option value="Aragua">Aragua</option>
+                    <option value="Barinas">Barinas</option>
+                    <option value="Bolívar">Bolívar</option>
+                    <option value="Carabobo">Carabobo</option>
+                    <option value="Cojedes">Cojedes</option>
+                    <option value="Delta Amacuro">Delta Amacuro</option>
+                    <option value="Distrito Capital">Distrito Capital</option>
+                    <option value="Falcón">Falcón</option>
+                    <option value="Guárico">Guárico</option>
+                    <option value="Lara">Lara</option>
+                    <option value="Mérida">Mérida</option>
+                    <option value="Miranda">Miranda</option>
+                    <option value="Monagas">Monagas</option>
+                    <option value="Nueva Esparta">Nueva Esparta</option>
+                    <option value="Portuguesa">Portuguesa</option>
+                    <option value="Sucre">Sucre</option>
+                    <option value="Táchira">Táchira</option>
+                    <option value="Trujillo">Trujillo</option>
+                    <option value="La Guaira">La Guaira</option>
+                    <option value="Yaracuy">Yaracuy</option>
+                    <option value="Zulia">Zulia</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group mb-3">
-                <label class="form-label">Institución donde estudia o trabaja:</label>
-                <input type="text" id="institucion" class="form-control" required>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Ocupación:</label>
+                <input type="text" id="ocupacion" required>
             </div>
-
-            <hr class="my-4">
-
-            <div class="form-group mb-3">
-                <label class="form-label">Foto tipo Carnet:</label>
-                <input type="file" id="fotoCarnet" class="form-control" accept="image/*" required>
+            <div class="form-group">
+                <label>Nivel Educativo:</label>
+                <select id="nivelEducativo" required>
+                    <option value="">Seleccione nivel...</option>
+                    <option value="Primaria">Primaria</option>
+                    <option value="Bachillerato / Secundaria">Bachillerato / Secundaria</option>
+                    <option value="Técnico Medio / Superior">Técnico Medio / Superior</option>
+                    <option value="Universitario (En curso)">Universitario (En curso)</option>
+                    <option value="Universitario (Graduado)">Universitario (Graduado)</option>
+                    <option value="Postgrado">Postgrado</option>
+                </select>
             </div>
+        </div>
 
-            <div class="form-group mb-3">
-                <label class="form-label">Foto de la Cédula:</label>
-                <input type="file" id="fotoCedula" class="form-control" accept="image/*,.pdf" required>
-            </div>
+        <div class="form-group">
+            <label>Institución donde estudia o trabaja:</label>
+            <input type="text" id="institucion" required>
+        </div>
 
-            <div class="form-group mb-4">
-                <label class="form-label">Comprobante de Pago:</label>
-                <input type="file" id="comprobantePago" class="form-control" accept="image/*,.pdf" required>
-            </div>
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
 
-            <button type="submit" id="btnEnviar" class="btn w-100 py-2">Enviar Inscripción</button>
-        </form>
-    </div>
+        <div class="form-group">
+            <label>Foto tipo Carnet:</label>
+            <input type="file" id="fotoCarnet" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+            <label>Foto de la Cédula:</label>
+            <input type="file" id="fotoCedula" accept="image/*,.pdf" required>
+        </div>
+
+        <div class="form-group">
+            <label>Comprobante de Pago:</label>
+            <input type="file" id="comprobantePago" accept="image/*,.pdf" required>
+        </div>
+
+        <button type="submit" id="btnEnviar">Enviar Inscripción</button>
+    </form>
 </div>
-
-<!-- Bootstrap JS Bundle CDN -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- SDK de Supabase -->
 
 <!-- SDK de Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
