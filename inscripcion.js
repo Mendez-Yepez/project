@@ -43,6 +43,45 @@ async function subirArchivo(file, carpeta) {
 document.getElementById('formInscripcion').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btnEnviar = document.getElementById('btnEnviar');
+
+    // ==========================================
+    // VALIDACIONES DE CAMPOS
+    // ==========================================
+    const cedula = document.getElementById('identificacion').value;
+    const nombres = document.getElementById('nombres').value;
+    const apellidos = document.getElementById('apellidos').value;
+    const telefono = document.getElementById('telefono').value;
+    const whatsapp = document.getElementById('whatsapp').value;
+    const municipio = document.getElementById('municipio').value;
+    const ocupacion = document.getElementById('ocupacion').value;
+    const institucion = document.getElementById('institucion').value;
+
+    // Expresiones regulares
+    const soloNumeros = /^[0-9]+$/;
+    const soloLetrasYEspacios = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+    if (!soloNumeros.test(cedula)) {
+        alert('La Cédula de Identidad solo debe contener números.');
+        document.getElementById('identificacion').focus();
+        return;
+    }
+
+    if (!soloNumeros.test(telefono) || !soloNumeros.test(whatsapp)) {
+        alert('Los campos de Teléfono y WhatsApp solo deben contener números.');
+        return;
+    }
+
+    if (!soloLetrasYEspacios.test(nombres) || !soloLetrasYEspacios.test(apellidos)) {
+        alert('Los Nombres y Apellidos no deben contener números ni caracteres especiales.');
+        return;
+    }
+
+    if (!soloLetrasYEspacios.test(municipio) || !soloLetrasYEspacios.test(ocupacion) || !soloLetrasYEspacios.test(institucion)) {
+        alert('Los campos de Municipio, Ocupación e Institución no deben contener números ni caracteres especiales.');
+        return;
+    }
+    // ==========================================
+
     btnEnviar.disabled = true;
     btnEnviar.textContent = 'Procesando inscripción...';
 
@@ -77,21 +116,21 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
         const { error: insertError } = await supabaseClient.from('inscripciones').insert([
             {
                 curso_id: cursoId,
-                numero_identificacion: document.getElementById('identificacion').value,
+                numero_identificacion: cedula,
                 nacionalidad: document.getElementById('nacionalidad').value,
-                nombres: document.getElementById('nombres').value,
-                apellidos: document.getElementById('apellidos').value,
+                nombres: nombres,
+                apellidos: apellidos,
                 fecha_nacimiento: document.getElementById('fechaNacimiento').value,
                 sexo: document.getElementById('sexo').value,
-                telefono: document.getElementById('telefono').value,
-                whatsapp: document.getElementById('whatsapp').value,
+                telefono: telefono,
+                whatsapp: whatsapp,
                 correo_electronico: document.getElementById('correo').value,
                 direccion: document.getElementById('direccion').value,
-                municipio_ciudad: document.getElementById('municipio').value,
+                municipio_ciudad: municipio,
                 estado: document.getElementById('estado').value,
-                ocupacion: document.getElementById('ocupacion').value,
+                ocupacion: ocupacion,
                 nivel_educativo: document.getElementById('nivelEducativo').value,
-                institucion: document.getElementById('institucion').value,
+                institucion: institucion,
                 foto_carnet_url: carnetUrl,
                 foto_cedula_url: cedulaUrl,
                 comprobante_pago_url: pagoUrl
@@ -111,6 +150,5 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
         btnEnviar.textContent = 'Enviar Inscripción';
     }
 });
-
 // Inicializar la carga de cursos al cargar la ventana
 window.onload = cargarCursos;
