@@ -79,7 +79,7 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
             alert('Para nacionalidad Venezolana, la cédula debe tener entre 6 y 8 dígitos.');
             document.getElementById('identificacion').focus();
             return;
-        }
+        } 
     } else if (nacionalidad === 'Extranjero') {
         // Cédula de extranjero / pasaporte (suele ser más grande, ej. mayor a 8 o hasta 12 dígitos)
         if (cedula.length < 7 || cedula.length > 15) {
