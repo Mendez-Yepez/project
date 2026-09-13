@@ -35,20 +35,27 @@
                 <ul class="navbar-nav gap-2 fw-semibold align-items-center me-lg-3">
                     <li class="nav-item"><a class="nav-link active" href="index.html">INICIO</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">NOSOTROS</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Misión y Visión</a></li>
-                            <li><a class="dropdown-item" href="#">Autoridades</a></li>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">NOSOTROS</a>
+                        <ul class="dropdown-menu p-3 shadow" style="min-width: 320px; max-width: 400px;">
+                            <li><h6 class="dropdown-header px-0 text-uppercase fw-bold" style="color: #2b5278;">Nuestros Valores</h6></li>
+                            <li class="dropdown-item-text px-0 small text-muted">
+                                <p class="mb-2"><strong>Amor y Servicio:</strong> Reflejar el carácter de Cristo mediante el cuidado y el apoyo mutuo.</p>
+                                <p class="mb-2"><strong>Integridad:</strong> Actuar con honestidad, ética y congruencia con los principios de la fe cristiana.</p>
+                                <p class="mb-2"><strong>Excelencia:</strong> Buscar la máxima calidad en la enseñanza, el aprendizaje y la gestión institucional.</p>
+                                <p class="mb-0"><strong>Fe Bíblica:</strong> Fundamentar el conocimiento y la vida diaria en las Sagradas Escrituras.</p>
+                            </li>
                         </ul>
                     </li>
-        
-                    <li class="nav-item"><a class="nav-link" href="#">ADMISIÓN</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="galeria.html">GALERÍA</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">SERVICIOS</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">FINANZAS</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">NOTICIAS</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                    <a href="inscripcion.html" class="btn btn-outline-dark btn-sm fw-bold px-3 py-2"><i class="bi bi-card-checklist me-1"></i> PREINSCRIPCIÓN</a>
+                    <!-- Botón de la barra con estado dinámico -->
+                    <a id="nav-btn-preinscripcion" href="inscripcion.html" class="btn btn-outline-dark btn-sm fw-bold px-3 py-2">
+                        <i class="bi bi-card-checklist me-1"></i> INSCRIPCIÓN
+                    </a>
                 </div>
             </div>
         </div>
@@ -59,8 +66,8 @@
         <div class="container py-lg-4">
             <div class="row align-items-center">
                 
-                <!-- Columna Izquierda: Collage de Fotografías en Rombos -->
-                <div class="col-lg-6 mb-5 mb-lg-0">
+                <!-- Columna Izquierda: Collage de Fotografías -->
+                <div class="col-lg-4 mb-5 mb-lg-0">
                     <div class="rhombus-collage d-flex justify-content-center align-items-center">
                         <div class="rhombus-grid">
                             <div class="rhombus-item"><img src="Gemini_Generated_Image_hjge2shjge2shjge.jpeg" alt="Estudiantes"></div>
@@ -72,14 +79,29 @@
                     </div>
                 </div>
 
-                <!-- Columna Derecha: Título de Admisión y Enlace a Formulario -->
+                <!-- Columna Derecha: Admisión y Estado del Ciclo -->
                 <div class="col-lg-6 text-center text-lg-start ps-lg-5">
                     <div class="hero-text-box">
-                        <h1 class="display-3 fw-black tracking-tight" style="color: #2b5278;">ADMISIÓN</h1>
+                        <h1 class="display-3 fw-bold tracking-tight" style="color: #2b5278;">ADMISIÓN</h1>
                         <div class="display-1 fw-bold my-2" style="color: #8b263e;">2026-2</div>
-                        <a href="inscripcion.html" class="btn btn-action btn-lg px-5 py-3 fw-bold shadow-lg mt-3">
-                            ¡POSTÚLATE HOY!
-                        </a>
+                        
+                        <!-- Indicador visual del estado del ciclo -->
+                        <div id="badge-estado" class="badge bg-secondary mb-3 fs-6 px-3 py-2">
+                            Verificando disponibilidad...
+                        </div>
+
+                        <div>
+                            <!-- Botón principal de postulación -->
+                            <a id="btn-postulate" href="inscripcion.html" class="btn btn-action btn-lg px-5 py-3 fw-bold shadow-lg mt-2">
+                                ¡POSTÚLATE HOY!
+                            </a>
+                        </div>
+
+                        <!-- Alerta cuando las inscripciones están cerradas -->
+                        <div id="alerta-cerrado" class="alert alert-warning mt-3 border-0 shadow-sm" style="display: none;" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            El periodo de postulaciones para el ciclo <strong>2026-2</strong> ha finalizado.
+                        </div>
                     </div>
                 </div>
 
@@ -100,6 +122,53 @@
         </div>
     </footer>
 
+    <!-- Bootstrap 5 JS Bundle (Necesario para los desplegables) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- LÓGICA DE CONTROL DE CICLO Y FECHA LÍMITE -->
+    <script>
+        // === CONFIGURACIÓN ===
+        // Define aquí la fecha límite (Año, Mes-1, Día, Hora, Minuto, Segundo)
+        // Nota: Enero es mes 0, Diciembre es mes 11.
+        // Ejemplo: 30 de Septiembre de 2026 a las 23:59:59 (Mes 8)
+        const fechaLimiteInscripcion = new Date(2026, 8, 30, 23, 59, 59);
+
+        function verificarEstadoInscripciones() {
+            const ahora = new Date();
+            
+            // Elementos del DOM a modificar
+            const badgeEstado = document.getElementById('badge-estado');
+            const btnPostulate = document.getElementById('btn-postulate');
+            const navBtnInscripcion = document.getElementById('nav-btn-preinscripcion');
+            const alertaCerrado = document.getElementById('alerta-cerrado');
+
+            if (ahora <= fechaLimiteInscripcion) {
+                // Periodo ACTIVO: Mostramos estado verde y habilitamos botones
+                badgeEstado.className = 'badge bg-success mb-3 fs-6 px-3 py-2';
+                badgeEstado.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Proceso de Inscripción Abierto';
+                alertaCerrado.style.display = 'none';
+            } else {
+                // Periodo CERRADO: Mostramos estado rojo y bloqueamos botones
+                badgeEstado.className = 'badge bg-danger mb-3 fs-6 px-3 py-2';
+                badgeEstado.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Inscripciones Cerradas';
+                
+                // Bloquear botón principal
+                btnPostulate.classList.add('disabled');
+                btnPostulate.removeAttribute('href'); // Evita navegación
+                btnPostulate.style.pointerEvents = 'none'; // Desactiva clics
+
+                // Bloquear botón del menú
+                navBtnInscripcion.classList.add('disabled');
+                navBtnInscripcion.removeAttribute('href');
+                navBtnInscripcion.style.pointerEvents = 'none';
+
+                // Mostrar alerta informativa
+                alertaCerrado.style.display = 'block';
+            }
+        }
+
+        // Ejecutar la verificación inmediatamente cuando carga la página
+        document.addEventListener('DOMContentLoaded', verificarEstadoInscripciones);
+    </script>
 </body>
 </html>

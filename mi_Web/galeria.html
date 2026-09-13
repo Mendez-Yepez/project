@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria - CEIC</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- === CABECERA SUPERIOR (Header) === -->
+    <header class="top-header py-3 bg-white border-bottom text-center">
+        <div class="container d-flex flex-column align-items-center">
+            <div class="logo-box mb-2">
+                <img src="Gemini_Generated_Image_buubuubuubuubuub.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 90px;" onerror="this.style.display='none'; document.getElementById('alt-logo').style.display='block';">
+                <div id="alt-logo" class="fw-bold fs-2" style="color: #2b5278; display: none;">CEIC</div>
+            </div>
+            <p class="slogan mb-0 fst-italic text-secondary small">Amor · Servicio · Integridad · Excelencia</p>
+        </div>
+    </header>
+
+    <!-- === BARRA DE NAVEGACIÓN (Navbar) === -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top border-bottom">
+        <div class="container">
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+                <ul class="navbar-nav gap-2 fw-semibold align-items-center me-lg-3">
+                    <li class="nav-item"><a class="nav-link" href="index.html">INICIO</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">NOSOTROS</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Misión y Visión</a></li>
+                            <li><a class="dropdown-item" href="#">Autoridades</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">ADMISIÓN</a></li>
+                    <li class="nav-item"><a class="nav-link  href="#">GALERÍA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">SERVICIOS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">FINANZAS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">NOTICIAS</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <a id="nav-btn-preinscripcion" href="inscripcion.html" class="btn btn-outline-dark btn-sm fw-bold px-3 py-2">
+                        <i class="bi bi-card-checklist me-1"></i> INSCRIPCIÓN
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- === SECCIÓN PRINCIPAL: GALERÍA === -->
+    <main class="py-5 bg-light min-vh-100">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold display-4" style="color: #2b5278;">Nuestra Galería</h1>
+                <p class="text-muted">Conoce nuestras instalaciones y la vida estudiantil en el CEIC</p>
+            </div>
+
+            <!-- Contenedor del collage de fotos -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="rhombus-collage d-flex justify-content-center align-items-center">
+                        <div class="rhombus-grid">
+                            <div class="rhombus-item"><img src="Gemini_Generated_Image_hjge2shjge2shjge.jpeg" alt="Estudiantes"></div>
+                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80" alt="Campus"></div>
+                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80" alt="Clase"></div>
+                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=400&q=80" alt="Biblioteca"></div>
+                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=400&q=80" alt="Graduación"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- === PIE DE PÁGINA (Footer) === -->
+    <footer class="bg-white border-top py-3">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <div class="text-secondary small fw-semibold">
+                <i class="bi bi-globe me-1" style="color: #2b5278;"></i> CEIC.EDU.VE/ADMISION
+            </div>
+            <div class="d-flex gap-4 text-secondary small fw-semibold">
+                <span><i class="bi bi-whatsapp me-1" style="color: #2b5278;"></i> +58 412 000 0000</span>
+                <span><i class="bi bi-whatsapp me-1" style="color: #2b5278;"></i> +58 412 111 1111</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
