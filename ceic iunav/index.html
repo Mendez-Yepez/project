@@ -52,9 +52,12 @@
                     <li class="nav-item"><a class="nav-link" href="#">NOTICIAS</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                    
                     <a id="nav-btn-inscripcion" href="inscripcion.html" class="btn btn-outline-dark btn-sm fw-bold px-3 py-2">
                         <i class="bi bi-card-checklist me-1"></i> INSCRIPCIÓN
+                    </a>
+                    <!-- Botón ACCEDER ubicado al lado de INSCRIPCIÓN -->
+                    <a href="login.html" class="btn text-white btn-sm fw-bold px-3 py-2" style="background-color: #2b5278; border-radius: 0;">
+                        <i class="bi bi-person-fill me-1"></i> ACCEDER
                     </a>
                 </div>
             </div>
@@ -128,8 +131,6 @@
     <script>
         // === CONFIGURACIÓN ===
         // Define aquí la fecha límite (Año, Mes-1, Día, Hora, Minuto, Segundo)
-        // Nota: Enero es mes 0, Diciembre es mes 11.
-        // Ejemplo: 30 de Septiembre de 2026 a las 23:59:59 (Mes 8)
         const fechaLimiteInscripcion = new Date(2026, 8, 30, 23, 59, 59);
 
         function verificarEstadoInscripciones() {
@@ -138,7 +139,7 @@
             // Elementos del DOM a modificar
             const badgeEstado = document.getElementById('badge-estado');
             const btnPostulate = document.getElementById('btn-postulate');
-            const navBtnInscripcion = document.getElementById('nav-btn-preinscripcion');
+            const navBtnInscripcion = document.getElementById('nav-btn-inscripcion');
             const alertaCerrado = document.getElementById('alerta-cerrado');
 
             if (ahora <= fechaLimiteInscripcion) {
@@ -157,9 +158,11 @@
                 btnPostulate.style.pointerEvents = 'none'; // Desactiva clics
 
                 // Bloquear botón del menú
-                navBtnInscripcion.classList.add('disabled');
-                navBtnInscripcion.removeAttribute('href');
-                navBtnInscripcion.style.pointerEvents = 'none';
+                if (navBtnInscripcion) {
+                    navBtnInscripcion.classList.add('disabled');
+                    navBtnInscripcion.removeAttribute('href');
+                    navBtnInscripcion.style.pointerEvents = 'none';
+                }
 
                 // Mostrar alerta informativa
                 alertaCerrado.style.display = 'block';
