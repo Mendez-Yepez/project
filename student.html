@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Área de Estudiante · CEIC</title>
+<style>
+  :root[data-theme="dark"]{
+    --bg-gradient: linear-gradient(135deg,#0d131a 0%,#1e2b3a 50%,#0d131a 100%);
+    --panel-bg: rgba(22,30,39,0.72); --panel-border: rgba(255,255,255,0.12);
+    --text-main:#ffffff; --text-muted:#cbd5e1; --primary-blue:#2b547e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+  body{
+    background:var(--bg-gradient); min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:1.5rem; padding-top:calc(1.5rem + env(safe-area-inset-top,0px)); padding-bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));
+    color:var(--text-main);
+  }
+  .card{
+    background:var(--panel-bg); backdrop-filter:blur(16px); border:1px solid var(--panel-border);
+    border-radius:16px; padding:2.5rem; max-width:420px; text-align:center;
+  }
+  .seal{width:90px; height:90px; border-radius:50%; background:#fff; margin:0 auto 1.2rem; overflow:hidden;}
+  .seal svg{width:100%; height:100%;}
+  h1{font-family:Georgia,serif; font-size:1.3rem; margin-bottom:0.6rem;}
+  p{color:var(--text-muted); font-size:0.92rem; line-height:1.5;}
+  .tag{display:inline-block; margin-top:1.1rem; font-size:0.75rem; padding:0.3rem 0.8rem; border-radius:999px; background:rgba(43,84,126,0.35); color:var(--text-muted);}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="seal" id="sealSlot"></div>
+    <h1>Bienvenido/a</h1>
+    <p id="msg">Tu sesión de estudiante se validó correctamente. Esta sección todavía está en construcción.</p>
+    <div class="tag" id="numTag"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
