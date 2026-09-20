@@ -18,6 +18,12 @@
       --theme-btn-bg: rgba(255, 255, 255, 0.1);
       --btn-secondary-border: rgba(255, 255, 255, 0.25);
       --btn-secondary-hover: rgba(255, 255, 255, 0.1);
+      --error-bg: rgba(128, 0, 0, 0.18);
+      --error-border: rgba(255, 120, 120, 0.4);
+      --error-text: #ffb3b3;
+      --success-bg: rgba(63, 174, 92, 0.18);
+      --success-border: rgba(120, 220, 150, 0.4);
+      --success-text: #a6f0bd;
     }
 
     /* Variables para Modo Claro */
@@ -33,6 +39,12 @@
       --theme-btn-bg: rgba(0, 0, 0, 0.05);
       --btn-secondary-border: #2b547e;
       --btn-secondary-hover: rgba(43, 84, 126, 0.08);
+      --error-bg: rgba(128, 0, 0, 0.08);
+      --error-border: rgba(128, 0, 0, 0.35);
+      --error-text: #800000;
+      --success-bg: rgba(63, 174, 92, 0.1);
+      --success-border: rgba(63, 174, 92, 0.35);
+      --success-text: #2f7d47;
     }
 
     * {
@@ -205,6 +217,26 @@
       font-size: 0.9rem;
     }
 
+    /* Mensajes de estado */
+    .status-message {
+      display: none;
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.85rem;
+      margin-bottom: 1.1rem;
+    }
+    .status-message.show { display: block; }
+    .status-message.error {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+    }
+    .status-message.success {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+    }
+
     /* Contenedor para acciones/botones */
     .actions-container {
       display: flex;
@@ -233,6 +265,12 @@
 
     .submit-btn:active {
       transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
     }
 
     /* Enlace estilo botón de Registro de Admin */
@@ -311,16 +349,18 @@
 
     <h2 class="title">Iniciar Sesión</h2>
 
-    <form>
+    <div class="status-message" id="statusMessage"></div>
+
+    <form id="loginForm">
       <div class="form-group">
-        <label class="form-label" for="Nombre de usuario">Tu nombre de usuario</label>
-        <input type="text" id="Nombre de usuario" class="input-field" placeholder="Tu nombre de usuario" required>
+        <label class="form-label" for="username">Tu nombre de usuario</label>
+        <input type="text" id="username" class="input-field" placeholder="Tu nombre de usuario o N° de estudiante" required autocomplete="username">
       </div>
 
       <div class="form-group">
         <label class="form-label" for="password">Contraseña</label>
         <div class="password-container">
-          <input type="password" id="password" class="input-field" placeholder="********" minlength="8" required>
+          <input type="password" id="password" class="input-field" placeholder="********" minlength="8" required autocomplete="current-password">
           <button type="button" class="toggle-btn" id="togglePassword">
             <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -331,26 +371,51 @@
       </div>
 
       <label class="remember-container">
-        <input type="checkbox">
+        <input type="checkbox" id="remember">
         <span>Recordarme</span>
       </label>
 
       <div class="actions-container">
-  <button type="submit" class="submit-btn">Ingresar</button>
-  <a href="nadmin.html" class="register-btn">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle cx="8.5" cy="7" r="4"></circle>
-      <line x1="20" y1="8" x2="20" y2="14"></line>
-      <line x1="23" y1="11" x2="17" y2="11"></line>
-    </svg>
-    Registrar nuevo admin
-  </a>
-</div>
+        <button type="submit" class="submit-btn" id="submitBtn">Ingresar</button>
+        <a href="nadmin.html" class="register-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+          Registrar nuevo admin
+        </a>
+      </div>
     </form>
   </div>
 
+  <!-- Cliente de Supabase (build para navegador) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
+    /* =========================================================
+       CONFIGURACIÓN
+       ========================================================= */
+    const SUPABASE_URL = "https://fzvjhdeodahtxoolxzkx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
+
+    // AJUSTA ESTOS 3 SI TU TABLA/COLUMNAS SE LLAMAN DISTINTO
+    const TABLE_NAME = "logins";
+    const COL_USER = "nombre_de_usuario";
+    const COL_PASS = "password";
+
+    // Rutas relativas dentro de tu carpeta del proyecto
+    const ADMIN_REDIRECT_URL = "admin.html";
+    const STUDENT_REDIRECT_URL = "student.html";
+
+    let supabaseClient = null;
+    try {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch (e) {
+      console.error("No se pudo inicializar Supabase:", e);
+    }
+
     /* Mostrar / Ocultar contraseña */
     const passwordInput = document.getElementById('password');
     const toggleBtn = document.getElementById('togglePassword');
@@ -359,7 +424,7 @@
     toggleBtn.addEventListener('click', () => {
       const isPassword = passwordInput.type === 'password';
       passwordInput.type = isPassword ? 'text' : 'password';
-      eyeIcon.innerHTML = isPassword 
+      eyeIcon.innerHTML = isPassword
         ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`
         : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
     });
@@ -388,9 +453,75 @@
     themeToggleBtn.addEventListener('click', () => {
       const currentTheme = root.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
       root.setAttribute('data-theme', newTheme);
       themeIcon.innerHTML = newTheme === 'dark' ? sunSVG : moonSVG;
+    });
+
+    /* ---------- Envío del formulario / validación contra Supabase ---------- */
+    const form = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusBox = document.getElementById('statusMessage');
+
+    function showStatus(msg, type) {
+      statusBox.textContent = msg;
+      statusBox.className = 'status-message show ' + type; // 'error' o 'success'
+    }
+    function hideStatus() {
+      statusBox.className = 'status-message';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideStatus();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!supabaseClient) {
+        showStatus('No se pudo conectar con la base de datos. Revisa la configuración de Supabase.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verificando...';
+
+      try {
+        const { data, error } = await supabaseClient
+          .from(TABLE_NAME)
+          .select('*')
+          .eq(COL_USER, username)
+          .eq(COL_PASS, password)
+          .maybeSingle();
+
+        if (error) {
+          console.error(error);
+          showStatus('Error al consultar la base de datos: ' + error.message, 'error');
+          return;
+        }
+
+        if (!data) {
+          showStatus('Usuario o contraseña incorrectos.', 'error');
+          return;
+        }
+
+        showStatus('Credenciales correctas. Redirigiendo...', 'success');
+
+        try { sessionStorage.setItem('ceic_username', username); } catch (err) {}
+
+        const isAdmin = username.toLowerCase().startsWith('admin');
+        try { sessionStorage.setItem('ceic_role', isAdmin ? 'admin' : 'estudiante'); } catch (err) {}
+
+        setTimeout(() => {
+          window.location.href = isAdmin ? ADMIN_REDIRECT_URL : STUDENT_REDIRECT_URL;
+        }, 500);
+
+      } catch (err) {
+        console.error(err);
+        showStatus('No se pudo contactar la base de datos.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Ingresar';
+      }
     });
   </script>
 </body>

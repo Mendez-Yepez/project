@@ -1,4 +1,3 @@
-
 const SUPABASE_URL = "https://fzvjhdeodahtxoolxzkx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
 const LOGIN_URL = "ceic iunav/login.html"; // a donde te devuelve si no hay sesión
@@ -71,16 +70,13 @@ function loadMockData() {
     {
       id: "1basA", name: "Primero Básico A", period: "2026",
       students: [
-        { nombre:"Camila Andrea Fuentes Rojas", numero:"1001", nacimiento:"12/03/2019", apoderado:"Marcela Rojas", telefono:"+56 9 1234 5678", direccion:"Pasaje Los Aromos 214", ingreso:"04/03/2026" },
-        { nombre:"Joaquín Ignacio Pérez Soto", numero:"1002", nacimiento:"25/07/2019", apoderado:"Luis Pérez", telefono:"+56 9 2345 6789", direccion:"Calle San Martín 88", ingreso:"04/03/2026" },
-        { nombre:"Valentina Paz Muñoz Díaz", numero:"1003", nacimiento:"02/11/2019", apoderado:"Carolina Díaz", telefono:"+56 9 3456 7890", direccion:"Villa El Bosque 305", ingreso:"05/03/2026" }
-      ]
-    },
-    {
-      id: "2basB", name: "Segundo Básico B", period: "2026",
-      students: [
-        { nombre:"Matías Alonso Reyes Morales", numero:"1006", nacimiento:"14/05/2018", apoderado:"Daniela Morales", telefono:"+56 9 6789 0123", direccion:"Calle Los Alerces 120", ingreso:"03/03/2026" },
-        { nombre:"Isidora Martina Silva Vega", numero:"1007", nacimiento:"30/06/2018", apoderado:"Francisco Silva", telefono:"+56 9 7890 1234", direccion:"Villa Sol Naciente 45", ingreso:"03/03/2026" }
+        { 
+          numero_identificacion: "12345678", nombres: "Camila Andrea", apellidos: "Fuentes Rojas", 
+          fecha_nacimiento: "2019-03-12", sexo: "Femenino", telefono: "+56 9 1234 5678", 
+          whatsapp: "+56 9 1234 5678", correo_electronico: "camila@correo.com", direccion: "Pasaje Los Aromos 214", 
+          municipio_ciudad: "Santiago", estado: "Metropolitana", nacionalidad: "Chilena", 
+          ocupacion: "Estudiante", nivel_educativo: "Básica", institucion: "CEIC" 
+        }
       ]
     }
   ];
@@ -113,7 +109,8 @@ function renderStudents() {
 
   const term = searchTerm.toLowerCase();
   const filtered = course.students.filter(s =>
-    s.nombre.toLowerCase().includes(term) || s.numero.includes(searchTerm)
+    (`${s.nombres} ${s.apellidos}`.toLowerCase().includes(term)) || 
+    String(s.numero_identificacion || "").toLowerCase().includes(term)
   );
 
   const body = document.getElementById('studentBody');
@@ -127,11 +124,11 @@ function renderStudents() {
   empty.style.display = 'none';
   body.innerHTML = filtered.map(s => `
     <tr>
-      <td><div class="stu-name">${esc(s.nombre)}</div><div class="stu-sub">Nac. ${esc(s.nacimiento)}</div></td>
-      <td><span class="badge">#${esc(s.numero)}</span></td>
-      <td>${esc(s.apoderado)}</td>
-      <td>${esc(s.ingreso)}</td>
-      <td class="row-actions"><button class="ficha-btn" data-numero="${esc(s.numero)}">Generar ficha</button></td>
+      <td><div class="stu-name">${esc(s.nombres)} ${esc(s.apellidos)}</div><div class="stu-sub">Nac. ${esc(s.fecha_nacimiento)}</div></td>
+      <td><span class="badge">#${esc(s.numero_identificacion)}</span></td>
+      <td>${esc(s.correo_electronico || 'N/D')}</td>
+      <td>${esc(s.telefono || s.whatsapp || 'N/D')}</td>
+      <td class="row-actions"><button class="ficha-btn" data-id="${esc(s.numero_identificacion)}">Generar ficha</button></td>
     </tr>
   `).join('');
 }
@@ -142,19 +139,27 @@ function render() {
   renderStudents();
 }
 
-function openFicha(numero) {
+function openFicha(numeroId) {
   const course = COURSES.find(c => c.id === activeCourseId);
-  const s = course?.students.find(x => x.numero === numero);
+  const s = course?.students.find(x => String(x.numero_identificacion) === String(numeroId));
   if (!s) return;
+  
   document.getElementById('fichaFields').innerHTML = `
-    <div class="ficha-field"><span class="k">Nombre completo</span><span class="v">${esc(s.nombre)}</span></div>
-    <div class="ficha-field"><span class="k">N° de estudiante</span><span class="v">${esc(s.numero)}</span></div>
+    <div class="ficha-field"><span class="k">Nombres y Apellidos</span><span class="v">${esc(s.nombres)} ${esc(s.apellidos)}</span></div>
+    <div class="ficha-field"><span class="k">N° de Identificación</span><span class="v">${esc(s.numero_identificacion)}</span></div>
     <div class="ficha-field"><span class="k">Curso</span><span class="v">${esc(course.name)}</span></div>
-    <div class="ficha-field"><span class="k">Fecha de nacimiento</span><span class="v">${esc(s.nacimiento)}</span></div>
-    <div class="ficha-field"><span class="k">Apoderado(a)</span><span class="v">${esc(s.apoderado)}</span></div>
-    <div class="ficha-field"><span class="k">Teléfono de contacto</span><span class="v">${esc(s.telefono)}</span></div>
+    <div class="ficha-field"><span class="k">Fecha de Nacimiento</span><span class="v">${esc(s.fecha_nacimiento)}</span></div>
+    <div class="ficha-field"><span class="k">Sexo</span><span class="v">${esc(s.sexo)}</span></div>
+    <div class="ficha-field"><span class="k">Teléfono</span><span class="v">${esc(s.telefono)}</span></div>
+    <div class="ficha-field"><span class="k">WhatsApp</span><span class="v">${esc(s.whatsapp)}</span></div>
+    <div class="ficha-field"><span class="k">Correo Electrónico</span><span class="v">${esc(s.correo_electronico)}</span></div>
     <div class="ficha-field"><span class="k">Dirección</span><span class="v">${esc(s.direccion)}</span></div>
-    <div class="ficha-field"><span class="k">Fecha de ingreso</span><span class="v">${esc(s.ingreso)}</span></div>
+    <div class="ficha-field"><span class="k">Municipio / Ciudad</span><span class="v">${esc(s.municipio_ciudad)}</span></div>
+    <div class="ficha-field"><span class="k">Estado</span><span class="v">${esc(s.estado)}</span></div>
+    <div class="ficha-field"><span class="k">Nacionalidad</span><span class="v">${esc(s.nacionalidad)}</span></div>
+    <div class="ficha-field"><span class="k">Ocupación</span><span class="v">${esc(s.ocupacion)}</span></div>
+    <div class="ficha-field"><span class="k">Nivel Educativo</span><span class="v">${esc(s.nivel_educativo)}</span></div>
+    <div class="ficha-field"><span class="k">Institución</span><span class="v">${esc(s.institucion)}</span></div>
   `;
   document.getElementById('fichaOverlay').classList.add('show');
 }
@@ -170,7 +175,7 @@ document.getElementById('courseList').addEventListener('click', e => {
 
 document.getElementById('studentBody').addEventListener('click', e => {
   const btn = e.target.closest('.ficha-btn');
-  if (btn) openFicha(btn.dataset.numero);
+  if (btn) openFicha(btn.dataset.id);
 });
 
 document.getElementById('searchInput').addEventListener('input', e => {
