@@ -1,0 +1,107 @@
+/* ==========================================
+   1. VARIABLES GLOBALES Y ESTILOS BASE
+   ========================================== */
+:root {
+  --ceic-blue: #2b5278;
+  --ceic-blue-dark: #1e3a57;
+  --ceic-light-gray: #f8f9fa;
+  --ceic-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --ceic-transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #333333;
+  background-color: var(--ceic-light-gray);
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================
+   2. ENCABEZADO / BANNER PRINCIPAL
+   ========================================== */
+section.py-5[style*="background-color: #2b5278"] {
+  background-color: var(--ceic-blue) !important;
+  box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================
+   3. TARJETAS DE LA GALERÍA
+   ========================================== */
+.main.gallery-section,
+main {
+  min-height: 80vh;
+}
+
+/* Efecto de elevación e iluminación en las tarjetas de fotos */
+.card {
+  transition: var(--ceic-transition);
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.18) !important;
+}
+
+.card-img-top {
+  border-radius: 12px;
+  transition: transform 0.5s ease;
+}
+
+/* Zoom suave en la imagen al pasar el cursor */
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* Ajuste del enlace disparador del modal */
+.card a {
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* ==========================================
+   4. VENTANAS MODALES (IMÁGENES EN GRANDE)
+   ========================================== */
+.modal-content {
+  box-shadow: none;
+}
+
+/* Imagen en el modal con sombra suave y bordes redondeados */
+.modal-body img {
+  max-height: 85vh;
+  object-fit: contain;
+  box-shadow: var(--ceic-shadow);
+  border: 3px solid #ffffff;
+}
+
+/* Fondo oscuro translúcido para resaltar la imagen */
+.modal-backdrop.show {
+  opacity: 0.85;
+  background-color: #0d1b2a;
+}
+
+/* Botón flotante para cerrar modales si agregas un botón de cierre */
+.modal .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+  position: absolute;
+  top: -35px;
+  right: 0;
+  opacity: 0.8;
+}
+
+.modal .btn-close:hover {
+  opacity: 1;
+}
+
+/* ==========================================
+   5. ADAPTABILIDAD MÓVIL
+   ========================================== */
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 200px !important;
+  }
+}

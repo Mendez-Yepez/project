@@ -4,27 +4,100 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galería - CEIC</title>
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Iconos de Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <!-- Estilos personalizados -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- AQUÍ FALTA ESTA LÍNEA (Contenedor del Header) -->
+  <!-- Contenedor del Header -->
   <div id="site-header"></div>
 
+  <!-- BANNER PRINCIPAL -->
+  <section class="py-5 text-white text-center" style="background-color: #2b5278;">
+    <div class="container py-2">
+      <h1 class="display-4 fw-bold mb-2">Nuestra Galería</h1>
+      <p class="lead mb-0 opacity-90">Conoce nuestras instalaciones y la vida estudiantil en el CEIC</p>
+    </div>
+  </section>
+
+  <!-- === SECCIÓN DE FOTOS (GALERÍA CON MODAL) === -->
   <main class="py-5 bg-light min-vh-100">
     <div class="container">
-      <div class="row justify-content-center">
-        <!-- Tu contenido de la galería -->
+      <div class="row g-4">
+
+        <!-- Foto 1 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 border-0 shadow-sm overflow-hidden">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal1">
+              <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid" alt="Estudiantes" style="height: 250px; object-fit: cover;">
+            </a>
+          </div>
+        </div>
+
+        <!-- Foto 2 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 border-0 shadow-sm overflow-hidden">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal2">
+              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid" alt="Biblioteca" style="height: 250px; object-fit: cover;">
+            </a>
+          </div>
+        </div>
+
+        <!-- Foto 3 -->
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 border-0 shadow-sm overflow-hidden">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal3">
+              <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80" class="card-img-top img-fluid" alt="Graduación" style="height: 250px; object-fit: cover;">
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
 
+  <!-- === VENTANAS MODALES PARA VER FOTOS EN GRANDE === -->
+  <div class="modal fade" id="imgModal1" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body p-0 text-center">
+          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80" class="img-fluid rounded" alt="Foto Ampliada">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="imgModal2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body p-0 text-center">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" class="img-fluid rounded" alt="Foto Ampliada">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="imgModal3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0">
+        <div class="modal-body p-0 text-center">
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80" class="img-fluid rounded" alt="Foto Ampliada">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Contenedor del Footer -->
   <div id="site-footer"></div>
 
-  <!-- Carga modular -->
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script Carga Modular -->
   <script>
     async function loadComponent(id, file) {
       try {
@@ -32,6 +105,11 @@
         if (!response.ok) throw new Error('No se pudo cargar ' + file);
         const data = await response.text();
         document.getElementById(id).innerHTML = data;
+
+        if (typeof bootstrap !== 'undefined') {
+          const dropdowns = document.querySelectorAll('.dropdown-toggle');
+          dropdowns.forEach(el => new bootstrap.Dropdown(el));
+        }
       } catch (error) {
         console.error(error);
       }
@@ -40,7 +118,5 @@
     loadComponent('site-header', 'includes/header.html');
     loadComponent('site-footer', 'includes/footer.html');
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
