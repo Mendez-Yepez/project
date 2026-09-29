@@ -126,4 +126,31 @@
             .banner-overlay, .banner-overlay.justify-content-end {
                 background: rgba(255, 255, 255, 0.90);
             }
+            /* === ESTILOS REJILLA TIPO IUNAV === */
+.oferta-cursos-section {
+    background-color: #fcfcfc;
+}
+
+.curso-grid-item {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.curso-grid-item:hover {
+    background-color: #ffffff;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.curso-grid-item .icon-box i {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.curso-grid-item:hover .icon-box i {
+    transform: scale(1.15);
+}
+
+.tracking-wide {
+    letter-spacing: 2px;
+}
         }
