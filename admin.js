@@ -14,6 +14,13 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
   }
 })();
 
+// Escapa texto para evitar que datos con símbolos rompan el HTML
+function esc(v) {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // Sellos SVG institucionales
 const SEAL_SVG = `
 <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +37,7 @@ document.getElementById('sealSlot2').innerHTML = SEAL_SVG;
 try {
   const adminName = sessionStorage.getItem('ceic_username') || 'admin';
   document.getElementById('adminLabel').textContent = adminName;
-} catch(e){}
+} catch (e) {}
 
 // Tema Claro / Oscuro
 const root = document.documentElement;
@@ -39,148 +46,129 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
+/* =========================================================
+   NAVEGACIÓN ENTRE VISTAS
+   ========================================================= */
 function cambiarVista(vista) {
   document.querySelectorAll('.sidebar .course-item').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.vista-panel').forEach(el => el.style.display = 'none');
 
-  if (vista === 'alumnos') {
-    document.getElementById('menuAlumnos').classList.add('active');
-    document.getElementById('seccionAlumnos').style.display = 'block';
-  } else if (vista === 'cursos') {
-    document.getElementById('menuCursos').classList.add('active');
-    document.getElementById('seccionCursos').style.display = 'block';
-    cargarCursosAdmin();
-  } else if (vista === 'horarios') {
-    document.getElementById('menuHorarios').classList.add('active');
-    document.getElementById('seccionHorarios').style.display = 'block';
-  }
+  const mapa = {
+    alumnos:  ['menuAlumnos',  'seccionAlumnos'],
+    porCurso: ['menuPorCurso', 'seccionPorCurso'],
+    pagos:    ['menuPagos',    'seccionPagos'],
+    cursos:   ['menuCursos',   'seccionCursos'],
+    horarios: ['menuHorarios', 'seccionHorarios']
+  };
+  const [menu, seccion] = mapa[vista];
+  document.getElementById(menu).classList.add('active');
+  document.getElementById(seccion).style.display = 'block';
+
+  if (vista === 'cursos') cargarCursosAdmin();
+  if (vista === 'pagos') cargarPagos();
 }
 
 /* =========================================================
-   CARGAR CURSOS Y ALUMNOS INSCRITOS EN EL MENÚ LATERAL
+   DATOS: CURSOS E INSCRITOS
    ========================================================= */
 let cursosGlobal = [];
-let cursoSeleccionadoId = null;
 let alumnosGlobal = [];
+
+const nombreCurso = id =>
+  (cursosGlobal.find(c => String(c.id) === String(id)) || {}).nombre || 'Sin curso';
 
 async function inicializarPanel() {
   try {
-    // 1. Obtener los cursos registrados
-    const { data: cursos, error: errCursos } = await supabaseClient.from('cursos').select('*');
-    if (errCursos) throw errCursos;
+    const { data: cursos, error: e1 } = await supabaseClient.from('cursos').select('*');
+    if (e1) throw e1;
     cursosGlobal = cursos || [];
 
-    // 2. Obtener inscripciones para conteo por curso
-    const { data: inscripciones, error: errInsc } = await supabaseClient.from('inscripciones').select('id, curso_id');
-    if (errInsc) throw errInsc;
+    const { data: insc, error: e2 } = await supabaseClient.from('inscripciones').select('*');
+    if (e2) throw e2;
+    alumnosGlobal = insc || [];
 
-    const conteoMap = {};
-    (inscripciones || []).forEach(i => {
-      conteoMap[i.curso_id] = (conteoMap[i.curso_id] || 0) + 1;
-    });
+    // Estadísticas
+    document.getElementById('statsRow').innerHTML = `
+      <div class="stat"><div class="num">${alumnosGlobal.length}</div><div class="lbl">Total inscritos</div></div>
+      <div class="stat"><div class="num">${cursosGlobal.length}</div><div class="lbl">Cursos registrados</div></div>`;
 
-    const courseListEl = document.getElementById('courseList');
-    courseListEl.innerHTML = '';
+    // Vista general
+    aplicarBusquedaGeneral();
 
-    if (cursosGlobal.length === 0) {
-      courseListEl.innerHTML = '<span style="font-size:0.8rem; color:var(--text-faint); padding:0.5rem; display:block;">No hay cursos registrados.</span>';
-      cargarAlumnosDeCurso(null);
-      return;
-    }
-
-    // 3. Crear lista de cursos dinámicamente con sus totales
-    cursosGlobal.forEach((curso, index) => {
-      const totalInscritos = conteoMap[curso.id] || 0;
-      const div = document.createElement('div');
-      div.className = `course-item ${index === 0 ? 'active' : ''}`;
-      div.id = `course_item_${curso.id}`;
-      div.innerHTML = `
-        <span class="cname">${curso.nombre}</span>
-        <span class="ccount" id="count_${curso.id}">${totalInscritos} inscrito/s</span>
-      `;
-      div.onclick = () => {
-        document.querySelectorAll('.sidebar .course-item').forEach(el => el.classList.remove('active'));
-        div.classList.add('active');
-        cambiarVista('alumnos');
-        cargarAlumnosDeCurso(curso.id);
-      };
-      courseListEl.appendChild(div);
-    });
-
-    if (cursosGlobal.length > 0) {
-      cargarAlumnosDeCurso(cursosGlobal[0].id);
-    }
+    // Desplegable de cursos (con conteo)
+    const sel = document.getElementById('selectCurso');
+    const previo = sel.value;
+    sel.innerHTML = '<option value="">— Selecciona un curso —</option>' +
+      cursosGlobal.map(c => {
+        const n = alumnosGlobal.filter(a => String(a.curso_id) === String(c.id)).length;
+        return `<option value="${esc(c.id)}">${esc(c.nombre)} (${n})</option>`;
+      }).join('');
+    sel.value = previo;
+    mostrarAlumnosCurso();
+    actualizarBadgePagos();
   } catch (err) {
     console.error('Error al inicializar panel:', err);
   }
 }
 
-async function cargarAlumnosDeCurso(cursoId) {
-  cursoSeleccionadoId = cursoId;
-  const cursoActual = cursosGlobal.find(c => c.id === cursoId);
-  
-  document.getElementById('courseTitle').textContent = cursoActual ? cursoActual.nombre : 'Sin curso seleccionado';
-  document.getElementById('courseSub').textContent = cursoActual ? (cursoActual.descripcion || 'Alumnos inscritos en este programa') : '';
-
-  try {
-    let query = supabaseClient.from('inscripciones').select('*');
-    if (cursoId) query = query.eq('curso_id', cursoId);
-
-    const { data, error } = await query;
-    if (error) throw error;
-
-    alumnosGlobal = data || [];
-    renderizarAlumnos(alumnosGlobal);
-
-    if (cursoId) {
-      const badgeCount = document.getElementById(`count_${cursoId}`);
-      if (badgeCount) badgeCount.textContent = `${alumnosGlobal.length} inscrito/s`;
-    }
-  } catch (err) {
-    console.error('Error cargando alumnos:', err);
-  }
-}
-
-function renderizarAlumnos(lista) {
-  const tbody = document.getElementById('studentBody');
-  const emptyState = document.getElementById('emptyState');
+function renderizarAlumnos(lista, tbodyId, emptyId, mostrarCurso) {
+  const tbody = document.getElementById(tbodyId);
+  const empty = document.getElementById(emptyId);
   tbody.innerHTML = '';
 
-  if (lista.length === 0) {
-    emptyState.style.display = 'block';
-    return;
-  }
-  emptyState.style.display = 'none';
+  if (!lista.length) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
 
-  lista.forEach(alumno => {
+  lista.forEach(a => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>
-        <div class="stu-name">${alumno.nombres} ${alumno.apellidos}</div>
-        <div class="stu-sub">${alumno.nacionalidad || ''}</div>
+        <div class="stu-name">${esc(a.nombres)} ${esc(a.apellidos)}</div>
+        <div class="stu-sub">${esc(a.nacionalidad)}</div>
       </td>
-      <td><span class="badge">${alumno.numero_identificacion}</span></td>
-      <td>${alumno.telefono || 'N/A'}</td>
-      <td>${alumno.correo_electronico || 'N/A'}</td>
+      ${mostrarCurso ? `<td><span class="badge">${esc(nombreCurso(a.curso_id))}</span></td>` : ''}
+      <td><span class="badge">${esc(a.numero_identificacion)}</span></td>
+      <td>${esc(a.telefono || 'N/A')}</td>
+      <td>${esc(a.correo_electronico || 'N/A')}</td>
+      ${mostrarCurso ? '' : `<td>${esc(a.ocupacion || 'N/A')}</td>`}
       <td>
         <div class="row-actions">
-          <button class="ficha-btn" onclick='verFicha(${JSON.stringify(alumno)})'>Ver Ficha</button>
+          <button class="ficha-btn" onclick="verFichaPorId('${esc(a.id)}')">Ver Ficha</button>
         </div>
-      </td>
-    `;
+      </td>`;
     tbody.appendChild(tr);
   });
 }
 
-// Búsqueda en tiempo real
-document.getElementById('searchInput').addEventListener('input', (e) => {
-  const term = e.target.value.toLowerCase();
-  const filtrados = alumnosGlobal.filter(a => 
+function verFichaPorId(id) {
+  const alumno = alumnosGlobal.find(a => String(a.id) === String(id));
+  if (alumno) verFicha(alumno);
+}
+
+function filtrar(lista, term) {
+  term = (term || '').toLowerCase();
+  return lista.filter(a =>
     `${a.nombres} ${a.apellidos}`.toLowerCase().includes(term) ||
-    (a.numero_identificacion && a.numero_identificacion.toLowerCase().includes(term))
+    String(a.numero_identificacion || '').toLowerCase().includes(term)
   );
-  renderizarAlumnos(filtrados);
-});
+}
+
+// Vista general: búsqueda
+function aplicarBusquedaGeneral() {
+  const term = document.getElementById('searchInput').value;
+  renderizarAlumnos(filtrar(alumnosGlobal, term), 'studentBody', 'emptyState', true);
+}
+document.getElementById('searchInput').addEventListener('input', aplicarBusquedaGeneral);
+
+// Vista por curso: selección + búsqueda
+function mostrarAlumnosCurso() {
+  const cursoId = document.getElementById('selectCurso').value;
+  const term = document.getElementById('searchCurso').value;
+  const lista = cursoId ? alumnosGlobal.filter(a => String(a.curso_id) === String(cursoId)) : [];
+  renderizarAlumnos(filtrar(lista, term), 'studentBodyCurso', 'emptyStateCurso', false);
+}
+document.getElementById('selectCurso').addEventListener('change', mostrarAlumnosCurso);
+document.getElementById('searchCurso').addEventListener('input', mostrarAlumnosCurso);
 
 /* =========================================================
    FICHA PERSONAL Y EXPORTAR A PDF (CON FOTO TIPO CARNET)
@@ -188,32 +176,30 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 const fichaOverlay = document.getElementById('fichaOverlay');
 
 function verFicha(alumno) {
-  // Cargar foto tipo carnet en la esquina superior derecha
   const fotoSlot = document.getElementById('fichaFotoSlot');
   const urlFoto = alumno.foto_url || alumno.foto_carnet_url || alumno.foto;
-  
+
   if (urlFoto) {
-    fotoSlot.innerHTML = `<img src="${urlFoto}" alt="Foto ${alumno.nombres}" onerror="this.onerror=null; this.parentNode.innerHTML='<span class=\'no-foto\'>Sin foto</span>';">`;
+    fotoSlot.innerHTML = `<img src="${esc(urlFoto)}" alt="Foto" onerror="this.parentNode.innerHTML='<span class=&quot;no-foto&quot;>Sin foto</span>'">`;
   } else {
     fotoSlot.innerHTML = `<span class="no-foto">📷<br>Sin foto</span>`;
   }
 
-  // Renderizar información detallada
-  const camposContainer = document.getElementById('fichaFields');
-  camposContainer.innerHTML = `
-    <div class="ficha-field"><span class="k">Nombres y Apellidos:</span><span class="v">${alumno.nombres} ${alumno.apellidos}</span></div>
-    <div class="ficha-field"><span class="k">Cédula / Identificación:</span><span class="v">${alumno.nacionalidad || ''} ${alumno.numero_identificacion}</span></div>
-    <div class="ficha-field"><span class="k">Fecha de Nacimiento:</span><span class="v">${alumno.fecha_nacimiento || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Sexo:</span><span class="v">${alumno.sexo || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Teléfono / WhatsApp:</span><span class="v">${alumno.telefono || 'N/A'} / ${alumno.whatsapp || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Correo Electrónico:</span><span class="v">${alumno.correo_electronico || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Ubicación:</span><span class="v">${alumno.municipio_ciudad || ''}, ${alumno.estado || ''}</span></div>
-    <div class="ficha-field"><span class="k">Dirección:</span><span class="v">${alumno.direccion || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Ocupación:</span><span class="v">${alumno.ocupacion || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Nivel Educativo:</span><span class="v">${alumno.nivel_educativo || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Institución / Empresa:</span><span class="v">${alumno.institucion || 'N/A'}</span></div>
+  document.getElementById('fichaFields').innerHTML = `
+    <div class="ficha-field"><span class="k">Curso:</span><span class="v">${esc(nombreCurso(alumno.curso_id))}</span></div>
+    <div class="ficha-field"><span class="k">Nombres y Apellidos:</span><span class="v">${esc(alumno.nombres)} ${esc(alumno.apellidos)}</span></div>
+    <div class="ficha-field"><span class="k">Cédula / Identificación:</span><span class="v">${esc(alumno.nacionalidad)} ${esc(alumno.numero_identificacion)}</span></div>
+    <div class="ficha-field"><span class="k">Fecha de Nacimiento:</span><span class="v">${esc(alumno.fecha_nacimiento || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Sexo:</span><span class="v">${esc(alumno.sexo || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Teléfono / WhatsApp:</span><span class="v">${esc(alumno.telefono || 'N/A')} / ${esc(alumno.whatsapp || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Correo Electrónico:</span><span class="v">${esc(alumno.correo_electronico || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Ubicación:</span><span class="v">${esc(alumno.municipio_ciudad)}, ${esc(alumno.estado)}</span></div>
+    <div class="ficha-field"><span class="k">Dirección:</span><span class="v">${esc(alumno.direccion || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Ocupación:</span><span class="v">${esc(alumno.ocupacion || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Nivel Educativo:</span><span class="v">${esc(alumno.nivel_educativo || 'N/A')}</span></div>
+    <div class="ficha-field"><span class="k">Institución / Empresa:</span><span class="v">${esc(alumno.institucion || 'N/A')}</span></div>
   `;
-  
+
   fichaOverlay.classList.add('show');
 }
 
@@ -242,6 +228,11 @@ function abrirModalCurso(curso = null) {
     document.getElementById('cursoIdEdit').value = '';
   }
   modalCursoOverlay.classList.add('show');
+}
+
+function editarCursoPorId(id) {
+  const curso = cursosGlobal.find(c => String(c.id) === String(id));
+  if (curso) abrirModalCurso(curso);
 }
 
 document.getElementById('modalCursoClose').onclick = () => modalCursoOverlay.classList.remove('show');
@@ -277,8 +268,8 @@ document.getElementById('formCrearCurso').addEventListener('submit', async (e) =
     }
 
     modalCursoOverlay.classList.remove('show');
-    inicializarPanel();
-    if(document.getElementById('seccionCursos').style.display === 'block') {
+    await inicializarPanel();
+    if (document.getElementById('seccionCursos').style.display === 'block') {
       cargarCursosAdmin();
     }
   } catch (err) {
@@ -304,17 +295,18 @@ async function cargarCursosAdmin() {
     return;
   }
 
+  cursosGlobal = data;
   contenedor.innerHTML = '';
   data.forEach(curso => {
     contenedor.innerHTML += `
       <div style="background:var(--input-bg); border:1px solid var(--panel-border); padding:1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
         <div>
-          <strong style="font-size:1rem; color:var(--text-main);">${curso.nombre}</strong>
-          <p style="font-size:0.8rem; color:var(--text-faint); margin-top:0.2rem;">${curso.descripcion || 'Sin descripción'} | Modalidad: ${curso.modalidad || 'N/A'} | Costo: $${curso.costo || 0}</p>
+          <strong style="font-size:1rem; color:var(--text-main);">${esc(curso.nombre)}</strong>
+          <p style="font-size:0.8rem; color:var(--text-faint); margin-top:0.2rem;">${esc(curso.descripcion || 'Sin descripción')} | Modalidad: ${esc(curso.modalidad || 'N/A')} | Costo: $${esc(curso.costo || 0)}</p>
         </div>
         <div style="display:flex; gap:0.5rem;">
-          <button class="ficha-btn" onclick='abrirModalCurso(${JSON.stringify(curso)})'>Modificar</button>
-          <button class="ficha-btn" style="background:var(--accent-red);" onclick="eliminarCurso('${curso.id}')">Eliminar</button>
+          <button class="ficha-btn" onclick="editarCursoPorId('${esc(curso.id)}')">Modificar</button>
+          <button class="ficha-btn" style="background:var(--accent-red);" onclick="eliminarCurso('${esc(curso.id)}')">Eliminar</button>
         </div>
       </div>
     `;
@@ -329,7 +321,7 @@ async function eliminarCurso(id) {
     alert('Error al eliminar: ' + error.message);
   } else {
     alert('Curso eliminado correctamente.');
-    inicializarPanel();
+    await inicializarPanel();
     cargarCursosAdmin();
   }
 }
@@ -339,7 +331,6 @@ async function eliminarCurso(id) {
    ========================================================= */
 document.getElementById('formHorario').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const titulo = document.getElementById('tituloHorario').value;
   const archivo = document.getElementById('archivoHorario').files[0];
 
   try {
@@ -360,6 +351,302 @@ document.getElementById('formHorario').addEventListener('submit', async (e) => {
     alert('Error al subir el horario: ' + err.message);
   }
 });
+
+/* =========================================================
+   PAGOS DE INSCRIPCIÓN
+   =========================================================
+   AJUSTA ESTA CONFIGURACIÓN a los nombres reales de tu base de datos.
+   - Los archivos se buscan primero en las columnas de la tabla
+     'inscripciones' (la primera que tenga valor).
+   - Si no hay columna con valor, se busca en la carpeta del bucket
+     un archivo cuyo nombre contenga el número de identificación.
+   ========================================================= */
+const PAGOS_CFG = {
+  bucket: 'documentos-inscripcion',
+  carpetaPagos: 'pagos',
+  carpetaCedulas: 'cedulas',
+  colComprobante: ['comprobante_url', 'comprobante_pago_url', 'pago_url', 'comprobante_pago', 'comprobante'],
+  colCedula: ['cedula_url', 'foto_cedula_url', 'foto_cedula', 'cedula_foto'],
+  colMonto: ['monto', 'monto_pagado'],
+  colReferencia: ['referencia', 'nro_referencia', 'numero_referencia'],
+  colMetodo: ['metodo_pago', 'forma_pago'],
+  colFechaPago: ['fecha_pago'],
+  colEstado: 'estado_pago',      // pendiente | aceptado | archivado
+  colMotivo: 'motivo_estado',
+  colFechaRevision: 'fecha_revision'
+};
+
+let pagosCache = {};          // id inscripción -> { pago, cedula }
+let listadoCarpetas = {};     // carpeta -> archivos
+let pagoArchivandoId = null;
+
+const pick = (o, cols) => {
+  for (const c of cols) if (o[c] !== undefined && o[c] !== null && o[c] !== '') return o[c];
+  return null;
+};
+const estadoDe = a => a[PAGOS_CFG.colEstado] || 'pendiente';
+const esPdf = s => /\.pdf(\?|$)/i.test(s || '');
+
+function extraerPath(url) {
+  const m = url.match(/\/object\/(?:public|sign|authenticated)\/[^/]+\/([^?]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+async function firmarArchivo(valor) {
+  if (!valor) return null;
+  let path = valor;
+  if (/^https?:/i.test(valor)) {
+    path = extraerPath(valor);
+    if (!path) return { url: valor, path: null, pdf: esPdf(valor) };
+  }
+  const { data, error } = await supabaseClient.storage
+    .from(PAGOS_CFG.bucket).createSignedUrl(path, 3600);
+  if (error || !data) return { url: null, path, pdf: esPdf(path) };
+  return { url: data.signedUrl, path, pdf: esPdf(path) };
+}
+
+async function listarCarpeta(carpeta) {
+  if (!listadoCarpetas[carpeta]) {
+    const { data } = await supabaseClient.storage
+      .from(PAGOS_CFG.bucket).list(carpeta, { limit: 1000 });
+    listadoCarpetas[carpeta] = (data || []).filter(f => f.id);
+  }
+  return listadoCarpetas[carpeta];
+}
+
+async function resolverArchivo(alumno, columnas, carpeta) {
+  const valor = pick(alumno, columnas);
+  if (valor) return firmarArchivo(valor);
+
+  const clave = String(alumno.numero_identificacion || '').trim();
+  if (!clave) return null;
+  const archivos = await listarCarpeta(carpeta);
+  const f = archivos.find(x => x.name.includes(clave));
+  return f ? firmarArchivo(`${carpeta}/${f.name}`) : null;
+}
+
+function actualizarBadgePagos() {
+  const pendientes = alumnosGlobal.filter(a => estadoDe(a) === 'pendiente').length;
+  const b = document.getElementById('badgePagos');
+  b.textContent = pendientes;
+  b.style.display = pendientes ? 'inline-block' : 'none';
+}
+
+async function cargarPagos() {
+  const cont = document.getElementById('listaPagos');
+  cont.innerHTML = '<div class="empty" style="grid-column:1/-1;">Cargando pagos...</div>';
+  listadoCarpetas = {};
+  await inicializarPanel();
+  await Promise.all(alumnosGlobal.map(async a => {
+    if (!pagosCache[a.id]) {
+      pagosCache[a.id] = {
+        pago: await resolverArchivo(a, PAGOS_CFG.colComprobante, PAGOS_CFG.carpetaPagos),
+        cedula: await resolverArchivo(a, PAGOS_CFG.colCedula, PAGOS_CFG.carpetaCedulas)
+      };
+    }
+  }));
+  renderPagos();
+}
+
+function mediaHTML(info, id, tipo) {
+  if (!info || !info.url) return `<div class="media-box" style="cursor:default;">Sin archivo</div>`;
+  const clic = `onclick="verMedia('${esc(id)}','${tipo}')"`;
+  if (info.pdf) return `<div class="media-box" ${clic}>📄 Ver PDF</div>`;
+  return `<div class="media-box" ${clic}><img src="${esc(info.url)}" alt="${tipo}" loading="lazy"></div>`;
+}
+
+function renderPagos() {
+  const cont = document.getElementById('listaPagos');
+  const filtro = document.getElementById('filtroEstadoPago').value;
+  const term = document.getElementById('searchPagos').value;
+
+  let lista = alumnosGlobal.filter(a => filtro === 'todos' || estadoDe(a) === filtro);
+  lista = filtrar(lista, term);
+
+  if (!lista.length) {
+    cont.innerHTML = '<div class="empty" style="grid-column:1/-1;">No hay pagos en esta categoría.</div>';
+    return;
+  }
+
+  cont.innerHTML = lista.map(a => {
+    const est = estadoDe(a);
+    const c = pagosCache[a.id] || {};
+    const monto = pick(a, PAGOS_CFG.colMonto);
+    const ref = pick(a, PAGOS_CFG.colReferencia);
+    const met = pick(a, PAGOS_CFG.colMetodo);
+    const fec = pick(a, PAGOS_CFG.colFechaPago);
+    const motivo = a[PAGOS_CFG.colMotivo];
+    const id = esc(a.id);
+    return `
+      <div class="pago-card">
+        <div class="pago-top">
+          <div>
+            <div class="stu-name">${esc(a.nombres)} ${esc(a.apellidos)}</div>
+            <div class="stu-sub">${esc(a.nacionalidad)} ${esc(a.numero_identificacion)}</div>
+          </div>
+          <span class="badge st-${esc(est)}">${esc(est)}</span>
+        </div>
+        <div class="pago-media">
+          <div><div class="media-cap">COMPROBANTE DE PAGO</div>${mediaHTML(c.pago, a.id, 'pago')}</div>
+          <div><div class="media-cap">FOTO DE CÉDULA</div>${mediaHTML(c.cedula, a.id, 'cedula')}</div>
+        </div>
+        <div class="pago-datos">
+          <div class="row"><span>Curso</span><span>${esc(nombreCurso(a.curso_id))}</span></div>
+          ${monto !== null ? `<div class="row"><span>Monto</span><span>$${esc(monto)}</span></div>` : ''}
+          ${ref ? `<div class="row"><span>Referencia</span><span>${esc(ref)}</span></div>` : ''}
+          ${met ? `<div class="row"><span>Método</span><span>${esc(met)}</span></div>` : ''}
+          ${fec ? `<div class="row"><span>Fecha de pago</span><span>${esc(fec)}</span></div>` : ''}
+          <div class="row"><span>Teléfono</span><span>${esc(a.telefono || 'N/A')}</span></div>
+        </div>
+        ${est === 'archivado' && motivo ? `<div class="pago-motivo"><strong>Motivo:</strong> ${esc(motivo)}</div>` : ''}
+        <div class="pago-btns">
+          ${est !== 'aceptado' ? `<button class="ficha-btn btn-ok" onclick="aceptarPago('${id}')">✔ Aceptar</button>` : ''}
+          ${est !== 'archivado' ? `<button class="ficha-btn btn-warn" onclick="abrirArchivarPago('${id}')">🗂 Archivar</button>` : ''}
+          <button class="ficha-btn btn-bad" onclick="rechazarPago('${id}')">✖ Rechazar</button>
+        </div>
+        <button class="ficha-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted);" onclick="verFichaPorId('${id}')">Ver ficha completa</button>
+      </div>`;
+  }).join('');
+}
+
+document.getElementById('filtroEstadoPago').addEventListener('change', renderPagos);
+document.getElementById('searchPagos').addEventListener('input', renderPagos);
+
+/* ---- Visor de imagen / PDF ---- */
+const visorOverlay = document.getElementById('visorOverlay');
+function verMedia(id, tipo) {
+  const info = (pagosCache[id] || {})[tipo];
+  if (!info || !info.url) return;
+  document.getElementById('visorContenido').innerHTML = info.pdf
+    ? `<iframe src="${esc(info.url)}"></iframe>`
+    : `<img src="${esc(info.url)}" alt="${esc(tipo)}">`;
+  visorOverlay.classList.add('show');
+}
+document.getElementById('visorClose').onclick = () => {
+  visorOverlay.classList.remove('show');
+  document.getElementById('visorContenido').innerHTML = '';
+};
+
+/* ---- Acciones ---- */
+async function actualizarEstadoPago(id, estado, motivo) {
+  const { data, error } = await supabaseClient.from('inscripciones')
+    .update({
+      [PAGOS_CFG.colEstado]: estado,
+      [PAGOS_CFG.colMotivo]: motivo || null,
+      [PAGOS_CFG.colFechaRevision]: new Date().toISOString()
+    })
+    .eq('id', id)
+    .select();
+  if (error) throw error;
+  if (!data || !data.length) {
+    throw new Error('No se modificó ningún registro. Revisa las políticas RLS de la tabla inscripciones.');
+  }
+}
+
+async function aceptarPago(id) {
+  if (!confirm('¿Aceptar este pago? Se guardará en la tabla de pagos y la inscripción se conservará como pagada.')) return;
+  const a = alumnosGlobal.find(x => String(x.id) === String(id));
+  if (!a) return;
+  const c = pagosCache[id] || {};
+  let adminName = 'admin';
+  try { adminName = sessionStorage.getItem('ceic_username') || 'admin'; } catch (e) {}
+
+  try {
+    // 1. Guardar (o actualizar) el pago aceptado en la tabla 'pagos'
+    const registro = {
+      inscripcion_id: a.id,
+      curso_id: a.curso_id || null,
+      nombres: a.nombres,
+      apellidos: a.apellidos,
+      nacionalidad: a.nacionalidad || null,
+      numero_identificacion: a.numero_identificacion,
+      telefono: a.telefono || null,
+      correo_electronico: a.correo_electronico || null,
+      monto: pick(a, PAGOS_CFG.colMonto),
+      referencia: pick(a, PAGOS_CFG.colReferencia),
+      metodo_pago: pick(a, PAGOS_CFG.colMetodo),
+      fecha_pago: pick(a, PAGOS_CFG.colFechaPago),
+      comprobante_path: (c.pago && c.pago.path) || null,
+      cedula_path: (c.cedula && c.cedula.path) || null,
+      estado: 'aceptado',
+      aprobado_por: adminName,
+      fecha_aprobacion: new Date().toISOString()
+    };
+    const { error: errPago } = await supabaseClient.from('pagos')
+      .upsert(registro, { onConflict: 'inscripcion_id' });
+    if (errPago) throw errPago;
+
+    // 2. Marcar la inscripción como aceptada
+    try {
+      await actualizarEstadoPago(id, 'aceptado', null);
+    } catch (err) {
+      // Si falla, deshacer el registro en 'pagos' para no dejar datos inconsistentes
+      await supabaseClient.from('pagos').delete().eq('inscripcion_id', id);
+      throw err;
+    }
+
+    await cargarPagos();
+  } catch (err) {
+    alert('Error al aceptar el pago: ' + err.message);
+  }
+}
+
+const motivoOverlay = document.getElementById('motivoOverlay');
+function abrirArchivarPago(id) {
+  const a = alumnosGlobal.find(x => String(x.id) === String(id));
+  pagoArchivandoId = id;
+  document.getElementById('motivoSub').textContent = a ? `${a.nombres} ${a.apellidos}` : '';
+  document.getElementById('motivoTexto').value = '';
+  motivoOverlay.classList.add('show');
+}
+const cerrarMotivo = () => { motivoOverlay.classList.remove('show'); pagoArchivandoId = null; };
+document.getElementById('motivoClose').onclick = cerrarMotivo;
+document.getElementById('motivoCancel').onclick = cerrarMotivo;
+document.getElementById('motivoConfirm').onclick = async () => {
+  const motivo = document.getElementById('motivoTexto').value.trim();
+  if (!motivo) { alert('Debes especificar el motivo para archivar el pago.'); return; }
+  const id = pagoArchivandoId;
+  try {
+    await actualizarEstadoPago(id, 'archivado', motivo);
+    // Si el pago había sido aceptado antes, ya no debe figurar en la tabla 'pagos'
+    await supabaseClient.from('pagos').delete().eq('inscripcion_id', id);
+    cerrarMotivo();
+    await cargarPagos();
+  } catch (err) {
+    alert('Error al archivar el pago: ' + err.message);
+  }
+};
+
+async function rechazarPago(id) {
+  const a = alumnosGlobal.find(x => String(x.id) === String(id));
+  const nombre = a ? `${a.nombres} ${a.apellidos}` : 'este alumno';
+  if (!confirm(`¿Rechazar el pago de ${nombre}?\n\nSe ELIMINARÁ su inscripción de la base de datos junto con el comprobante y la foto de cédula. Esta acción no se puede deshacer.`)) return;
+
+  try {
+    // 1. Eliminar la inscripción
+    const { data, error } = await supabaseClient.from('inscripciones')
+      .delete().eq('id', id).select();
+    if (error) throw error;
+    if (!data || !data.length) {
+      throw new Error('No se eliminó ningún registro. Revisa las políticas RLS de la tabla inscripciones.');
+    }
+
+    // 2. Eliminar los archivos del almacenamiento
+    const c = pagosCache[id] || {};
+    const rutas = [c.pago && c.pago.path, c.cedula && c.cedula.path].filter(Boolean);
+    if (rutas.length) {
+      const { error: errFiles } = await supabaseClient.storage.from(PAGOS_CFG.bucket).remove(rutas);
+      if (errFiles) console.warn('No se pudieron eliminar los archivos:', errFiles);
+    }
+
+    delete pagosCache[id];
+    listadoCarpetas = {};
+    alert('Pago rechazado. La inscripción fue eliminada.');
+    await cargarPagos();
+  } catch (err) {
+    alert('Error al rechazar el pago: ' + err.message);
+  }
+}
 
 // Inicialización automática
 document.addEventListener('DOMContentLoaded', () => {

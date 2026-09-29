@@ -30,6 +30,8 @@
     padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   }
   h1,h2,h3,.serif{font-family:Georgia,'Times New Roman',serif;}
+  select option{background:#1e2b3a;color:#fff;}
+  :root[data-theme="light"] select option{background:#fff;color:#0f172a;}
 
   .topbar{
     display:flex; align-items:center; justify-content:space-between; gap:1rem;
@@ -69,7 +71,6 @@
   .course-item:hover{background:var(--row-hover);}
   .course-item.active{background:var(--chip-bg); border-color:var(--panel-border);}
   .course-item .cname{font-size:0.92rem; font-weight:600;}
-  .course-item .ccount{font-size:0.76rem; color:var(--text-faint);}
 
   .main{flex:1; padding:1.4rem 1.6rem 2.5rem; min-width:0;}
   .main-header{display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:1.1rem; flex-wrap:wrap;}
@@ -81,10 +82,11 @@
   }
   .search-box input{background:none; border:none; outline:none; color:var(--text-main); font-size:0.88rem; width:100%;}
   .search-box input::placeholder{color:var(--text-faint);}
+  select.search-box{outline:none; font-size:0.88rem; cursor:pointer;}
 
   .panel{
     background:var(--panel-bg); backdrop-filter:blur(14px); border:1px solid var(--panel-border);
-    border-radius:14px; overflow:hidden;
+    border-radius:14px; overflow-x:auto;
   }
   table{width:100%; border-collapse:collapse; font-size:0.87rem;}
   thead th{
@@ -128,46 +130,27 @@
     position:absolute; top:0.8rem; right:0.8rem; background:rgba(0,0,0,0.06); border:none; width:30px; height:30px;
     border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#1a1a1a;
   }
-  
-  /* Encabezado Ficha con Foto a la Derecha */
+
   .ficha-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    border-bottom: 2px solid var(--primary-blue);
-    padding-bottom: 0.9rem;
-    margin-bottom: 1rem;
-    padding-right: 1.8rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    border-bottom: 2px solid var(--primary-blue); padding-bottom: 0.9rem; margin-bottom: 1rem; padding-right: 1.8rem;
   }
-  .ficha-head-left {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
+  .ficha-head-left { display: flex; align-items: center; gap: 0.8rem; }
   .ficha-head .seal { width:52px; height:52px; border-radius:50%; background:#fff; flex-shrink:0; overflow:hidden; }
   .ficha-head .seal svg { width:100%; height:100%; }
   .ficha-head .titles { line-height:1.2; }
   .ficha-head .titles .t1 { font-family:Georgia,serif; font-weight:700; font-size:1.05rem; }
   .ficha-head .titles .t2 { font-size:0.72rem; color:#555; letter-spacing:0.02em; }
-  
+
   .ficha-foto-slot {
-    width: 75px;
-    height: 95px;
-    border-radius: 6px;
-    border: 2px solid var(--primary-blue);
-    background: #e2e8f0;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    width: 75px; height: 95px; border-radius: 6px; border: 2px solid var(--primary-blue);
+    background: #e2e8f0; overflow: hidden; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }
   .ficha-foto-slot img { width: 100%; height: 100%; object-fit: cover; }
   .ficha-foto-slot .no-foto { font-size: 0.65rem; color: #64748b; text-align: center; padding: 0.2rem; font-weight: 600; }
 
-  .ficha-field{display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dashed rgba(0,0,0,0.12); font-size:0.87rem;}
+  .ficha-field{display:flex; justify-content:space-between; gap:1rem; padding:0.4rem 0; border-bottom:1px dashed rgba(0,0,0,0.12); font-size:0.87rem;}
   .ficha-field .k{color:#555;}
   .ficha-field .v{font-weight:600; text-align:right;}
   .ficha-actions{display:flex; gap:0.6rem; margin-top:1.2rem;}
@@ -176,6 +159,38 @@
   .btn-cancel{background:rgba(0,0,0,0.08); color:#1a1a1a;}
 
   .empty{padding:2.5rem 1rem; text-align:center; color:var(--text-faint); font-size:0.9rem;}
+
+  /* ---- Pagos ---- */
+  .pagos-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1rem;}
+  .pago-card{background:var(--panel-bg); backdrop-filter:blur(14px); border:1px solid var(--panel-border); border-radius:14px; padding:1rem; display:flex; flex-direction:column; gap:0.8rem;}
+  .pago-top{display:flex; justify-content:space-between; align-items:flex-start; gap:0.6rem;}
+  .pago-media{display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;}
+  .media-cap{font-size:0.7rem; color:var(--text-faint); margin-bottom:0.25rem; font-weight:600;}
+  .media-box{aspect-ratio:4/3; background:rgba(0,0,0,0.25); border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.75rem; color:var(--text-faint); text-align:center; border:1px solid var(--divider);}
+  .media-box img{width:100%; height:100%; object-fit:contain;}
+  .pago-datos{font-size:0.82rem; display:flex; flex-direction:column; gap:0.2rem;}
+  .pago-datos .row{display:flex; justify-content:space-between; gap:0.6rem;}
+  .pago-datos .row span:first-child{color:var(--text-faint);}
+  .pago-datos .row span:last-child{font-weight:600; text-align:right;}
+  .pago-motivo{font-size:0.78rem; background:var(--input-bg); border-radius:8px; padding:0.5rem 0.7rem; color:var(--text-muted);}
+  .pago-btns{display:flex; gap:0.4rem; flex-wrap:wrap;}
+  .pago-btns .ficha-btn{flex:1;}
+  .btn-ok{background:#2f8f4e !important;} .btn-ok:hover{background:#3fae5c !important;}
+  .btn-warn{background:#b7791f !important;} .btn-warn:hover{background:#d69e2e !important;}
+  .btn-bad{background:var(--accent-red) !important;} .btn-bad:hover{background:#a00000 !important;}
+  .badge.st-pendiente{background:rgba(214,158,46,0.25); color:#e0b04a;}
+  .badge.st-aceptado{background:rgba(63,174,92,0.25); color:#5fd07f;}
+  .badge.st-archivado{background:rgba(143,161,179,0.25); color:var(--text-muted);}
+  .menu-badge{display:inline-block; margin-left:0.4rem; background:var(--accent-red); color:#fff; border-radius:999px; font-size:0.68rem; padding:0.05rem 0.45rem;}
+  .visor{max-width:900px; background:#111; padding:1rem;}
+  .visor img{width:100%; max-height:80vh; object-fit:contain;}
+  .visor iframe{width:100%; height:80vh; border:none; background:#fff;}
+  .motivo-txt{width:100%; padding:0.6rem; border-radius:6px; border:1px solid #ccc; background:#fff; color:#000; margin-top:0.6rem;}
+
+  @media (max-width:800px){
+    .layout{flex-direction:column;}
+    .sidebar{width:100%; border-right:none; border-bottom:1px solid var(--panel-border);}
+  }
 
   @media print{
     body *{visibility:hidden;}
@@ -213,49 +228,83 @@
   <!-- MENÚ LATERAL -->
   <aside class="sidebar">
     <h3>Menú Principal</h3>
-    <div class="course-item active" onclick="cambiarVista('alumnos')" id="menuAlumnos">
-      <span class="cname">👥 Alumnos e Inscritos</span>
-    </div>
-    <div class="course-item" onclick="cambiarVista('cursos')" id="menuCursos">
-      <span class="cname">📚 Gestionar Cursos</span>
-    </div>
-    <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios">
-      <span class="cname">📅 Subir Horarios</span>
-    </div>
-
-    <h3 style="margin-top: 1.5rem;">Cursos Registrados</h3>
-    <div id="courseList"></div>
+    <div class="course-item active" onclick="cambiarVista('alumnos')" id="menuAlumnos"><span class="cname">👥 Todos los Inscritos</span></div>
+    <div class="course-item" onclick="cambiarVista('porCurso')" id="menuPorCurso"><span class="cname">🎓 Alumnos por Curso</span></div>
+    <div class="course-item" onclick="cambiarVista('pagos')" id="menuPagos"><span class="cname">💳 Pagos de Inscripción<span class="menu-badge" id="badgePagos" style="display:none;">0</span></span></div>
+    <div class="course-item" onclick="cambiarVista('cursos')" id="menuCursos"><span class="cname">📚 Gestionar Cursos</span></div>
+    <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios"><span class="cname">📅 Subir Horarios</span></div>
   </aside>
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="main">
-    
-    <!-- VISTA 1: ALUMNOS E INSCRITOS -->
+
+    <!-- VISTA 1: TODOS LOS INSCRITOS -->
     <div id="seccionAlumnos" class="vista-panel">
       <div class="stats-row" id="statsRow"></div>
       <div class="main-header">
         <div>
-          <h1 id="courseTitle">Curso</h1>
-          <p id="courseSub">Alumnos inscritos</p>
+          <h1>Todos los Inscritos</h1>
+          <p>Listado general con el curso de cada alumno</p>
         </div>
         <div class="search-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" id="searchInput" placeholder="Buscar alumno...">
         </div>
       </div>
-
       <div class="panel">
         <table>
           <thead>
-            <tr><th>Alumno</th><th>Cédula</th><th>Teléfono</th><th>Correo</th><th></th></tr>
+            <tr><th>Alumno</th><th>Curso</th><th>Cédula</th><th>Teléfono</th><th>Correo</th><th></th></tr>
           </thead>
           <tbody id="studentBody"></tbody>
         </table>
-        <div class="empty" id="emptyState" style="display:none;">No se encontraron alumnos con ese criterio.</div>
+        <div class="empty" id="emptyState" style="display:none;">No se encontraron alumnos.</div>
       </div>
     </div>
 
-    <!-- VISTA 2: GESTIONAR CURSOS -->
+    <!-- VISTA 2: ALUMNOS POR CURSO -->
+    <div id="seccionPorCurso" class="vista-panel" style="display:none;">
+      <div class="main-header">
+        <div>
+          <h1>Alumnos por Curso</h1>
+          <p>Selecciona un curso para ver sus estudiantes</p>
+        </div>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <select id="selectCurso" class="search-box" style="color:var(--text-main); min-width:260px;"></select>
+          <div class="search-box"><input type="text" id="searchCurso" placeholder="Buscar en el curso..."></div>
+        </div>
+      </div>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr><th>Alumno</th><th>Cédula</th><th>Teléfono</th><th>Correo</th><th>Ocupación</th><th></th></tr>
+          </thead>
+          <tbody id="studentBodyCurso"></tbody>
+        </table>
+        <div class="empty" id="emptyStateCurso" style="display:none;">Selecciona un curso o no hay alumnos inscritos.</div>
+      </div>
+    </div>
+
+    <!-- VISTA: PAGOS DE INSCRIPCIÓN -->
+    <div id="seccionPagos" class="vista-panel" style="display:none;">
+      <div class="main-header">
+        <div>
+          <h1>Pagos de Inscripción</h1>
+          <p>Revisa el comprobante y la cédula de cada inscrito y decide qué hacer con el pago</p>
+        </div>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <select id="filtroEstadoPago" class="search-box" style="color:var(--text-main); min-width:170px;">
+            <option value="pendiente">Pendientes</option>
+            <option value="aceptado">Aceptados</option>
+            <option value="archivado">Archivados</option>
+            <option value="todos">Todos</option>
+          </select>
+          <div class="search-box"><input type="text" id="searchPagos" placeholder="Buscar por nombre o cédula..."></div>
+        </div>
+      </div>
+      <div id="listaPagos" class="pagos-grid"></div>
+    </div>
+
+    <!-- VISTA 3: GESTIONAR CURSOS -->
     <div id="seccionCursos" class="vista-panel" style="display: none;">
       <div class="main-header">
         <div>
@@ -265,13 +314,11 @@
         <button class="ficha-btn" onclick="abrirModalCurso()">+ Nuevo Curso</button>
       </div>
       <div class="panel" style="padding: 1.5rem;">
-        <div id="listaCursosAdmin" style="display: flex; flex-direction: column; gap: 0.8rem;">
-          <!-- Se cargan dinámicamente -->
-        </div>
+        <div id="listaCursosAdmin" style="display: flex; flex-direction: column; gap: 0.8rem;"></div>
       </div>
     </div>
 
-    <!-- VISTA 3: SUBIR HORARIOS -->
+    <!-- VISTA 4: SUBIR HORARIOS -->
     <div id="seccionHorarios" class="vista-panel" style="display: none;">
       <div class="main-header">
         <div>
@@ -283,7 +330,7 @@
         <form id="formHorario">
           <div style="margin-bottom: 1rem;">
             <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Título del Horario</label>
-            <input type="text" id="tituloHorario" class="search-box" style="width: 100%; border: 1px solid var(--panel-border);" placeholder="Ej. Horario Ciclo 2026-2" required>
+            <input type="text" id="tituloHorario" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Horario Ciclo 2026-2" required>
           </div>
           <div style="margin-bottom: 1rem;">
             <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Archivo (PDF o Imagen)</label>
@@ -309,7 +356,6 @@
           <div class="t2">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</div>
         </div>
       </div>
-      <!-- Espacio reservado para la foto tipo carnet a la derecha -->
       <div class="ficha-foto-slot" id="fichaFotoSlot"></div>
     </div>
     <div id="fichaFields"></div>
@@ -365,6 +411,33 @@
         <button type="submit" class="btn-print" id="btnGuardarCursoData">Guardar Curso</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- MODAL MOTIVO (ARCHIVAR) -->
+<div class="overlay" id="motivoOverlay">
+  <div class="ficha" style="max-width:440px;">
+    <button class="ficha-close" id="motivoClose">✕</button>
+    <div class="ficha-head">
+      <div class="titles">
+        <div class="t1">Archivar pago</div>
+        <div class="t2" id="motivoSub">Especifica el motivo</div>
+      </div>
+    </div>
+    <label style="font-size:0.8rem; font-weight:600;">Motivo del archivo *</label>
+    <textarea id="motivoTexto" rows="4" class="motivo-txt" placeholder="Ej. Comprobante ilegible, falta verificar referencia..."></textarea>
+    <div class="ficha-actions">
+      <button class="btn-cancel" id="motivoCancel">Cancelar</button>
+      <button class="btn-print" id="motivoConfirm">Archivar</button>
+    </div>
+  </div>
+</div>
+
+<!-- VISOR DE IMAGEN / PDF -->
+<div class="overlay" id="visorOverlay">
+  <div class="ficha visor">
+    <button class="ficha-close" id="visorClose">✕</button>
+    <div id="visorContenido"></div>
   </div>
 </div>
 
