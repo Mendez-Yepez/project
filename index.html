@@ -13,20 +13,18 @@
 </head>
 <body>
 
-    <!-- === CABECERA SUPERIOR (Header) === -->
-    <header class="top-header py-3 bg-white border-bottom text-center">
+     <header class="top-header py-3 border-bottom text-center">
         <div class="container d-flex flex-column align-items-center">
-            <!-- Logo principal de la institución -->
             <div class="logo-box mb-2">
                 <img src="Gemini_Generated_Image_buubuubuubuubuub.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 90px;" onerror="this.style.display='none'; document.getElementById('alt-logo').style.display='block';">
-                <div id="alt-logo" class="fw-bold fs-2" style="color: #2b5278; display: none;">CEIC</div>
+                <div id="alt-logo" class="fw-bold fs-2" style="color: var(--primary-blue); display: none;">CEIC</div>
             </div>
-            <p class="slogan mb-0 fst-italic text-secondary small">Formando Valores para la Vida y la Eteridad</p>
+            <p class="slogan mb-0 fst-italic small">Formando Valores para la Vida y la Eternidad</p>
         </div>
     </header>
 
-    
-    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top border-bottom">
+    <!-- === BARRA DE NAVEGACIÓN === -->
+    <nav class="navbar navbar-expand-lg border-bottom sticky-top shadow-sm">
         <div class="container">
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -36,8 +34,8 @@
                     <li class="nav-item"><a class="nav-link active" href="index.html">INICIO</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">NOSOTROS</a>
-                        <ul class="dropdown-menu p-3 shadow" style="min-width: 320px; max-width: 400px;">
-                            <li><h6 class="dropdown-header px-0 text-uppercase fw-bold" style="color: #2b5278;">Nuestros Valores</h6></li>
+                        <ul class="dropdown-menu p-3 shadow border-0" style="min-width: 320px; max-width: 400px;">
+                            <li><h6 class="dropdown-header px-0 text-uppercase fw-bold" style="color: var(--primary-blue);">Nuestros Valores</h6></li>
                             <li class="dropdown-item-text px-0 small text-muted">
                                 <p class="mb-2"><strong>Amor y Servicio:</strong> Reflejar el carácter de Cristo mediante el cuidado y el apoyo mutuo.</p>
                                 <p class="mb-2"><strong>Integridad:</strong> Actuar con honestidad, ética y congruencia con los principios de la fe cristiana.</p>
@@ -46,17 +44,16 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link active" href="galeria.html">GALERÍA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="galeria.html">GALERÍA</a></li>
                     <li class="nav-item"><a class="nav-link" href="catalogo.html">CURSOS</a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://www.instagram.com/ceic_iunav/">REDES SOCIALES</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://www.instagram.com/ceic_iunav/" target="_blank">REDES SOCIALES</a></li>
                     <li class="nav-item"><a class="nav-link" href="noticias.html">NOTICIAS</a></li>
                 </ul>
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
                     <a id="nav-btn-inscripcion" href="inscripcion.html" class="btn btn-outline-dark btn-sm fw-bold px-3 py-2">
                         <i class="bi bi-card-checklist me-1"></i> INSCRIPCIÓN
                     </a>
-                    <!-- Botón ACCEDER ubicado al lado de INSCRIPCIÓN -->
-                    <a href="login.html" class="btn text-white btn-sm fw-bold px-3 py-2" style="background-color: #2b5278; border-radius: 0;">
+                    <a href="login.html" class="btn text-white btn-sm fw-bold px-3 py-2" style="background-color: var(--primary-blue); border-radius: 4px;">
                         <i class="bi bi-person-fill me-1"></i> ACCEDER
                     </a>
                 </div>
@@ -64,112 +61,147 @@
         </div>
     </nav>
 
-    <main class="hero-section py-5 bg-light overflow-hidden">
-        <div class="container py-lg-4">
-            <div class="row align-items-center">
+    <!-- === CARRUSEL ANIMADO EN TEMA CLARO === -->
+    <main class="hero-carousel-section py-4 flex-grow-1">
+        <div class="container">
+            
+            <!-- Estado del proceso -->
+            <div class="text-center mb-3">
+                <div id="badge-estado" class="badge bg-secondary fs-6 px-3 py-2">
+                    Verificando disponibilidad...
+                </div>
+            </div>
+
+            <!-- Slider de Bootstrap -->
+            <div id="mainBannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4500">
                 
-               
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <div class="rhombus-collage d-flex justify-content-center align-items-center">
-                        <div class="rhombus-grid">
-                            <div class="rhombus-item"><img src="Gemini_Generated_Image_hjge2shjge2shjge.jpeg" alt="Estudiantes"></div>
-                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400&q=80" alt="Campus"></div>
-                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80" alt="Clase"></div>
-                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=400&q=80" alt="Biblioteca"></div>
-                            <div class="rhombus-item"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=400&q=80" alt="Graduación"></div>
-                        </div>
-                    </div>
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#mainBannerCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Diapositiva 1"></button>
+                    <button type="button" data-bs-target="#mainBannerCarousel" data-bs-slide-to="1" aria-label="Diapositiva 2"></button>
+                    <button type="button" data-bs-target="#mainBannerCarousel" data-bs-slide-to="2" aria-label="Diapositiva 3"></button>
                 </div>
 
-                <!-- Columna Derecha: Admisión y Estado del Ciclo -->
-                <div class="col-lg-6 text-center text-lg-start ps-lg-5">
-                    <div class="hero-text-box">
-                        <!-- <h1 class="display-3 fw-bold tracking-tight" style="color: #2b5278;">ADMISIÓN</h1> -->
-                        <!-- <div class="display-1 fw-bold my-2" style="color: #8b263e;">2026-2</div> -->
-                        
-                        
-                        <div id="badge-estado" class="badge bg-secondary mb-3 fs-6 px-3 py-2">
-                            Verificando disponibilidad...
-                        </div>
+                <div class="carousel-inner rounded-4 shadow-sm border bg-white">
 
-                        <div>
-                            <!-- Botón principal de postulación -->
-                            <a id="btn-postulate" href="inscripcion.html" class="btn btn-action btn-lg px-5 py-3 fw-bold shadow-lg mt-2">
-                                ¡POSTÚLATE HOY!
-                            </a>
-                        </div>
-
-                        <!-- Alerta cuando las inscripciones están cerradas -->
-                        <div id="alerta-cerrado" class="alert alert-warning mt-3 border-0 shadow-sm" style="display: none;" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            El periodo de postulaciones para el ciclo <strong>2026-2</strong> ha finalizado.
+                    <!-- Diapositiva 1 -->
+                    <div class="carousel-item active">
+                        <div class="banner-slide" style="background-image: url('Gemini_Generated_Image_hjge2shjge2shjge.jpeg');">
+                            <div class="banner-overlay d-flex align-items-center justify-content-start p-4 p-md-5">
+                                <div class="banner-text-box text-start col-12 col-md-7 col-lg-6">
+                                    <h2 class="fw-bold fs-2 mb-2">Diseño Colaborativo</h2>
+                                    <p class="lead fs-6 mb-3">Formando estudiantes en proyectos de tecnología, diseño e innovación mediante un enfoque práctico.</p>
+                                    <a id="btn-postulate" href="inscripcion.html" class="btn btn-action fw-bold px-4 py-2">
+                                        ¡POSTÚLATE HOY!
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Diapositiva 2 -->
+                    <div class="carousel-item">
+                        <div class="banner-slide" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80');">
+                            <div class="banner-overlay d-flex align-items-center justify-content-end p-4 p-md-5">
+                                <div class="banner-text-box text-end col-12 col-md-7 col-lg-6">
+                                    <h2 class="fw-bold fs-2 mb-2">Fabricación Digital</h2>
+                                    <p class="lead fs-6 mb-3">Aprende y desarrolla soluciones con áreas interactivas de formación y prototipado.</p>
+                                    <a href="catalogo.html" class="btn btn-outline-dark rounded-pill fw-bold px-4 py-2">
+                                        VER CURSOS
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diapositiva 3 -->
+                    <div class="carousel-item">
+                        <div class="banner-slide" style="background-image: url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80');">
+                            <div class="banner-overlay d-flex align-items-center justify-content-start p-4 p-md-5">
+                                <div class="banner-text-box text-start col-12 col-md-7 col-lg-6">
+                                    <h2 class="fw-bold fs-2 mb-2">Proyectos e Investigación</h2>
+                                    <p class="lead fs-6 mb-3">Combinamos la teoría y la práctica con valores integrales para la formación diaria.</p>
+                                    <a href="galeria.html" class="btn btn-outline-primary rounded-pill fw-bold px-4 py-2">
+                                        VER GALERÍA
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon filter-dark" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide-to="next">
+                    <span class="carousel-control-next-icon filter-dark" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
 
             </div>
+
+            <!-- Alerta cuando las inscripciones están cerradas -->
+            <div id="alerta-cerrado" class="alert alert-warning mt-4 border-0 shadow-sm text-center" style="display: none;" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                El periodo de postulaciones para el ciclo <strong>2026-2</strong> ha finalizado.
+            </div>
+
         </div>
     </main>
 
     <!-- === PIE DE PÁGINA (Footer) === -->
-    <footer class="bg-white border-top py-3">
+    <footer class="border-top py-3 mt-auto">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <div class="text-secondary small fw-semibold">
-                <i class="bi bi-globe me-1" style="color: #2b5278;"></i> CEIC.EDU.VE/ADMISION
+                <i class="bi bi-globe me-1" style="color: var(--primary-blue);"></i> CEIC.EDU.VE/ADMISION
             </div>
             <div class="d-flex gap-4 text-secondary small fw-semibold">
-                <span><i class="bi bi-whatsapp me-1" style="color: #2b5278;"></i> +58 412 000 0000</span>
-                <span><i class="bi bi-whatsapp me-1" style="color: #2b5278;"></i> +58 412 111 1111</span>
+                <span><i class="bi bi-whatsapp me-1 text-success"></i> +58 412 000 0000</span>
+                <span><i class="bi bi-whatsapp me-1 text-success"></i> +58 412 111 1111</span>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS Bundle (Necesario para los desplegables) -->
+    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- LÓGICA DE CONTROL DE CICLO Y FECHA LÍMITE -->
+    <!-- LÓGICA DE FECHA LÍMITE DE INSCRIPCIÓN -->
     <script>
-        // === CONFIGURACIÓN ===
-        // Define aquí la fecha límite (Año, Mes-1, Día, Hora, Minuto, Segundo)
         const fechaLimiteInscripcion = new Date(2026, 8, 30, 23, 59, 59);
 
         function verificarEstadoInscripciones() {
             const ahora = new Date();
             
-            // Elementos del DOM a modificar
             const badgeEstado = document.getElementById('badge-estado');
             const btnPostulate = document.getElementById('btn-postulate');
             const navBtnInscripcion = document.getElementById('nav-btn-inscripcion');
             const alertaCerrado = document.getElementById('alerta-cerrado');
 
             if (ahora <= fechaLimiteInscripcion) {
-                // Periodo ACTIVO: Mostramos estado verde y habilitamos botones
-                badgeEstado.className = 'badge bg-success mb-3 fs-6 px-3 py-2';
+                badgeEstado.className = 'badge bg-success fs-6 px-3 py-2';
                 badgeEstado.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Proceso de Inscripción Abierto';
                 alertaCerrado.style.display = 'none';
             } else {
-                // Periodo CERRADO: Mostramos estado rojo y bloqueamos botones
-                badgeEstado.className = 'badge bg-danger mb-3 fs-6 px-3 py-2';
+                badgeEstado.className = 'badge bg-danger fs-6 px-3 py-2';
                 badgeEstado.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Inscripciones Cerradas';
                 
-                // Bloquear botón principal
-                btnPostulate.classList.add('disabled');
-                btnPostulate.removeAttribute('href'); // Evita navegación
-                btnPostulate.style.pointerEvents = 'none'; // Desactiva clics
+                if (btnPostulate) {
+                    btnPostulate.classList.add('disabled');
+                    btnPostulate.removeAttribute('href');
+                    btnPostulate.style.pointerEvents = 'none';
+                }
 
-                // Bloquear botón del menú
                 if (navBtnInscripcion) {
                     navBtnInscripcion.classList.add('disabled');
                     navBtnInscripcion.removeAttribute('href');
                     navBtnInscripcion.style.pointerEvents = 'none';
                 }
 
-                // Mostrar alerta informativa
                 alertaCerrado.style.display = 'block';
             }
         }
 
-        // Ejecutar la verificación inmediatamente cuando carga la página
         document.addEventListener('DOMContentLoaded', verificarEstadoInscripciones);
     </script>
 </body>
