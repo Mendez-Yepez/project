@@ -1,11 +1,11 @@
 /* === VARIABLES Y TEMA CLARO INSTITUCIONAL === */
         :root {
-            --primary-blue: #f8fcff;
+            --primary-blue: #bfdef5;
             --primary-red: #8b263e;
             --accent-gold: #0a0801;
             --bg-light: #057ff8;
             --text-dark: #212529;
-            --border-light: #e9ecef;
+            --border-light: #00050a;
         }
 
         body {
