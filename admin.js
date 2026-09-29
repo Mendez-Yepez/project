@@ -57,7 +57,7 @@ function cambiarVista(vista) {
 }
 
 /* =========================================================
-   CARGAR CURSOS Y ALUMNOS INSCRITOS
+   CARGAR CURSOS Y ALUMNOS INSCRITOS EN EL MENÚ LATERAL
    ========================================================= */
 let cursosGlobal = [];
 let cursoSeleccionadoId = null;
@@ -65,16 +65,15 @@ let alumnosGlobal = [];
 
 async function inicializarPanel() {
   try {
-    // 1. Obtener la lista de cursos
+    // 1. Obtener los cursos registrados
     const { data: cursos, error: errCursos } = await supabaseClient.from('cursos').select('*');
     if (errCursos) throw errCursos;
     cursosGlobal = cursos || [];
 
-    // 2. Obtener la lista general de inscripciones para contar
+    // 2. Obtener inscripciones para conteo por curso
     const { data: inscripciones, error: errInsc } = await supabaseClient.from('inscripciones').select('id, curso_id');
     if (errInsc) throw errInsc;
 
-    // Calcular la cantidad de inscritos por cada id de curso
     const conteoMap = {};
     (inscripciones || []).forEach(i => {
       conteoMap[i.curso_id] = (conteoMap[i.curso_id] || 0) + 1;
@@ -89,7 +88,7 @@ async function inicializarPanel() {
       return;
     }
 
-    // 3. Renderizar cada curso en el menú lateral con su total de alumnos
+    // 3. Crear lista de cursos dinámicamente con sus totales
     cursosGlobal.forEach((curso, index) => {
       const totalInscritos = conteoMap[curso.id] || 0;
       const div = document.createElement('div');
@@ -108,7 +107,6 @@ async function inicializarPanel() {
       courseListEl.appendChild(div);
     });
 
-    // Cargar automáticamente el primer curso si existe
     if (cursosGlobal.length > 0) {
       cargarAlumnosDeCurso(cursosGlobal[0].id);
     }
@@ -134,7 +132,6 @@ async function cargarAlumnosDeCurso(cursoId) {
     alumnosGlobal = data || [];
     renderizarAlumnos(alumnosGlobal);
 
-    // Actualizar dinámicamente el contador del curso activo
     if (cursoId) {
       const badgeCount = document.getElementById(`count_${cursoId}`);
       if (badgeCount) badgeCount.textContent = `${alumnosGlobal.length} inscrito/s`;
@@ -186,11 +183,22 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 });
 
 /* =========================================================
-   FICHA PERSONAL Y EXPORTAR A PDF
+   FICHA PERSONAL Y EXPORTAR A PDF (CON FOTO TIPO CARNET)
    ========================================================= */
 const fichaOverlay = document.getElementById('fichaOverlay');
 
 function verFicha(alumno) {
+  // Cargar foto tipo carnet en la esquina superior derecha
+  const fotoSlot = document.getElementById('fichaFotoSlot');
+  const urlFoto = alumno.foto_url || alumno.foto_carnet_url || alumno.foto;
+  
+  if (urlFoto) {
+    fotoSlot.innerHTML = `<img src="${urlFoto}" alt="Foto ${alumno.nombres}" onerror="this.onerror=null; this.parentNode.innerHTML='<span class=\'no-foto\'>Sin foto</span>';">`;
+  } else {
+    fotoSlot.innerHTML = `<span class="no-foto">📷<br>Sin foto</span>`;
+  }
+
+  // Renderizar información detallada
   const camposContainer = document.getElementById('fichaFields');
   camposContainer.innerHTML = `
     <div class="ficha-field"><span class="k">Nombres y Apellidos:</span><span class="v">${alumno.nombres} ${alumno.apellidos}</span></div>
@@ -205,6 +213,7 @@ function verFicha(alumno) {
     <div class="ficha-field"><span class="k">Nivel Educativo:</span><span class="v">${alumno.nivel_educativo || 'N/A'}</span></div>
     <div class="ficha-field"><span class="k">Institución / Empresa:</span><span class="v">${alumno.institucion || 'N/A'}</span></div>
   `;
+  
   fichaOverlay.classList.add('show');
 }
 
@@ -352,7 +361,7 @@ document.getElementById('formHorario').addEventListener('submit', async (e) => {
   }
 });
 
-// Inicialización
+// Inicialización automática
 document.addEventListener('DOMContentLoaded', () => {
   inicializarPanel();
 });
