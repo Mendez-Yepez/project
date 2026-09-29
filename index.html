@@ -68,7 +68,7 @@
             <!-- Estado del proceso -->
             <div class="text-center mb-3">
                 <div id="badge-estado" class="badge bg-secondary fs-6 px-3 py-2">
-                    
+                    Verificando disponibilidad...
                 </div>
             </div>
 
@@ -165,42 +165,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- LÓGICA DE FECHA LÍMITE DE INSCRIPCIÓN -->
-    <script>
-        const fechaLimiteInscripcion = new Date(2026, 8, 30, 23, 59, 59);
-
-        function verificarEstadoInscripciones() {
-            const ahora = new Date();
-            
-            const badgeEstado = document.getElementById('badge-estado');
-            const btnPostulate = document.getElementById('btn-postulate');
-            const navBtnInscripcion = document.getElementById('nav-btn-inscripcion');
-            const alertaCerrado = document.getElementById('alerta-cerrado');
-
-            if (ahora <= fechaLimiteInscripcion) {
-                badgeEstado.className = 'badge bg-success fs-6 px-3 py-2';
-                badgeEstado.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Proceso de Inscripción Abierto';
-                alertaCerrado.style.display = 'none';
-            } else {
-                badgeEstado.className = 'badge bg-danger fs-6 px-3 py-2';
-                badgeEstado.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Inscripciones Cerradas';
-                
-                if (btnPostulate) {
-                    btnPostulate.classList.add('disabled');
-                    btnPostulate.removeAttribute('href');
-                    btnPostulate.style.pointerEvents = 'none';
-                }
-
-                if (navBtnInscripcion) {
-                    navBtnInscripcion.classList.add('disabled');
-                    navBtnInscripcion.removeAttribute('href');
-                    navBtnInscripcion.style.pointerEvents = 'none';
-                }
-
-                alertaCerrado.style.display = 'block';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', verificarEstadoInscripciones);
-    </script>
+    
 </body>
 </html>
