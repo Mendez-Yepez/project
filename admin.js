@@ -39,7 +39,11 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
+<<<<<<< HEAD
 /* =========================================================
+=======
+/* ==========================================================
+>>>>>>> f94de59 (galeria y betas)
    NAVEGACIÓN ENTRE VISTAS DEL PANEL
    ========================================================= */
 function cambiarVista(vista) {
@@ -339,4 +343,19 @@ document.getElementById('formHorario').addEventListener('submit', async (e) => {
 });
 
 // Inicializar al cargar la ventana
+<<<<<<< HEAD
 window.onload = inicializarPanel;
+=======
+window.onload = inicializarPanel;
+
+//10 cli     10 pro       1 cli sin pedido      pedido 2 pro
+
+//mostrar todos los clientes 
+// / mostrar todos los pedidos ordenados de mayor a menor por su total mostrando nombre de cliente
+// /mostrar los pedidos realizados por clientes de nirgua 
+// /pedidos con total mayor a 200 con nombre de cliente 
+// / mostrar todos lo productos
+// /mostrar en una consulta nombre de cliente numero de pedido y el nombre del producto 
+// mostrar todos detalles de pedios incluyendonombre de cada producto
+//mostrar los pedidos que tengan el producto mouse 
+>>>>>>> f94de59 (galeria y betas)
