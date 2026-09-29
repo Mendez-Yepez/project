@@ -39,15 +39,8 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
-<<<<<<< HEAD
-/* =========================================================
-=======
-/* ==========================================================
->>>>>>> f94de59 (galeria y betas)
-   NAVEGACIÓN ENTRE VISTAS DEL PANEL
-   ========================================================= */
 function cambiarVista(vista) {
-  document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sidebar .course-item').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.vista-panel').forEach(el => el.style.display = 'none');
 
   if (vista === 'alumnos') {
@@ -72,23 +65,40 @@ let alumnosGlobal = [];
 
 async function inicializarPanel() {
   try {
-    const { data: cursos, error } = await supabaseClient.from('cursos').select('*');
-    if (error) throw error;
+    // 1. Obtener la lista de cursos
+    const { data: cursos, error: errCursos } = await supabaseClient.from('cursos').select('*');
+    if (errCursos) throw errCursos;
     cursosGlobal = cursos || [];
+
+    // 2. Obtener la lista general de inscripciones para contar
+    const { data: inscripciones, error: errInsc } = await supabaseClient.from('inscripciones').select('id, curso_id');
+    if (errInsc) throw errInsc;
+
+    // Calcular la cantidad de inscritos por cada id de curso
+    const conteoMap = {};
+    (inscripciones || []).forEach(i => {
+      conteoMap[i.curso_id] = (conteoMap[i.curso_id] || 0) + 1;
+    });
 
     const courseListEl = document.getElementById('courseList');
     courseListEl.innerHTML = '';
 
     if (cursosGlobal.length === 0) {
-      courseListEl.innerHTML = '<span style="font-size:0.8rem; color:var(--text-faint); padding:0.5rem;">No hay cursos. Crea uno nuevo.</span>';
+      courseListEl.innerHTML = '<span style="font-size:0.8rem; color:var(--text-faint); padding:0.5rem; display:block;">No hay cursos registrados.</span>';
       cargarAlumnosDeCurso(null);
       return;
     }
 
+    // 3. Renderizar cada curso en el menú lateral con su total de alumnos
     cursosGlobal.forEach((curso, index) => {
+      const totalInscritos = conteoMap[curso.id] || 0;
       const div = document.createElement('div');
       div.className = `course-item ${index === 0 ? 'active' : ''}`;
-      div.innerHTML = `<span class="cname">${curso.nombre}</span><span class="ccount" id="count_${curso.id}">Cargando...</span>`;
+      div.id = `course_item_${curso.id}`;
+      div.innerHTML = `
+        <span class="cname">${curso.nombre}</span>
+        <span class="ccount" id="count_${curso.id}">${totalInscritos} inscrito/s</span>
+      `;
       div.onclick = () => {
         document.querySelectorAll('.sidebar .course-item').forEach(el => el.classList.remove('active'));
         div.classList.add('active');
@@ -98,6 +108,7 @@ async function inicializarPanel() {
       courseListEl.appendChild(div);
     });
 
+    // Cargar automáticamente el primer curso si existe
     if (cursosGlobal.length > 0) {
       cargarAlumnosDeCurso(cursosGlobal[0].id);
     }
@@ -123,6 +134,7 @@ async function cargarAlumnosDeCurso(cursoId) {
     alumnosGlobal = data || [];
     renderizarAlumnos(alumnosGlobal);
 
+    // Actualizar dinámicamente el contador del curso activo
     if (cursoId) {
       const badgeCount = document.getElementById(`count_${cursoId}`);
       if (badgeCount) badgeCount.textContent = `${alumnosGlobal.length} inscrito/s`;
@@ -168,7 +180,7 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
   const filtrados = alumnosGlobal.filter(a => 
     `${a.nombres} ${a.apellidos}`.toLowerCase().includes(term) ||
-    a.numero_identificacion.toLowerCase().includes(term)
+    (a.numero_identificacion && a.numero_identificacion.toLowerCase().includes(term))
   );
   renderizarAlumnos(filtrados);
 });
@@ -182,11 +194,11 @@ function verFicha(alumno) {
   const camposContainer = document.getElementById('fichaFields');
   camposContainer.innerHTML = `
     <div class="ficha-field"><span class="k">Nombres y Apellidos:</span><span class="v">${alumno.nombres} ${alumno.apellidos}</span></div>
-    <div class="ficha-field"><span class="k">Cédula / Identificación:</span><span class="v">${alumno.nacionalidad || ''} - ${alumno.numero_identificacion}</span></div>
+    <div class="ficha-field"><span class="k">Cédula / Identificación:</span><span class="v">${alumno.nacionalidad || ''} ${alumno.numero_identificacion}</span></div>
     <div class="ficha-field"><span class="k">Fecha de Nacimiento:</span><span class="v">${alumno.fecha_nacimiento || 'N/A'}</span></div>
     <div class="ficha-field"><span class="k">Sexo:</span><span class="v">${alumno.sexo || 'N/A'}</span></div>
-    <div class="ficha-field"><span class="k">Teléfono / WhatsApp:</span><span class="v">${alumno.telefono} / ${alumno.whatsapp}</span></div>
-    <div class="ficha-field"><span class="k">Correo Electrónico:</span><span class="v">${alumno.correo_electronico}</span></div>
+    <div class="ficha-field"><span class="k">Teléfono / WhatsApp:</span><span class="v">${alumno.telefono || 'N/A'} / ${alumno.whatsapp || 'N/A'}</span></div>
+    <div class="ficha-field"><span class="k">Correo Electrónico:</span><span class="v">${alumno.correo_electronico || 'N/A'}</span></div>
     <div class="ficha-field"><span class="k">Ubicación:</span><span class="v">${alumno.municipio_ciudad || ''}, ${alumno.estado || ''}</span></div>
     <div class="ficha-field"><span class="k">Dirección:</span><span class="v">${alumno.direccion || 'N/A'}</span></div>
     <div class="ficha-field"><span class="k">Ocupación:</span><span class="v">${alumno.ocupacion || 'N/A'}</span></div>
@@ -242,14 +254,12 @@ document.getElementById('formCrearCurso').addEventListener('submit', async (e) =
 
   try {
     if (id) {
-      // Actualizar
       const { error } = await supabaseClient.from('cursos').update({
         nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion
       }).eq('id', id);
       if (error) throw error;
       alert('¡Curso actualizado con éxito!');
     } else {
-      // Insertar nuevo
       const { error } = await supabaseClient.from('cursos').insert([{
         nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion
       }]);
@@ -342,20 +352,7 @@ document.getElementById('formHorario').addEventListener('submit', async (e) => {
   }
 });
 
-// Inicializar al cargar la ventana
-<<<<<<< HEAD
-window.onload = inicializarPanel;
-=======
-window.onload = inicializarPanel;
-
-//10 cli     10 pro       1 cli sin pedido      pedido 2 pro
-
-//mostrar todos los clientes 
-// / mostrar todos los pedidos ordenados de mayor a menor por su total mostrando nombre de cliente
-// /mostrar los pedidos realizados por clientes de nirgua 
-// /pedidos con total mayor a 200 con nombre de cliente 
-// / mostrar todos lo productos
-// /mostrar en una consulta nombre de cliente numero de pedido y el nombre del producto 
-// mostrar todos detalles de pedios incluyendonombre de cada producto
-//mostrar los pedidos que tengan el producto mouse 
->>>>>>> f94de59 (galeria y betas)
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+  inicializarPanel();
+});
