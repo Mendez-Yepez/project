@@ -127,6 +127,6 @@
                 height: 320px;
             }
             .banner-overlay, .banner-overlay.justify-content-end {
-                background: rgba(255, 255, 255, 0.90);
+                background: rgba(230, 190, 190, 0.9);
             }
         }
