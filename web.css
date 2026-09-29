@@ -62,11 +62,12 @@
         }
 
         .banner-slide {
-            height: 380px;
+            height: 520px; /* Cambia de 320px o 380px a 520px (o más si lo prefieres) */
             background-size: cover;
             background-position: center;
             position: relative;
-        }
+        }  
+        
 
         /* Superposición clara con degradado para asegurar lectura clara */
         .banner-overlay {
