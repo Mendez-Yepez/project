@@ -1,171 +1,79 @@
-/* === VARIABLES Y CONFIGURACIÓN BASE === */
+/* === CONFIGURACIÓN Y TEMA EDUCATIVO OSCURO === */
 :root {
-    --primary-blue: #2b5278;
-    --primary-red: #8b263e;
-    --accent-gold: #d4af37;
-    --bg-light: #f8f9fa;
-    --text-dark: #333333;
+    --bg-dark: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --primary-blue: #38bdf8;
+    --accent-gold: #f59e0b;
+    --accent-red: #e11d48;
+    --text-light: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-glow: rgba(56, 189, 248, 0.2);
 }
 
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: var(--text-dark);
-    background-color: #ffffff;
+    color: var(--text-light);
+    background-color: var(--bg-dark);
+    /* Fondo con micro-patrón tecnológico suave */
+    background-image: 
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(225, 29, 72, 0.08) 0%, transparent 40%),
+        linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* === CABECERA Y NAVEGACIÓN === */
+/* === ESTILOS DEL HEADER === */
 .top-header {
-    background-color: #ffffff;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
 }
 
 .slogan {
     letter-spacing: 1px;
     font-size: 0.85rem;
+    color: var(--accent-gold);
+}
+
+/* === ESTILOS DE LA BARRA DE NAVEGACIÓN === */
+.navbar {
+    background: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-color: var(--border-glow) !important;
 }
 
 .navbar .nav-link {
-    color: var(--primary-blue);
-    font-size: 0.95rem;
+    color: var(--text-light) !important;
+    font-size: 0.85rem;
+    font-weight: 600;
     padding: 0.5rem 1rem !important;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .navbar .nav-link:hover, 
 .navbar .nav-link.active {
-    color: var(--primary-red);
+    color: var(--primary-blue) !important;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
 }
 
 #nav-btn-preinscripcion {
-    border-color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
     color: var(--primary-blue);
+    border-radius: 20px;
     transition: all 0.3s ease;
 }
 
 #nav-btn-preinscripcion:hover {
     background-color: var(--primary-blue);
-    color: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
 }
 
-/* === SECCIÓN HERO === */
-.hero-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-}
-
-.hero-text-box h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    letter-spacing: -1px;
-}
-
-.hero-text-box .display-1 {
-    font-size: clamp(3.5rem, 7vw, 5.5rem);
-    line-height: 1;
-}
-
-/* Botón principal de acción profesional */
-.btn-action {
-    background-color: var(--primary-red);
-    color: #ffffff;
-    border: none;
-    border-radius: 50px;
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-action:hover {
-    background-color: #6e1e31;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(139, 38, 62, 0.3);
-}
-
-/* Estado deshabilitado cuando cierra el ciclo */
-.btn-action.disabled {
-    background-color: #6c757d !important;
-    opacity: 0.65;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Alerta de cierre estilizada */
-#alerta-cerrado strong {
-    color: var(--primary-red);
-}
-
-/* === COLLAGE DE ROMBOS (RHOMBUS COLLAGE) === */
-.rhombus-collage {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    height: 400px;
-    margin: 0 auto;
-}
-
-.rhombus-grid {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.rhombus-item {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    transform: rotate(45deg);
-    overflow: hidden;
-    border: 4px solid #ffffff;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    border-radius: 12px;
-    background-color: var(--primary-blue);
-    transition: transform 0.3s ease, z-index 0.3s ease;
-}
-
-.rhombus-item:hover {
-    transform: rotate(45deg) scale(1.05);
-    z-index: 10;
-}
-
-/* Posicionamiento de los rombos en la cuadrícula */
-.rhombus-item:nth-child(1) { top: 0; left: 110px; }
-.rhombus-item:nth-child(2) { top: 110px; left: 0; }
-.rhombus-item:nth-child(3) { top: 110px; left: 220px; }
-.rhombus-item:nth-child(4) { top: 220px; left: 110px; }
-.rhombus-item:nth-child(5) { top: 110px; left: 110px; z-index: 2; width: 180px; height: 180px; }
-
-/* Ajuste de la imagen dentro del rombo girado */
-.rhombus-item img {
-    width: 142%; /* sqrt(2) * 100% para cubrir el rombo */
-    height: 142%;
-    object-fit: cover;
-    transform: rotate(-45deg) scale(1.1); /* Des-rotar imagen */
-    position: absolute;
-    top: -21%;
-    left: -21%;
-}
-
-/* === PIE DE PÁGINA (FOOTER) === */
-footer {
-    background-color: #ffffff;
-    font-size: 0.9rem;
-}
-
-/* === ADAPTABILIDAD (RESPONSIVE) === */
-@media (max-width: 992px) {
-    .rhombus-collage {
-        max-width: 300px;
-        height: 300px;
-        margin-bottom: 40px;
-    }
-
-    .rhombus-item {
-        width: 140px;
-        height: 140px;
-    }
-
-    .rhombus-item:nth-child(1) { top: 0; left: 80px; }
-    .rhombus-item:nth-child(2) { top: 80px; left: 0; }
-    .rhombus-item:nth-child(3) { top: 80px; left: 160px; }
-    .rhombus-item:nth-child(4) { top: 160px; left: 80px; }
-    .rhombus-item:nth-child(5) { top: 80px; left: 80px; width: 140px; height: 140px; }
+/* === ESTILOS DEL FOOTER === */
+.top-info-bar {
+    background: #090d16;
+    border-color: var(--border-glow) !important;
 }
