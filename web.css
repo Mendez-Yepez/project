@@ -1,156 +1,198 @@
-/* === VARIABLES Y TEMA CLARO INSTITUCIONAL === */
-        :root {
-            --primary-blue: #2b5278;
-            --primary-red: #8b263e;
-            --accent-gold: #d43737;
+:root {
+            --primary-blue: #0a2540;
+            --primary-teal: #005f73;
+            --primary-red: #bb2d3b;
+            --gold-accent: #c69214;
+            --gold-light: #e6c667;
             --bg-light: #f8f9fa;
-            --text-dark: #212529;
-            --border-light: #e9ecef;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
             background-color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* === CABECERA Y BARRA DE NAVEGACIÓN === */
+        /* --- Top Bar de Contactos --- */
+        .top-bar {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            font-size: 0.825rem;
+        }
+
+        /* --- Header con Logo Principal --- */
         .top-header {
             background-color: #ffffff;
         }
 
-        .slogan {
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
-
-        .navbar {
-            background-color: #ffffff !important;
-        }
-
-        .navbar .nav-link {
-            color: var(--primary-blue) !important;
-            font-size: 0.9rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem !important;
-            transition: color 0.2s ease;
-        }
-
-        .navbar .nav-link:hover, 
-        .navbar .nav-link.active {
-            color: var(--primary-red) !important;
-        }
-
-        #nav-btn-inscripcion {
-            border-color: var(--primary-blue);
-            color: var(--primary-blue);
-            transition: all 0.3s ease;
-        }
-
-        #nav-btn-inscripcion:hover {
-            background-color: var(--primary-blue);
-            color: #ffffff;
-        }
-
-        /* === CARRUSEL ANIMADO EN TEMA CLARO === */
-        .hero-carousel-section {
-            background-color: #f8f9fa;
-        }
-
-        .banner-slide {
-            height: 520px; /* Cambia de 320px o 380px a 520px (o más si lo prefieres) */
-            background-size: cover;
-            background-position: center;
-            position: relative;
-}
-        
-
-       
-        .banner-overlay {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 50%, rgba(255, 255, 255, 0.10) 100%);
-        }
-
-        .banner-overlay.justify-content-end {
-            background: linear-gradient(270deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 50%, rgba(255, 255, 255, 0.10) 100%);
-        }
-
-        .banner-text-box h2 {
-            color: var(--primary-blue);
-            font-weight: 800;
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
-        }
-
-        .banner-text-box p {
-            color: #1a252f;
-            font-weight: 500;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-        }
-        
-        .btn-action {
-            background-color: var(--primary-red);
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .btn-action:hover {
-            background-color: #6e1e31;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(139, 38, 62, 0.25);
-        }
-
-        .btn-action.disabled {
-            background-color: #6c757d !important;
-            opacity: 0.65;
-            transform: none;
-            box-shadow: none;
-        }
-
-        
-        footer {
+        /* --- Navbar Flotante / Navegación --- */
+        .navbar-floating {
             background-color: #ffffff;
         }
 
-        @media (max-width: 768px) {
-            .banner-slide {
-                height: 320px;
-            }
-            .banner-overlay, .banner-overlay.justify-content-end {
-                background: rgba(255, 255, 255, 0.90);
-            }
-            
-.oferta-cursos-section {
-    background-color: #fcfcfc;
-}
+        .nav-link {
+            color: var(--primary-blue) !important;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
 
-.curso-grid-item {
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
-}
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-teal) !important;
+        }
 
-.curso-grid-item:hover {
-    background-color: #ffffff;
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
-}
+        /* --- Barra de Anuncio Alert --- */
+        .announcement-bar {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #bee5eb;
+        }
 
-.curso-grid-item .icon-box i {
-    transition: transform 0.3s ease;
-    display: inline-block;
-}
+        /* --- Hero Section IUNAV --- */
+        .hero-section {
+            position: relative;
+            background-color: #ffffff;
+            overflow: hidden;
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+            border-bottom: 4px solid var(--gold-accent);
+        }
 
-.curso-grid-item:hover .icon-box i {
-    transform: scale(1.15);
-}
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
 
-.tracking-wide {
-    letter-spacing: 2px;
-}
+        /* Formas Circulares de Imágenes */
+        .circle-img-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #ffffff;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .circle-img-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Escudo Dorado Flotante */
+        .floating-shield {
+            position: absolute;
+            bottom: -20px;
+            right: 15%;
+            z-index: 10;
+            width: 140px;
+        }
+
+        /* --- Sección Cursos / Programas Hexagonales --- */
+        .courses-section {
+            background-color: #f4f6f8;
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--primary-teal);
+        }
+
+        /* Tarjeta Estilo Hexagonal / Biselada */
+        .hex-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hex-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: var(--gold-accent);
+        }
+
+        .hex-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .hex-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+        }
+
+        .hex-subtitle {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .hex-link {
+            font-size: 0.85rem;
+            color: var(--primary-teal);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-catalog {
+            background-color: var(--primary-teal);
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 0.8rem 2.5rem;
+            border: none;
+            clip-path: polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-catalog:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        footer a {
+            color: #555;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--primary-teal);
         }
