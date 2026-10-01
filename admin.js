@@ -46,10 +46,16 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
+// NUEVO: Cerrar Sesión
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  sessionStorage.removeItem('ceic_role');
+  sessionStorage.removeItem('ceic_username');
+  window.location.href = 'login.html';
+});
+
 /* =========================================================
    NAVEGACIÓN ENTRE VISTAS
    ========================================================= */
-// 1. Actualizar el mapa de vistas
 function cambiarVista(vista) {
   document.querySelectorAll('.sidebar .course-item').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.vista-panel').forEach(el => el.style.display = 'none');
@@ -60,7 +66,7 @@ function cambiarVista(vista) {
     pagos:    ['menuPagos',    'seccionPagos'],
     cursos:   ['menuCursos',   'seccionCursos'],
     horarios: ['menuHorarios', 'seccionHorarios'],
-    fechas:   ['menuFechas',   'seccionFechas'] // <- Opción agregada
+    fechas:   ['menuFechas',   'seccionFechas']
   };
   const [menu, seccion] = mapa[vista];
   if (menu && seccion) {
@@ -70,10 +76,9 @@ function cambiarVista(vista) {
 
   if (vista === 'cursos') cargarCursosAdmin();
   if (vista === 'pagos') cargarPagos();
-  if (vista === 'fechas') cargarFechasInscripcion(); // <- Cargar fechas al entrar
+  if (vista === 'fechas') cargarFechasInscripcion();
 }
 
-// 2. Cargar fechas guardadas
 async function cargarFechasInscripcion() {
   try {
     const { data, error } = await supabaseClient.from('configuracion').select('*');
@@ -92,7 +97,6 @@ async function cargarFechasInscripcion() {
   }
 }
 
-// 3. Guardar las nuevas fechas
 document.getElementById('formFechasInscripcion')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const inicio = document.getElementById('fechaInicioInscripcion').value;
@@ -118,6 +122,7 @@ document.getElementById('formFechasInscripcion')?.addEventListener('submit', asy
     msg.textContent = 'Error al guardar las fechas.';
   }
 });
+
 /* =========================================================
    DATOS: CURSOS E INSCRITOS
    ========================================================= */
@@ -404,12 +409,6 @@ document.getElementById('formHorario').addEventListener('submit', async (e) => {
 
 /* =========================================================
    PAGOS DE INSCRIPCIÓN
-   =========================================================
-   AJUSTA ESTA CONFIGURACIÓN a los nombres reales de tu base de datos.
-   - Los archivos se buscan primero en las columnas de la tabla
-     'inscripciones' (la primera que tenga valor).
-   - Si no hay columna con valor, se busca en la carpeta del bucket
-     un archivo cuyo nombre contenga el número de identificación.
    ========================================================= */
 const PAGOS_CFG = {
   bucket: 'documentos-inscripcion',
@@ -421,13 +420,13 @@ const PAGOS_CFG = {
   colReferencia: ['referencia', 'nro_referencia', 'numero_referencia'],
   colMetodo: ['metodo_pago', 'forma_pago'],
   colFechaPago: ['fecha_pago'],
-  colEstado: 'estado_pago',      // pendiente | aceptado | archivado
+  colEstado: 'estado_pago',
   colMotivo: 'motivo_estado',
   colFechaRevision: 'fecha_revision'
 };
 
-let pagosCache = {};          // id inscripción -> { pago, cedula }
-let listadoCarpetas = {};     // carpeta -> archivos
+let pagosCache = {};
+let listadoCarpetas = {};
 let pagoArchivandoId = null;
 
 const pick = (o, cols) => {
@@ -602,7 +601,6 @@ async function aceptarPago(id) {
   try { adminName = sessionStorage.getItem('ceic_username') || 'admin'; } catch (e) {}
 
   try {
-    // 1. Guardar (o actualizar) el pago aceptado en la tabla 'pagos'
     const registro = {
       inscripcion_id: a.id,
       curso_id: a.curso_id || null,
@@ -626,11 +624,9 @@ async function aceptarPago(id) {
       .upsert(registro, { onConflict: 'inscripcion_id' });
     if (errPago) throw errPago;
 
-    // 2. Marcar la inscripción como aceptada
     try {
       await actualizarEstadoPago(id, 'aceptado', null);
     } catch (err) {
-      // Si falla, deshacer el registro en 'pagos' para no dejar datos inconsistentes
       await supabaseClient.from('pagos').delete().eq('inscripcion_id', id);
       throw err;
     }
@@ -658,7 +654,6 @@ document.getElementById('motivoConfirm').onclick = async () => {
   const id = pagoArchivandoId;
   try {
     await actualizarEstadoPago(id, 'archivado', motivo);
-    // Si el pago había sido aceptado antes, ya no debe figurar en la tabla 'pagos'
     await supabaseClient.from('pagos').delete().eq('inscripcion_id', id);
     cerrarMotivo();
     await cargarPagos();
@@ -673,7 +668,6 @@ async function rechazarPago(id) {
   if (!confirm(`¿Rechazar el pago de ${nombre}?\n\nSe ELIMINARÁ su inscripción de la base de datos junto con el comprobante y la foto de cédula. Esta acción no se puede deshacer.`)) return;
 
   try {
-    // 1. Eliminar la inscripción
     const { data, error } = await supabaseClient.from('inscripciones')
       .delete().eq('id', id).select();
     if (error) throw error;
@@ -681,7 +675,6 @@ async function rechazarPago(id) {
       throw new Error('No se eliminó ningún registro. Revisa las políticas RLS de la tabla inscripciones.');
     }
 
-    // 2. Eliminar los archivos del almacenamiento
     const c = pagosCache[id] || {};
     const rutas = [c.pago && c.pago.path, c.cedula && c.cedula.path].filter(Boolean);
     if (rutas.length) {
