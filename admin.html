@@ -52,7 +52,7 @@
   }
   .icon-btn:hover{transform:scale(1.05);}
   
-  /* --- ESTILO NUEVO: Botón de Cerrar Sesión --- */
+  /* --- Botón de Cerrar Sesión --- */
   #logoutBtn:hover {
     background: rgba(128, 0, 0, 0.15);
     border-color: var(--accent-red);
@@ -116,6 +116,7 @@
     font-size:0.78rem; font-weight:600; cursor:pointer; white-space:nowrap;
   }
   .ficha-btn:hover{background:var(--primary-blue-light);}
+  .ficha-btn:disabled{opacity:0.6; cursor:not-allowed;}
 
   .stats-row{display:flex; gap:0.8rem; margin-bottom:1.1rem; flex-wrap:wrap;}
   .stat{
@@ -232,7 +233,7 @@
       </svg>
     </button>
 
-    <!-- NUEVO: Botón de Cerrar Sesión -->
+    <!-- Botón de Cerrar Sesión -->
     <button class="icon-btn" id="logoutBtn" aria-label="Cerrar sesión" title="Cerrar sesión">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -339,26 +340,33 @@
       </div>
     </div>
 
-    <!-- VISTA 4: SUBIR HORARIOS -->
+    <!-- VISTA 4: SUBIR HORARIOS (UNO POR CURSO) -->
     <div id="seccionHorarios" class="vista-panel" style="display: none;">
       <div class="main-header">
         <div>
-          <h1>Subir Horarios Institucionales</h1>
-          <p>Sube archivos PDF o imágenes con los horarios para los estudiantes</p>
+          <h1>Subir Horarios por Curso</h1>
+          <p>Sube la imagen del horario de cada curso de forma individual</p>
         </div>
       </div>
-      <div class="panel" style="padding: 1.8rem; max-width: 600px;">
+
+      <div class="panel" style="padding: 1.8rem; max-width: 600px; margin-bottom: 1.2rem;">
         <form id="formHorario">
           <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Título del Horario</label>
-            <input type="text" id="tituloHorario" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Horario Ciclo 2026-2" required>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Curso</label>
+            <select id="cursoHorario" class="search-box" style="width: 100%; color: var(--text-main);" required></select>
           </div>
           <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Archivo (PDF o Imagen)</label>
-            <input type="file" id="archivoHorario" accept=".pdf,image/*" required style="width: 100%; color: var(--text-main);">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Imagen del horario (JPG, PNG o PDF)</label>
+            <input type="file" id="archivoHorario" accept="image/*,.pdf" required style="width: 100%; color: var(--text-main);">
           </div>
-          <button type="submit" class="ficha-btn" style="width: 100%; padding: 0.7rem;">Subir Horario</button>
+          <div id="previewHorario" style="margin-bottom: 1rem;"></div>
+          <button type="submit" class="ficha-btn" id="btnSubirHorario" style="width: 100%; padding: 0.7rem;">Subir Horario</button>
         </form>
+      </div>
+
+      <div class="panel" style="padding: 1.5rem;">
+        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Horarios cargados</h3>
+        <div id="listaHorariosAdmin" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
       </div>
     </div>
 

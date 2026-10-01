@@ -10,14 +10,10 @@
 </head>
 <body class="bg-light">
 
-    <!-- Navbar Simple o de navegación -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index.html" style="color: #2b5278;">CEIC · CATÁLOGO</a>
-            <div class="ms-auto">
-                
-                </a>
-            </div>
         </div>
     </nav>
 
@@ -35,6 +31,21 @@
         </div>
     </div>
 
+    <!-- Modal Ver Horario -->
+    <div class="modal fade" id="modalHorario" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 12px; overflow: hidden;">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="modalHorarioTitulo" style="color: #2b5278;">Horario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center p-2" id="modalHorarioCuerpo"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (necesario para el modal) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Cliente de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -42,9 +53,15 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let cursosCatalogo = [];
+
+        const esc = v => String(v ?? '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
         async function cargarCatalogoPublico() {
             const contenedor = document.getElementById('contenedorCatalogo');
-            
+
             const { data, error } = await supabaseClient.from('cursos').select('*');
 
             if (error) {
@@ -58,29 +75,39 @@
                 return;
             }
 
-            contenedor.innerHTML = '';
-            
-            data.forEach(curso => {
-                contenedor.innerHTML += `
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-                            <div class="card-body d-flex flex-column">
-                                <h4 class="card-title fw-bold mb-3" style="color: #2b5278;">${curso.nombre}</h4>
-                                <p class="card-text text-secondary flex-grow-1">${curso.descripcion || 'Sin descripción detallada.'}</p>
-                                
-                                <ul class="list-unstyled small text-muted mb-4 bg-light p-3 rounded">
-                                    <li><strong>Modalidad:</strong> ${curso.modalidad || 'No especificada'}</li>
-                                    <li><strong>Costo:</strong> $${curso.costo || '0.00'}</li>
-                                    <li><strong>Cupos Máximos:</strong> ${curso.cupo_maximo || 'No especificado'}</li>
-                                    <li><strong>Culminación:</strong> ${curso.fecha_culminacion || 'Por definir'}</li>
-                                </ul>
+            cursosCatalogo = data;
+            contenedor.innerHTML = data.map(curso => `
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title fw-bold mb-3" style="color: #2b5278;">${esc(curso.nombre)}</h4>
+                            <p class="card-text text-secondary flex-grow-1">${esc(curso.descripcion || 'Sin descripción detallada.')}</p>
 
-                               
-                            </div>
+                            <ul class="list-unstyled small text-muted mb-3 bg-light p-3 rounded">
+                                <li><strong>Modalidad:</strong> ${esc(curso.modalidad || 'No especificada')}</li>
+                                <li><strong>Costo:</strong> $${esc(curso.costo || '0.00')}</li>
+                                <li><strong>Cupos Máximos:</strong> ${esc(curso.cupo_maximo || 'No especificado')}</li>
+                                <li><strong>Culminación:</strong> ${esc(curso.fecha_culminacion || 'Por definir')}</li>
+                            </ul>
+
+                            ${curso.horario_url
+                                ? `<button class="btn w-100 text-white fw-semibold" style="background:#2b5278;" onclick="verHorario('${esc(curso.id)}')">📅 Ver horario</button>`
+                                : `<button class="btn btn-outline-secondary w-100" disabled>Horario no disponible</button>`}
                         </div>
                     </div>
-                `;
-            });
+                </div>
+            `).join('');
+        }
+
+        function verHorario(id) {
+            const curso = cursosCatalogo.find(c => String(c.id) === String(id));
+            if (!curso || !curso.horario_url) return;
+            document.getElementById('modalHorarioTitulo').textContent = 'Horario · ' + curso.nombre;
+            const esPdf = /\.pdf(\?|$)/i.test(curso.horario_url);
+            document.getElementById('modalHorarioCuerpo').innerHTML = esPdf
+                ? `<iframe src="${esc(curso.horario_url)}" style="width:100%; height:75vh; border:none;"></iframe>`
+                : `<img src="${esc(curso.horario_url)}" alt="Horario" class="img-fluid rounded">`;
+            new bootstrap.Modal(document.getElementById('modalHorario')).show();
         }
 
         window.onload = cargarCatalogoPublico;

@@ -46,7 +46,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
-// NUEVO: Cerrar Sesión
+// Cerrar Sesión
 document.getElementById('logoutBtn').addEventListener('click', () => {
   sessionStorage.removeItem('ceic_role');
   sessionStorage.removeItem('ceic_username');
@@ -76,6 +76,7 @@ function cambiarVista(vista) {
 
   if (vista === 'cursos') cargarCursosAdmin();
   if (vista === 'pagos') cargarPagos();
+  if (vista === 'horarios') cargarHorariosAdmin();
   if (vista === 'fechas') cargarFechasInscripcion();
 }
 
@@ -137,6 +138,7 @@ async function inicializarPanel() {
     const { data: cursos, error: e1 } = await supabaseClient.from('cursos').select('*');
     if (e1) throw e1;
     cursosGlobal = cursos || [];
+    llenarSelectHorario();
 
     const { data: insc, error: e2 } = await supabaseClient.from('inscripciones').select('*');
     if (e2) throw e2;
@@ -382,30 +384,145 @@ async function eliminarCurso(id) {
 }
 
 /* =========================================================
-   SUBIR HORARIOS
+   SUBIR HORARIOS (UNO POR CURSO)
    ========================================================= */
-document.getElementById('formHorario').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const archivo = document.getElementById('archivoHorario').files[0];
+const HORARIOS_BUCKET = 'horarios';
 
-  try {
-    const fileName = `${Date.now()}_${archivo.name}`;
-    const { data, error } = await supabaseClient.storage
-      .from('documentos-inscripcion')
-      .upload(`horarios/${fileName}`, archivo);
+function llenarSelectHorario() {
+  const sel = document.getElementById('cursoHorario');
+  if (!sel) return;
+  const previo = sel.value;
+  sel.innerHTML = '<option value="">— Selecciona un curso —</option>' +
+    cursosGlobal.map(c => `<option value="${esc(c.id)}">${esc(c.nombre)}</option>`).join('');
+  sel.value = previo;
+}
 
-    if (error) throw error;
+function pathDesdeUrlHorario(url) {
+  const m = (url || '').match(/\/object\/public\/horarios\/([^?]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
 
-    const { data: publicUrl } = supabaseClient.storage
-      .from('documentos-inscripcion')
-      .getPublicUrl(data.path);
-
-    alert('¡Horario subido con éxito! Enlace disponible: ' + publicUrl.publicUrl);
-    document.getElementById('formHorario').reset();
-  } catch (err) {
-    alert('Error al subir el horario: ' + err.message);
+// Vista previa antes de subir
+document.getElementById('archivoHorario').addEventListener('change', (e) => {
+  const prev = document.getElementById('previewHorario');
+  const f = e.target.files[0];
+  if (!f) { prev.innerHTML = ''; return; }
+  if (f.type.startsWith('image/')) {
+    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--panel-border);">`;
+  } else {
+    prev.innerHTML = `<div class="stu-sub">📄 ${esc(f.name)}</div>`;
   }
 });
+
+document.getElementById('formHorario').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const cursoId = document.getElementById('cursoHorario').value;
+  const archivo = document.getElementById('archivoHorario').files[0];
+  if (!cursoId || !archivo) { alert('Selecciona un curso y un archivo.'); return; }
+
+  const btn = document.getElementById('btnSubirHorario');
+  btn.textContent = 'Subiendo...';
+  btn.disabled = true;
+
+  try {
+    const curso = cursosGlobal.find(c => String(c.id) === String(cursoId));
+    const ext = (archivo.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `curso_${cursoId}_${Date.now()}.${ext}`;
+
+    const { error: errUp } = await supabaseClient.storage
+      .from(HORARIOS_BUCKET).upload(path, archivo, { contentType: archivo.type });
+    if (errUp) throw errUp;
+
+    const { data: pub } = supabaseClient.storage.from(HORARIOS_BUCKET).getPublicUrl(path);
+
+    const { data: upd, error: errDb } = await supabaseClient.from('cursos')
+      .update({ horario_url: pub.publicUrl }).eq('id', cursoId).select();
+    if (errDb) throw errDb;
+    if (!upd || !upd.length) {
+      throw new Error('No se modificó ningún curso. Revisa las políticas RLS de la tabla cursos.');
+    }
+
+    // Borra el horario anterior de ese curso (si lo había)
+    const anterior = pathDesdeUrlHorario(curso && curso.horario_url);
+    if (anterior) await supabaseClient.storage.from(HORARIOS_BUCKET).remove([anterior]);
+
+    alert('¡Horario subido con éxito para: ' + (curso ? curso.nombre : 'el curso') + '!');
+    document.getElementById('formHorario').reset();
+    document.getElementById('previewHorario').innerHTML = '';
+    await inicializarPanel();
+    cargarHorariosAdmin();
+  } catch (err) {
+    alert('Error al subir el horario: ' + err.message);
+  } finally {
+    btn.textContent = 'Subir Horario';
+    btn.disabled = false;
+  }
+});
+
+async function cargarHorariosAdmin() {
+  const cont = document.getElementById('listaHorariosAdmin');
+  cont.innerHTML = '<p style="color:var(--text-faint);">Cargando...</p>';
+
+  const { data, error } = await supabaseClient.from('cursos').select('*');
+  if (error) { cont.innerHTML = '<p style="color:red;">Error al cargar cursos.</p>'; return; }
+  cursosGlobal = data || [];
+  llenarSelectHorario();
+
+  if (!cursosGlobal.length) {
+    cont.innerHTML = '<p style="color:var(--text-faint);">No hay cursos registrados.</p>';
+    return;
+  }
+
+  cont.innerHTML = cursosGlobal.map(c => {
+    const tiene = !!c.horario_url;
+    const pdf = esPdf(c.horario_url);
+    const mini = !tiene
+      ? `<div class="media-box" style="width:70px; aspect-ratio:1; cursor:default;">—</div>`
+      : pdf
+        ? `<div class="media-box" style="width:70px; aspect-ratio:1;" onclick="verHorarioAdmin('${esc(c.id)}')">📄</div>`
+        : `<div class="media-box" style="width:70px; aspect-ratio:1;" onclick="verHorarioAdmin('${esc(c.id)}')"><img src="${esc(c.horario_url)}" alt="Horario" loading="lazy"></div>`;
+    return `
+      <div style="background:var(--input-bg); border:1px solid var(--panel-border); padding:0.8rem 1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div style="display:flex; align-items:center; gap:0.8rem;">
+          ${mini}
+          <div>
+            <strong>${esc(c.nombre)}</strong>
+            <div class="stu-sub">${tiene ? 'Horario cargado' : 'Sin horario'}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          ${tiene ? `<button class="ficha-btn" onclick="verHorarioAdmin('${esc(c.id)}')">Ver</button>
+          <button class="ficha-btn" style="background:var(--accent-red);" onclick="eliminarHorario('${esc(c.id)}')">Quitar</button>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function verHorarioAdmin(id) {
+  const c = cursosGlobal.find(x => String(x.id) === String(id));
+  if (!c || !c.horario_url) return;
+  document.getElementById('visorContenido').innerHTML = esPdf(c.horario_url)
+    ? `<iframe src="${esc(c.horario_url)}"></iframe>`
+    : `<img src="${esc(c.horario_url)}" alt="Horario">`;
+  visorOverlay.classList.add('show');
+}
+
+async function eliminarHorario(id) {
+  if (!confirm('¿Quitar el horario de este curso?')) return;
+  const c = cursosGlobal.find(x => String(x.id) === String(id));
+  try {
+    const { data, error } = await supabaseClient.from('cursos')
+      .update({ horario_url: null }).eq('id', id).select();
+    if (error) throw error;
+    if (!data || !data.length) throw new Error('No se modificó ningún curso. Revisa las políticas RLS.');
+    const path = pathDesdeUrlHorario(c && c.horario_url);
+    if (path) await supabaseClient.storage.from(HORARIOS_BUCKET).remove([path]);
+    await inicializarPanel();
+    cargarHorariosAdmin();
+  } catch (err) {
+    alert('Error al quitar el horario: ' + err.message);
+  }
+}
 
 /* =========================================================
    PAGOS DE INSCRIPCIÓN
