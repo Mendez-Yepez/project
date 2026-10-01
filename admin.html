@@ -233,6 +233,10 @@
     <div class="course-item" onclick="cambiarVista('pagos')" id="menuPagos"><span class="cname">💳 Pagos de Inscripción<span class="menu-badge" id="badgePagos" style="display:none;">0</span></span></div>
     <div class="course-item" onclick="cambiarVista('cursos')" id="menuCursos"><span class="cname">📚 Gestionar Cursos</span></div>
     <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios"><span class="cname">📅 Subir Horarios</span></div>
+    <div class="course-item" onclick="cambiarVista('fechas')" id="menuFechas">
+    <span class="cname">⚙️ Fechas de Inscripción</span>
+</div>
+  
   </aside>
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -340,7 +344,28 @@
         </form>
       </div>
     </div>
-
+    <div id="seccionFechas" class="vista-panel" style="display: none;">
+      <div class="main-header">
+        <div>
+          <h1>Fechas de Inscripción</h1>
+          <p>Configura el período en el que la plataforma aceptará postulaciones</p>
+        </div>
+      </div>
+      <div class="panel" style="padding: 1.8rem; max-width: 500px;">
+        <form id="formFechasInscripcion">
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Fecha y Hora de Apertura</label>
+            <input type="datetime-local" id="fechaInicioInscripcion" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" required>
+          </div>
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Fecha y Hora Límite de Cierre</label>
+            <input type="datetime-local" id="fechaLimiteInscripcion" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" required>
+          </div>
+          <button type="submit" class="ficha-btn" style="width: 100%; padding: 0.7rem;">Guardar Fechas</button>
+        </form>
+        <div id="mensajeFechas" style="margin-top: 1rem; font-size: 0.85rem; display: none;"></div>
+      </div>
+    </div>
   </main>
 </div>
 
