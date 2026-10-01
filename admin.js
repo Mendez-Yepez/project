@@ -49,6 +49,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 /* =========================================================
    NAVEGACIÓN ENTRE VISTAS
    ========================================================= */
+// 1. Actualizar el mapa de vistas
 function cambiarVista(vista) {
   document.querySelectorAll('.sidebar .course-item').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.vista-panel').forEach(el => el.style.display = 'none');
@@ -58,16 +59,65 @@ function cambiarVista(vista) {
     porCurso: ['menuPorCurso', 'seccionPorCurso'],
     pagos:    ['menuPagos',    'seccionPagos'],
     cursos:   ['menuCursos',   'seccionCursos'],
-    horarios: ['menuHorarios', 'seccionHorarios']
+    horarios: ['menuHorarios', 'seccionHorarios'],
+    fechas:   ['menuFechas',   'seccionFechas'] // <- Opción agregada
   };
   const [menu, seccion] = mapa[vista];
-  document.getElementById(menu).classList.add('active');
-  document.getElementById(seccion).style.display = 'block';
+  if (menu && seccion) {
+    document.getElementById(menu).classList.add('active');
+    document.getElementById(seccion).style.display = 'block';
+  }
 
   if (vista === 'cursos') cargarCursosAdmin();
   if (vista === 'pagos') cargarPagos();
+  if (vista === 'fechas') cargarFechasInscripcion(); // <- Cargar fechas al entrar
 }
 
+// 2. Cargar fechas guardadas
+async function cargarFechasInscripcion() {
+  try {
+    const { data, error } = await supabaseClient.from('configuracion').select('*');
+    if (error) throw error;
+
+    data.forEach(item => {
+      if (item.clave === 'fecha_inicio_inscripcion') {
+        document.getElementById('fechaInicioInscripcion').value = item.valor.slice(0, 16);
+      }
+      if (item.clave === 'fecha_limite_inscripcion') {
+        document.getElementById('fechaLimiteInscripcion').value = item.valor.slice(0, 16);
+      }
+    });
+  } catch (err) {
+    console.error('Error al cargar fechas:', err);
+  }
+}
+
+// 3. Guardar las nuevas fechas
+document.getElementById('formFechasInscripcion')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const inicio = document.getElementById('fechaInicioInscripcion').value;
+  const limite = document.getElementById('fechaLimiteInscripcion').value;
+  const msg = document.getElementById('mensajeFechas');
+
+  try {
+    const { error: e1 } = await supabaseClient.from('configuracion').upsert([
+      { clave: 'fecha_inicio_inscripcion', valor: inicio },
+      { clave: 'fecha_limite_inscripcion', valor: limite }
+    ]);
+
+    if (e1) throw e1;
+
+    msg.style.display = 'block';
+    msg.style.color = '#3fae5c';
+    msg.textContent = '¡Fechas guardadas exitosamente!';
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  } catch (err) {
+    console.error(err);
+    msg.style.display = 'block';
+    msg.style.color = 'var(--accent-red)';
+    msg.textContent = 'Error al guardar las fechas.';
+  }
+});
 /* =========================================================
    DATOS: CURSOS E INSCRITOS
    ========================================================= */
