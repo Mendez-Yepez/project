@@ -14,14 +14,12 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
   }
 })();
 
-// Escapa texto para evitar que datos con símbolos rompan el HTML
 function esc(v) {
   return String(v ?? '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-// Sellos SVG institucionales
 const SEAL_SVG = `
 <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
   <circle cx="200" cy="200" r="185" fill="none" stroke="#2B547E" stroke-width="18" />
@@ -39,14 +37,12 @@ try {
   document.getElementById('adminLabel').textContent = adminName;
 } catch (e) {}
 
-// Tema Claro / Oscuro
 const root = document.documentElement;
 document.getElementById('themeToggle').addEventListener('click', () => {
   const current = root.getAttribute('data-theme');
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
-// Cerrar Sesión
 document.getElementById('logoutBtn').addEventListener('click', () => {
   sessionStorage.removeItem('ceic_role');
   sessionStorage.removeItem('ceic_username');
@@ -84,7 +80,6 @@ async function cargarFechasInscripcion() {
   try {
     const { data, error } = await supabaseClient.from('configuracion').select('*');
     if (error) throw error;
-
     data.forEach(item => {
       if (item.clave === 'fecha_inicio_inscripcion') {
         document.getElementById('fechaInicioInscripcion').value = item.valor.slice(0, 16);
@@ -109,9 +104,7 @@ document.getElementById('formFechasInscripcion')?.addEventListener('submit', asy
       { clave: 'fecha_inicio_inscripcion', valor: inicio },
       { clave: 'fecha_limite_inscripcion', valor: limite }
     ]);
-
     if (e1) throw e1;
-
     msg.style.display = 'block';
     msg.style.color = '#3fae5c';
     msg.textContent = '¡Fechas guardadas exitosamente!';
@@ -144,15 +137,12 @@ async function inicializarPanel() {
     if (e2) throw e2;
     alumnosGlobal = insc || [];
 
-    // Estadísticas
     document.getElementById('statsRow').innerHTML = `
       <div class="stat"><div class="num">${alumnosGlobal.length}</div><div class="lbl">Total inscritos</div></div>
       <div class="stat"><div class="num">${cursosGlobal.length}</div><div class="lbl">Cursos registrados</div></div>`;
 
-    // Vista general
     aplicarBusquedaGeneral();
 
-    // Desplegable de cursos (con conteo)
     const sel = document.getElementById('selectCurso');
     const previo = sel.value;
     sel.innerHTML = '<option value="">— Selecciona un curso —</option>' +
@@ -191,6 +181,10 @@ function renderizarAlumnos(lista, tbodyId, emptyId, mostrarCurso) {
       <td>
         <div class="row-actions">
           <button class="ficha-btn" onclick="verFichaPorId('${esc(a.id)}')">Ver Ficha</button>
+          ${!mostrarCurso ? `
+            <button class="ficha-btn" style="background:var(--primary-blue);" onclick="abrirEditarEstudiante('${esc(a.id)}')">✏️ Editar</button>
+            <button class="ficha-btn btn-bad" onclick="eliminarEstudiante('${esc(a.id)}', '${esc(a.nombres)}${esc(a.apellidos)}')">🗑️ Eliminar</button>
+          ` : ''}
         </div>
       </td>`;
     tbody.appendChild(tr);
@@ -210,14 +204,12 @@ function filtrar(lista, term) {
   );
 }
 
-// Vista general: búsqueda
 function aplicarBusquedaGeneral() {
   const term = document.getElementById('searchInput').value;
   renderizarAlumnos(filtrar(alumnosGlobal, term), 'studentBody', 'emptyState', true);
 }
 document.getElementById('searchInput').addEventListener('input', aplicarBusquedaGeneral);
 
-// Vista por curso: selección + búsqueda
 function mostrarAlumnosCurso() {
   const cursoId = document.getElementById('selectCurso').value;
   const term = document.getElementById('searchCurso').value;
@@ -228,7 +220,105 @@ document.getElementById('selectCurso').addEventListener('change', mostrarAlumnos
 document.getElementById('searchCurso').addEventListener('input', mostrarAlumnosCurso);
 
 /* =========================================================
-   FICHA PERSONAL Y EXPORTAR A PDF (CON FOTO TIPO CARNET)
+   EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES (ALUMNOS POR CURSO)
+   ========================================================= */
+const modalEditarEstudianteOverlay = document.getElementById('modalEditarEstudianteOverlay');
+
+function abrirEditarEstudiante(id) {
+  const alumno = alumnosGlobal.find(a => String(a.id) === String(id));
+  if (!alumno) return;
+
+  document.getElementById('editEstudianteId').value = alumno.id;
+  document.getElementById('editNombre').value = alumno.nombres || '';
+  document.getElementById('editApellido').value = alumno.apellidos || '';
+  document.getElementById('editNacionalidad').value = alumno.nacionalidad || '';
+  document.getElementById('editCedula').value = alumno.numero_identificacion || '';
+  document.getElementById('editFechaNacimiento').value = alumno.fecha_nacimiento || '';
+  document.getElementById('editSexo').value = alumno.sexo || 'Masculino';
+  document.getElementById('editTelefono').value = alumno.telefono || '';
+  document.getElementById('editWhatsapp').value = alumno.whatsapp || '';
+  document.getElementById('editCorreo').value = alumno.correo_electronico || '';
+  document.getElementById('editEstado').value = alumno.estado || '';
+  document.getElementById('editMunicipio').value = alumno.municipio_ciudad || '';
+  document.getElementById('editDireccion').value = alumno.direccion || '';
+  document.getElementById('editOcupacion').value = alumno.ocupacion || '';
+  document.getElementById('editNivelEducativo').value = alumno.nivel_educativo || '';
+  document.getElementById('editInstitucion').value = alumno.institucion || '';
+
+  const selectEditCurso = document.getElementById('editCursoSelect');
+  if (selectEditCurso) {
+    selectEditCurso.innerHTML = cursosGlobal.map(c => 
+      `<option value="${esc(c.id)}" ${String(c.id) === String(alumno.curso_id) ? 'selected' : ''}>${esc(c.nombre)}</option>`
+    ).join('');
+  }
+
+  modalEditarEstudianteOverlay?.classList.add('show');
+}
+
+document.getElementById('modalEditarEstudianteClose')?.addEventListener('click', () => {
+  modalEditarEstudianteOverlay?.classList.remove('show');
+});
+document.getElementById('modalEditarEstudianteCancel')?.addEventListener('click', () => {
+  modalEditarEstudianteOverlay?.classList.remove('show');
+});
+
+document.getElementById('formEditarEstudiante')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('editEstudianteId').value;
+
+  const datosActualizados = {
+    nombres: document.getElementById('editNombre').value.trim(),
+    apellidos: document.getElementById('editApellido').value.trim(),
+    nacionalidad: document.getElementById('editNacionalidad').value.trim(),
+    numero_identificacion: document.getElementById('editCedula').value.trim(),
+    fecha_nacimiento: document.getElementById('editFechaNacimiento').value || null,
+    sexo: document.getElementById('editSexo').value,
+    telefono: document.getElementById('editTelefono').value.trim(),
+    whatsapp: document.getElementById('editWhatsapp').value.trim(),
+    correo_electronico: document.getElementById('editCorreo').value.trim(),
+    estado: document.getElementById('editEstado').value.trim(),
+    municipio_ciudad: document.getElementById('editMunicipio').value.trim(),
+    direccion: document.getElementById('editDireccion').value.trim(),
+    ocupacion: document.getElementById('editOcupacion').value.trim(),
+    nivel_educativo: document.getElementById('editNivelEducativo').value.trim(),
+    institucion: document.getElementById('editInstitucion').value.trim(),
+    curso_id: document.getElementById('editCursoSelect').value
+  };
+
+  const { error } = await supabaseClient
+    .from('inscripciones')
+    .update(datosActualizados)
+    .eq('id', id);
+
+  if (error) {
+    alert('Error al actualizar el estudiante: ' + error.message);
+    return;
+  }
+
+  alert('¡Estudiante actualizado con éxito!');
+  modalEditarEstudianteOverlay?.classList.remove('show');
+  await inicializarPanel();
+});
+
+async function eliminarEstudiante(id, nombreCompleto) {
+  if (!confirm(`¿Estás seguro de eliminar permanentemente a "${nombreCompleto}" del registro de inscritos?\n\nEsta acción no se puede deshacer.`)) return;
+
+  const { error } = await supabaseClient
+    .from('inscripciones')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert('Error al eliminar el registro: ' + error.message);
+    return;
+  }
+
+  alert('Estudiante eliminado correctamente.');
+  await inicializarPanel();
+}
+
+/* =========================================================
+   FICHA PERSONAL Y EXPORTAR A PDF
    ========================================================= */
 const fichaOverlay = document.getElementById('fichaOverlay');
 
@@ -265,7 +355,7 @@ document.getElementById('fichaCancelBtn').onclick = () => fichaOverlay.classList
 document.getElementById('fichaPrintBtn').onclick = () => window.print();
 
 /* =========================================================
-   GESTIÓN DE CURSOS (CRUD: CREAR, MODIFICAR, ELIMINAR)
+   GESTIÓN DE CURSOS
    ========================================================= */
 const modalCursoOverlay = document.getElementById('modalCursoOverlay');
 
@@ -372,7 +462,6 @@ async function cargarCursosAdmin() {
 
 async function eliminarCurso(id) {
   if (!confirm("¿Estás seguro de eliminar este curso del catálogo y base de datos?")) return;
-
   const { error } = await supabaseClient.from('cursos').delete().eq('id', id);
   if (error) {
     alert('Error al eliminar: ' + error.message);
@@ -384,7 +473,7 @@ async function eliminarCurso(id) {
 }
 
 /* =========================================================
-   SUBIR HORARIOS (UNO POR CURSO)
+   SUBIR HORARIOS
    ========================================================= */
 const HORARIOS_BUCKET = 'horarios';
 
@@ -402,8 +491,7 @@ function pathDesdeUrlHorario(url) {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
-// Vista previa antes de subir
-document.getElementById('archivoHorario').addEventListener('change', (e) => {
+document.getElementById('archivoHorario')?.addEventListener('change', (e) => {
   const prev = document.getElementById('previewHorario');
   const f = e.target.files[0];
   if (!f) { prev.innerHTML = ''; return; }
@@ -414,7 +502,7 @@ document.getElementById('archivoHorario').addEventListener('change', (e) => {
   }
 });
 
-document.getElementById('formHorario').addEventListener('submit', async (e) => {
+document.getElementById('formHorario')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const cursoId = document.getElementById('cursoHorario').value;
   const archivo = document.getElementById('archivoHorario').files[0];
@@ -438,15 +526,11 @@ document.getElementById('formHorario').addEventListener('submit', async (e) => {
     const { data: upd, error: errDb } = await supabaseClient.from('cursos')
       .update({ horario_url: pub.publicUrl }).eq('id', cursoId).select();
     if (errDb) throw errDb;
-    if (!upd || !upd.length) {
-      throw new Error('No se modificó ningún curso. Revisa las políticas RLS de la tabla cursos.');
-    }
 
-    // Borra el horario anterior de ese curso (si lo había)
     const anterior = pathDesdeUrlHorario(curso && curso.horario_url);
     if (anterior) await supabaseClient.storage.from(HORARIOS_BUCKET).remove([anterior]);
 
-    alert('¡Horario subido con éxito para: ' + (curso ? curso.nombre : 'el curso') + '!');
+    alert('¡Horario subido con éxito!');
     document.getElementById('formHorario').reset();
     document.getElementById('previewHorario').innerHTML = '';
     await inicializarPanel();
@@ -514,7 +598,6 @@ async function eliminarHorario(id) {
     const { data, error } = await supabaseClient.from('cursos')
       .update({ horario_url: null }).eq('id', id).select();
     if (error) throw error;
-    if (!data || !data.length) throw new Error('No se modificó ningún curso. Revisa las políticas RLS.');
     const path = pathDesdeUrlHorario(c && c.horario_url);
     if (path) await supabaseClient.storage.from(HORARIOS_BUCKET).remove([path]);
     await inicializarPanel();
@@ -594,12 +677,15 @@ async function resolverArchivo(alumno, columnas, carpeta) {
 function actualizarBadgePagos() {
   const pendientes = alumnosGlobal.filter(a => estadoDe(a) === 'pendiente').length;
   const b = document.getElementById('badgePagos');
-  b.textContent = pendientes;
-  b.style.display = pendientes ? 'inline-block' : 'none';
+  if (b) {
+    b.textContent = pendientes;
+    b.style.display = pendientes ? 'inline-block' : 'none';
+  }
 }
 
 async function cargarPagos() {
   const cont = document.getElementById('listaPagos');
+  if (!cont) return;
   cont.innerHTML = '<div class="empty" style="grid-column:1/-1;">Cargando pagos...</div>';
   listadoCarpetas = {};
   await inicializarPanel();
@@ -623,8 +709,9 @@ function mediaHTML(info, id, tipo) {
 
 function renderPagos() {
   const cont = document.getElementById('listaPagos');
-  const filtro = document.getElementById('filtroEstadoPago').value;
-  const term = document.getElementById('searchPagos').value;
+  if (!cont) return;
+  const filtro = document.getElementById('filtroEstadoPago')?.value || 'todos';
+  const term = document.getElementById('searchPagos')?.value || '';
 
   let lista = alumnosGlobal.filter(a => filtro === 'todos' || estadoDe(a) === filtro);
   lista = filtrar(lista, term);
@@ -675,10 +762,9 @@ function renderPagos() {
   }).join('');
 }
 
-document.getElementById('filtroEstadoPago').addEventListener('change', renderPagos);
-document.getElementById('searchPagos').addEventListener('input', renderPagos);
+document.getElementById('filtroEstadoPago')?.addEventListener('change', renderPagos);
+document.getElementById('searchPagos')?.addEventListener('input', renderPagos);
 
-/* ---- Visor de imagen / PDF ---- */
 const visorOverlay = document.getElementById('visorOverlay');
 function verMedia(id, tipo) {
   const info = (pagosCache[id] || {})[tipo];
@@ -693,7 +779,6 @@ document.getElementById('visorClose').onclick = () => {
   document.getElementById('visorContenido').innerHTML = '';
 };
 
-/* ---- Acciones ---- */
 async function actualizarEstadoPago(id, estado, motivo) {
   const { data, error } = await supabaseClient.from('inscripciones')
     .update({
@@ -704,13 +789,10 @@ async function actualizarEstadoPago(id, estado, motivo) {
     .eq('id', id)
     .select();
   if (error) throw error;
-  if (!data || !data.length) {
-    throw new Error('No se modificó ningún registro. Revisa las políticas RLS de la tabla inscripciones.');
-  }
 }
 
 async function aceptarPago(id) {
-  if (!confirm('¿Aceptar este pago? Se guardará en la tabla de pagos y la inscripción se conservará como pagada.')) return;
+  if (!confirm('¿Aceptar este pago?')) return;
   const a = alumnosGlobal.find(x => String(x.id) === String(id));
   if (!a) return;
   const c = pagosCache[id] || {};
@@ -737,17 +819,8 @@ async function aceptarPago(id) {
       aprobado_por: adminName,
       fecha_aprobacion: new Date().toISOString()
     };
-    const { error: errPago } = await supabaseClient.from('pagos')
-      .upsert(registro, { onConflict: 'inscripcion_id' });
-    if (errPago) throw errPago;
-
-    try {
-      await actualizarEstadoPago(id, 'aceptado', null);
-    } catch (err) {
-      await supabaseClient.from('pagos').delete().eq('inscripcion_id', id);
-      throw err;
-    }
-
+    await supabaseClient.from('pagos').upsert(registro, { onConflict: 'inscripcion_id' });
+    await actualizarEstadoPago(id, 'aceptado', null);
     await cargarPagos();
   } catch (err) {
     alert('Error al aceptar el pago: ' + err.message);
@@ -756,59 +829,37 @@ async function aceptarPago(id) {
 
 const motivoOverlay = document.getElementById('motivoOverlay');
 function abrirArchivarPago(id) {
-  const a = alumnosGlobal.find(x => String(x.id) === String(id));
   pagoArchivandoId = id;
-  document.getElementById('motivoSub').textContent = a ? `${a.nombres} ${a.apellidos}` : '';
-  document.getElementById('motivoTexto').value = '';
-  motivoOverlay.classList.add('show');
+  motivoOverlay?.classList.add('show');
 }
-const cerrarMotivo = () => { motivoOverlay.classList.remove('show'); pagoArchivandoId = null; };
+const cerrarMotivo = () => { motivoOverlay?.classList.remove('show'); pagoArchivandoId = null; };
 document.getElementById('motivoClose').onclick = cerrarMotivo;
 document.getElementById('motivoCancel').onclick = cerrarMotivo;
 document.getElementById('motivoConfirm').onclick = async () => {
   const motivo = document.getElementById('motivoTexto').value.trim();
-  if (!motivo) { alert('Debes especificar el motivo para archivar el pago.'); return; }
-  const id = pagoArchivandoId;
+  if (!motivo) { alert('Especifica el motivo.'); return; }
   try {
-    await actualizarEstadoPago(id, 'archivado', motivo);
-    await supabaseClient.from('pagos').delete().eq('inscripcion_id', id);
+    await actualizarEstadoPago(pagoArchivandoId, 'archivado', motivo);
+    await supabaseClient.from('pagos').delete().eq('inscripcion_id', pagoArchivandoId);
     cerrarMotivo();
     await cargarPagos();
   } catch (err) {
-    alert('Error al archivar el pago: ' + err.message);
+    alert('Error al archivar: ' + err.message);
   }
 };
 
 async function rechazarPago(id) {
-  const a = alumnosGlobal.find(x => String(x.id) === String(id));
-  const nombre = a ? `${a.nombres} ${a.apellidos}` : 'este alumno';
-  if (!confirm(`¿Rechazar el pago de ${nombre}?\n\nSe ELIMINARÁ su inscripción de la base de datos junto con el comprobante y la foto de cédula. Esta acción no se puede deshacer.`)) return;
-
+  if (!confirm('¿Rechazar y eliminar la inscripción de este alumno?')) return;
   try {
-    const { data, error } = await supabaseClient.from('inscripciones')
-      .delete().eq('id', id).select();
-    if (error) throw error;
-    if (!data || !data.length) {
-      throw new Error('No se eliminó ningún registro. Revisa las políticas RLS de la tabla inscripciones.');
-    }
-
-    const c = pagosCache[id] || {};
-    const rutas = [c.pago && c.pago.path, c.cedula && c.cedula.path].filter(Boolean);
-    if (rutas.length) {
-      const { error: errFiles } = await supabaseClient.storage.from(PAGOS_CFG.bucket).remove(rutas);
-      if (errFiles) console.warn('No se pudieron eliminar los archivos:', errFiles);
-    }
-
+    await supabaseClient.from('inscripciones').delete().eq('id', id);
     delete pagosCache[id];
     listadoCarpetas = {};
-    alert('Pago rechazado. La inscripción fue eliminada.');
     await cargarPagos();
   } catch (err) {
-    alert('Error al rechazar el pago: ' + err.message);
+    alert('Error al rechazar: ' + err.message);
   }
 }
 
-// Inicialización automática
 document.addEventListener('DOMContentLoaded', () => {
   inicializarPanel();
 });
