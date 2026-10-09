@@ -254,37 +254,7 @@
   </aside>
 
   <main class="main">
-    <div id="seccionGaleria" class="vista-panel" style="display: none;">
-      <div class="main-header">
-        <div>
-          <h1>Gestión de Galería</h1>
-          <p>Sube nuevas imágenes o elimina las existentes que se muestran en la galería web</p>
-        </div>
-      </div>
-      
-      <!-- Panel para subir foto -->
-      <div class="panel" style="padding: 1.8rem; max-width: 600px; margin-bottom: 1.5rem;">
-        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Subir nueva foto</h3>
-        <form id="formGaleriaAdmin">
-          <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Título o Descripción</label>
-            <input type="text" id="galeriaTituloInput" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Actividad en el CEIC">
-          </div>
-          <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Seleccionar Imagen</label>
-            <input type="file" id="galeriaArchivoInput" accept="image/*" required style="width: 100%; color: var(--text-main);">
-          </div>
-          <div id="previewGaleriaAdmin" style="margin-bottom: 1rem;"></div>
-          <button type="submit" class="ficha-btn" id="btnSubirGaleriaAdmin" style="width: 100%; padding: 0.7rem;">Subir a la Galería</button>
-        </form>
-      </div>
-
-      <!-- Cuadrícula para ver las fotos ya subidas -->
-      <div class="panel" style="padding: 1.5rem;">
-        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Imágenes publicadas actualmente</h3>
-        <div id="listaGaleriaAdmin" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;"></div>
-      </div>
-    </div>
+    
 
     <div id="seccionAlumnos" class="vista-panel">
       <div class="stats-row" id="statsRow"></div>
