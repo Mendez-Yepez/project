@@ -24,205 +24,23 @@
     </div>
   </section>
 
-  <!-- === SECCIÓN DE FOTOS (GALERÍA CON MODAL) === -->
+  <!-- === SECCIÓN DE FOTOS DINÁMICA (CONECTADA A SUPABASE) === -->
   <main class="py-5 bg-light min-vh-100">
     <div class="container">
-      <div class="row g-4">
-
-        <!-- Foto 1 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal1">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.44 AM(2).jpeg" class="card-img-top img-fluid" alt="Actividad Grupal CEIC" style="height: 250px; object-fit: cover;">
-            </a>
+      <!-- Aquí se inyectarán las tarjetas de las fotos desde Supabase -->
+      <div class="row g-4" id="galeria-grid">
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando galería...</span>
           </div>
+          <p class="text-muted mt-2">Cargando imágenes desde Supabase...</p>
         </div>
-
-        <!-- Foto 2 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal2">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.44 AM(1).jpeg" class="card-img-top img-fluid" alt="Reunión Comunitaria" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 3 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal3">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.44 AM.jpeg" class="card-img-top img-fluid" alt="Equipo de Electricidad CEIC" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 4 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal4">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.43 AM(1).jpeg" class="card-img-top img-fluid" alt="Taller de Electricidad" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 5 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal5">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.43 AM.jpeg" class="card-img-top img-fluid" alt="Jornada de Peluquería" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 6 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal6">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.42 AM.jpeg" class="card-img-top img-fluid" alt="Estudiantes en Pasillo" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 7 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal7">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.41 AM.jpeg" class="card-img-top img-fluid" alt="Práctica de Masajes" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 8 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal8">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.40 AM(1).jpeg" class="card-img-top img-fluid" alt="Sesión de Terapia Corporal" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 9 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal9">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.40 AM.jpeg" class="card-img-top img-fluid" alt="Clase Práctica de Estética" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
-        <!-- Foto 10 -->
-        <div class="col-md-4 col-sm-6">
-          <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imgModal10">
-              <img src="WhatsApp Image 2026-09-14 at 11.17.39 AM.jpeg" class="card-img-top img-fluid" alt="Grupo de Repostería" style="height: 250px; object-fit: cover;">
-            </a>
-          </div>
-        </div>
-
       </div>
     </div>
   </main>
 
-  <!-- === VENTANAS MODALES PARA VER FOTOS EN GRANDE === -->
-  <div class="modal fade" id="imgModal1" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.44 AM(2).jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal2" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.44 AM(1).jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal3" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.44 AM.jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal4" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.43 AM(1).jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal5" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.43 AM.jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal6" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.42 AM.jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal7" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.41 AM.jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal8" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.40 AM(1).jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal9" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.40 AM.jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="imgModal10" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content bg-transparent border-0">
-        <div class="modal-body p-0 text-center">
-          <img src="WhatsApp Image 2026-09-14 at 11.17.39 AM.jpeg" class="img-fluid rounded" alt="Foto Ampliada">
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- === CONTENEDOR PARA LOS MODALES DINÁMICOS === -->
+  <div id="modales-container"></div>
 
   <!-- Contenedor del Footer -->
   <div id="site-footer"></div>
@@ -230,8 +48,19 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Script Carga Modular -->
+  <!-- SDK de Supabase (UMD build) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Script Carga Modular y Conexión a Supabase -->
   <script>
+    // Configuración de Supabase
+    const SUPABASE_URL = 'https://fzvjhdeodahtxoolxzkx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc';
+    
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Cargar componentes estáticos (Header y Footer)
     async function loadComponent(id, file) {
       try {
         const response = await fetch(file);
@@ -250,6 +79,82 @@
 
     loadComponent('site-header', 'includes/header.html');
     loadComponent('site-footer', 'includes/footer.html');
+
+    // Función para Cargar la Galería desde Supabase
+    async function cargarGaleriaDesdeSupabase() {
+      const gridContainer = document.getElementById('galeria-grid');
+      const modalesContainer = document.getElementById('modales-container');
+
+      try {
+        // Consultamos la tabla "galeria" ordenada por ID o fecha
+        const { data: fotos, error } = await _supabase
+          .from('galeria')
+          .select('*')
+          .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        // Limpiamos los contenedores
+        gridContainer.innerHTML = '';
+        modalesContainer.innerHTML = '';
+
+        if (!fotos || fotos.length === 0) {
+          gridContainer.innerHTML = '<div class="col-12 text-center"><p class="text-muted">No hay imágenes en la galería todavía.</p></div>';
+          return;
+        }
+
+        // Recorremos cada registro de la base de datos
+        fotos.forEach((foto, index) => {
+          const modalId = `imgModal${index + 1}`;
+          const titulo = foto.titulo || 'Actividad CEIC';
+          const imageUrl = foto.imagen_url;
+
+          // 1. Creamos la tarjeta para el grid
+          const cardCol = document.createElement('div');
+          cardCol.className = 'col-md-4 col-sm-6';
+          cardCol.innerHTML = `
+            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+              <a href="#" data-bs-toggle="modal" data-bs-target="#${modalId}">
+                <img src="${imageUrl}" class="card-img-top img-fluid" alt="${titulo}" style="height: 250px; object-fit: cover;">
+              </a>
+            </div>
+          `;
+          gridContainer.appendChild(cardCol);
+
+          // 2. Creamos el modal correspondiente para ver la foto en grande
+          const modalDiv = document.createElement('div');
+          modalDiv.className = 'modal fade';
+          modalDiv.id = modalId;
+          modalDiv.tabIndex = '-1';
+          modalDiv.setAttribute('aria-hidden', 'true');
+          modalDiv.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0 text-center position-relative">
+                  <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <img src="${imageUrl}" class="img-fluid rounded shadow" alt="Foto Ampliada">
+                </div>
+              </div>
+            </div>
+          `;
+          modalesContainer.appendChild(modalDiv);
+        });
+
+      } catch (err) {
+        console.error('Error al conectar con Supabase:', err.message);
+        gridContainer.innerHTML = `
+          <div class="col-12 text-center">
+            <div class="alert alert-danger" role="alert">
+              Hubo un error al cargar las imágenes de la galería. Comprueba tu conexión o las políticas RLS.
+            </div>
+          </div>`;
+      }
+    }
+
+    // Ejecutar al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarGaleriaDesdeSupabase();
+    });
   </script>
 </body>
 </html>

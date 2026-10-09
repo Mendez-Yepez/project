@@ -57,12 +57,13 @@ function cambiarVista(vista) {
   document.querySelectorAll('.vista-panel').forEach(el => el.style.display = 'none');
 
   const mapa = {
-    alumnos:  ['menuAlumnos',  'seccionAlumnos'],
-    porCurso: ['menuPorCurso', 'seccionPorCurso'],
-    pagos:    ['menuPagos',    'seccionPagos'],
-    cursos:   ['menuCursos',   'seccionCursos'],
-    horarios: ['menuHorarios', 'seccionHorarios'],
-    fechas:   ['menuFechas',   'seccionFechas']
+    alumnos:     ['menuAlumnos',  'seccionAlumnos'],
+    porCurso:    ['menuPorCurso', 'seccionPorCurso'],
+    pagos:       ['menuPagos',    'seccionPagos'],
+    cursos:      ['menuCursos',   'seccionCursos'],
+    horarios:    ['menuHorarios', 'seccionHorarios'],
+    fechas:      ['menuFechas',   'seccionFechas'],
+    galeriamain: ['menuGaleria',  'seccionGaleria']
   };
   const [menu, seccion] = mapa[vista];
   if (menu && seccion) {
@@ -74,6 +75,7 @@ function cambiarVista(vista) {
   if (vista === 'pagos') cargarPagos();
   if (vista === 'horarios') cargarHorariosAdmin();
   if (vista === 'fechas') cargarFechasInscripcion();
+  if (vista === 'galeriamain') cargarGaleriaAdmin();
 }
 
 async function cargarFechasInscripcion() {
@@ -182,8 +184,8 @@ function renderizarAlumnos(lista, tbodyId, emptyId, mostrarCurso) {
         <div class="row-actions">
           <button class="ficha-btn" onclick="verFichaPorId('${esc(a.id)}')">Ver Ficha</button>
           ${!mostrarCurso ? `
-            <button class="ficha-btn" style="background:var(--primary-blue);" onclick="abrirEditarEstudiante('${esc(a.id)}')">✏️ Editar</button>
-            <button class="ficha-btn btn-bad" onclick="eliminarEstudiante('${esc(a.id)}', '${esc(a.nombres)}${esc(a.apellidos)}')">🗑️ Eliminar</button>
+            <button class="ficha-btn" style="background:var(--primary-blue);" onclick="abrirEditarEstudiante('${esc(a.id)}')">Editar</button>
+            <button class="ficha-btn btn-bad" onclick="eliminarEstudiante('${esc(a.id)}', '${esc(a.nombres)}${esc(a.apellidos)}')">Eliminar</button>
           ` : ''}
         </div>
       </td>`;
@@ -220,7 +222,7 @@ document.getElementById('selectCurso').addEventListener('change', mostrarAlumnos
 document.getElementById('searchCurso').addEventListener('input', mostrarAlumnosCurso);
 
 /* =========================================================
-   EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES (ALUMNOS POR CURSO)
+   EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES
    ========================================================= */
 const modalEditarEstudianteOverlay = document.getElementById('modalEditarEstudianteOverlay');
 
@@ -301,7 +303,7 @@ document.getElementById('formEditarEstudiante')?.addEventListener('submit', asyn
 });
 
 async function eliminarEstudiante(id, nombreCompleto) {
-  if (!confirm(`¿Estás seguro de eliminar permanentemente a "${nombreCompleto}" del registro de inscritos?\n\nEsta acción no se puede deshacer.`)) return;
+  if (!confirm(`¿Estás seguro de eliminar permanentemente a "${nombreCompleto}" del registro de inscritos?`)) return;
 
   const { error } = await supabaseClient
     .from('inscripciones')
@@ -329,7 +331,7 @@ function verFicha(alumno) {
   if (urlFoto) {
     fotoSlot.innerHTML = `<img src="${esc(urlFoto)}" alt="Foto" onerror="this.parentNode.innerHTML='<span class=&quot;no-foto&quot;>Sin foto</span>'">`;
   } else {
-    fotoSlot.innerHTML = `<span class="no-foto">📷<br>Sin foto</span>`;
+    fotoSlot.innerHTML = `<span class="no-foto"><br>Sin foto</span>`;
   }
 
   document.getElementById('fichaFields').innerHTML = `
@@ -498,7 +500,7 @@ document.getElementById('archivoHorario')?.addEventListener('change', (e) => {
   if (f.type.startsWith('image/')) {
     prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--panel-border);">`;
   } else {
-    prev.innerHTML = `<div class="stu-sub">📄 ${esc(f.name)}</div>`;
+    prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
   }
 });
 
@@ -608,6 +610,138 @@ async function eliminarHorario(id) {
 }
 
 /* =========================================================
+   GESTIÓN DE LA GALERÍA WEB
+   ========================================================= */
+const GALERIA_BUCKET = 'fotos-galeria';
+
+document.getElementById('galeriaArchivoInput')?.addEventListener('change', (e) => {
+  const prev = document.getElementById('previewGaleriaAdmin');
+  const f = e.target.files[0];
+  if (!f) { prev.innerHTML = ''; return; }
+  if (f.type.startsWith('image/')) {
+    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:200px; border-radius:8px; border:1px solid var(--panel-border);">`;
+  } else {
+    prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
+  }
+});
+
+document.getElementById('formGaleriaAdmin')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const titulo = document.getElementById('galeriaTituloInput').value.trim();
+  const archivo = document.getElementById('galeriaArchivoInput').files[0];
+  if (!archivo) { alert('Selecciona una imagen.'); return; }
+
+  const btn = document.getElementById('btnSubirGaleriaAdmin');
+  btn.textContent = 'Subiendo...';
+  btn.disabled = true;
+
+  try {
+    const ext = (archivo.name.split('.').pop() || 'jpg').toLowerCase();
+    const fileName = `${Date.now()}-${Math.random().toString(36.substring(2, 7))}.${ext}`;
+    const filePath = `galeria_${fileName}`;
+
+    // 1. Subir al Storage (Bucket 'fotos-galeria')
+    const { error: uploadError } = await supabaseClient.storage
+      .from(GALERIA_BUCKET)
+      .upload(filePath, archivo, { contentType: archivo.type });
+
+    if (uploadError) throw uploadError;
+
+    // 2. Obtener URL pública
+    const { data: publicData } = supabaseClient.storage
+      .from(GALERIA_BUCKET)
+      .getPublicUrl(filePath);
+
+    const publicUrl = publicData.publicUrl;
+
+    // 3. Insertar el registro en la tabla 'galeria'
+    const { error: dbError } = await supabaseClient
+      .from('galeria')
+      .insert([{ titulo: titulo || 'Actividad CEIC', imagen_url: publicUrl }]);
+
+    if (dbError) throw dbError;
+
+    alert('¡Imagen subida a la galería con éxito!');
+    document.getElementById('formGaleriaAdmin').reset();
+    document.getElementById('previewGaleriaAdmin').innerHTML = '';
+    cargarGaleriaAdmin();
+
+  } catch (err) {
+    alert('Error al subir la imagen: ' + err.message);
+  } finally {
+    btn.textContent = 'Subir a la Galería';
+    btn.disabled = false;
+  }
+});
+
+async function cargarGaleriaAdmin() {
+  const contenedor = document.getElementById('listaGaleriaAdmin');
+  if (!contenedor) return;
+  contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">Cargando galería...</p>';
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('galeria')
+      .select('*')
+      .order('id', { ascending: false });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">No hay imágenes cargadas en la galería.</p>';
+      return;
+    }
+
+    contenedor.innerHTML = data.map(item => `
+      <div style="background:var(--input-bg); border:1px solid var(--panel-border); border-radius:8px; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="width:100%; height:150px; background:#000; overflow:hidden;">
+          <img src="${esc(item.imagen_url)}" alt="${esc(item.titulo)}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+        </div>
+        <div style="padding:0.7rem; display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:space-between;">
+          <div style="font-size:0.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(item.titulo)}">${esc(item.titulo || 'Sin título')}</div>
+          <button class="ficha-btn btn-bad" style="width:100%; padding:0.3rem;" onclick="eliminarFotoGaleria('${esc(item.id)}', '${esc(item.imagen_url)}')">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+
+  } catch (err) {
+    console.error('Error al cargar galería admin:', err);
+    contenedor.innerHTML = '<p style="color:red; grid-column:1/-1;">Error al cargar las imágenes de la galería.</p>';
+  }
+}
+
+function extraerPathGaleria(url) {
+  const m = url.match(/\/object\/public\/fotos-galeria\/([^?]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+async function eliminarFotoGaleria(id, url) {
+  if (!confirm('¿Estás seguro de eliminar esta imagen de la galería?')) return;
+
+  try {
+    // 1. Borrar de la base de datos
+    const { error: dbError } = await supabaseClient
+      .from('galeria')
+      .delete()
+      .eq('id', id);
+
+    if (dbError) throw dbError;
+
+    // 2. Borrar del Storage de Supabase
+    const path = extraerPathGaleria(url);
+    if (path) {
+      await supabaseClient.storage.from(GALERIA_BUCKET).remove([path]);
+    }
+
+    alert('Imagen eliminada de la galería correctamente.');
+    cargarGaleriaAdmin();
+
+  } catch (err) {
+    alert('Error al eliminar la imagen: ' + err.message);
+  }
+}
+
+/* =========================================================
    PAGOS DE INSCRIPCIÓN
    ========================================================= */
 const PAGOS_CFG = {
@@ -703,7 +837,7 @@ async function cargarPagos() {
 function mediaHTML(info, id, tipo) {
   if (!info || !info.url) return `<div class="media-box" style="cursor:default;">Sin archivo</div>`;
   const clic = `onclick="verMedia('${esc(id)}','${tipo}')"`;
-  if (info.pdf) return `<div class="media-box" ${clic}>📄 Ver PDF</div>`;
+  if (info.pdf) return `<div class="media-box" ${clic}>Ver PDF</div>`;
   return `<div class="media-box" ${clic}><img src="${esc(info.url)}" alt="${tipo}" loading="lazy"></div>`;
 }
 
@@ -753,9 +887,9 @@ function renderPagos() {
         </div>
         ${est === 'archivado' && motivo ? `<div class="pago-motivo"><strong>Motivo:</strong> ${esc(motivo)}</div>` : ''}
         <div class="pago-btns">
-          ${est !== 'aceptado' ? `<button class="ficha-btn btn-ok" onclick="aceptarPago('${id}')">✔ Aceptar</button>` : ''}
-          ${est !== 'archivado' ? `<button class="ficha-btn btn-warn" onclick="abrirArchivarPago('${id}')">🗂 Archivar</button>` : ''}
-          <button class="ficha-btn btn-bad" onclick="rechazarPago('${id}')">✖ Rechazar</button>
+          ${est !== 'aceptado' ? `<button class="ficha-btn btn-ok" onclick="aceptarPago('${id}')">Aceptar</button>` : ''}
+          ${est !== 'archivado' ? `<button class="ficha-btn btn-warn" onclick="abrirArchivarPago('${id}')">Archivar</button>` : ''}
+          <button class="ficha-btn btn-bad" onclick="rechazarPago('${id}')">Rechazar</button>
         </div>
         <button class="ficha-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted);" onclick="verFichaPorId('${id}')">Ver ficha completa</button>
       </div>`;
