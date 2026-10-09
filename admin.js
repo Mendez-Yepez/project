@@ -2,7 +2,7 @@
    CONFIGURACIÓN DE SUPABASE
    ========================================================= */
 const SUPABASE_URL = "https://fzvjhdeodahtxoolxzkx.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Control de Acceso
@@ -62,7 +62,8 @@ function cambiarVista(vista) {
     pagos:    ['menuPagos',    'seccionPagos'],
     cursos:   ['menuCursos',   'seccionCursos'],
     horarios: ['menuHorarios', 'seccionHorarios'],
-    fechas:   ['menuFechas',   'seccionFechas']
+    fechas:   ['menuFechas',   'seccionFechas'],
+    galeria:  ['menuGaleria',  'seccionGaleria']
   };
   const [menu, seccion] = mapa[vista];
   if (menu && seccion) {
@@ -74,6 +75,7 @@ function cambiarVista(vista) {
   if (vista === 'pagos') cargarPagos();
   if (vista === 'horarios') cargarHorariosAdmin();
   if (vista === 'fechas') cargarFechasInscripcion();
+  if (vista === 'galeria') cargarGaleriaAdmin();
 }
 
 async function cargarFechasInscripcion() {
@@ -107,7 +109,7 @@ document.getElementById('formFechasInscripcion')?.addEventListener('submit', asy
     if (e1) throw e1;
     msg.style.display = 'block';
     msg.style.color = '#3fae5c';
-    msg.textContent = '¡Fechas guardadas exitosamente!';
+    msg.textContent = 'Fechas guardadas exitosamente';
     setTimeout(() => { msg.style.display = 'none'; }, 3000);
   } catch (err) {
     console.error(err);
@@ -182,8 +184,8 @@ function renderizarAlumnos(lista, tbodyId, emptyId, mostrarCurso) {
         <div class="row-actions">
           <button class="ficha-btn" onclick="verFichaPorId('${esc(a.id)}')">Ver Ficha</button>
           ${!mostrarCurso ? `
-            <button class="ficha-btn" style="background:var(--primary-blue);" onclick="abrirEditarEstudiante('${esc(a.id)}')">✏️ Editar</button>
-            <button class="ficha-btn btn-bad" onclick="eliminarEstudiante('${esc(a.id)}', '${esc(a.nombres)}${esc(a.apellidos)}')">🗑️ Eliminar</button>
+            <button class="ficha-btn" style="background:var(--primary-blue);" onclick="abrirEditarEstudiante('${esc(a.id)}')">Editar</button>
+            <button class="ficha-btn btn-bad" onclick="eliminarEstudiante('${esc(a.id)}', '${esc(a.nombres)}${esc(a.apellidos)}')">Eliminar</button>
           ` : ''}
         </div>
       </td>`;
@@ -220,7 +222,7 @@ document.getElementById('selectCurso').addEventListener('change', mostrarAlumnos
 document.getElementById('searchCurso').addEventListener('input', mostrarAlumnosCurso);
 
 /* =========================================================
-   EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES (ALUMNOS POR CURSO)
+   EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES
    ========================================================= */
 const modalEditarEstudianteOverlay = document.getElementById('modalEditarEstudianteOverlay');
 
@@ -295,13 +297,13 @@ document.getElementById('formEditarEstudiante')?.addEventListener('submit', asyn
     return;
   }
 
-  alert('¡Estudiante actualizado con éxito!');
+  alert('Estudiante actualizado con éxito');
   modalEditarEstudianteOverlay?.classList.remove('show');
   await inicializarPanel();
 });
 
 async function eliminarEstudiante(id, nombreCompleto) {
-  if (!confirm(`¿Estás seguro de eliminar permanentemente a "${nombreCompleto}" del registro de inscritos?\n\nEsta acción no se puede deshacer.`)) return;
+  if (!confirm(`¿Estás seguro de eliminar permanentemente a "${nombreCompleto}" del registro de inscritos?`)) return;
 
   const { error } = await supabaseClient
     .from('inscripciones')
@@ -405,13 +407,13 @@ document.getElementById('formCrearCurso').addEventListener('submit', async (e) =
         nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion
       }).eq('id', id);
       if (error) throw error;
-      alert('¡Curso actualizado con éxito!');
+      alert('Curso actualizado con éxito');
     } else {
       const { error } = await supabaseClient.from('cursos').insert([{
         nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion
       }]);
       if (error) throw error;
-      alert('¡Curso registrado con éxito!');
+      alert('Curso registrado con éxito');
     }
 
     modalCursoOverlay.classList.remove('show');
@@ -498,7 +500,7 @@ document.getElementById('archivoHorario')?.addEventListener('change', (e) => {
   if (f.type.startsWith('image/')) {
     prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--panel-border);">`;
   } else {
-    prev.innerHTML = `<div class="stu-sub">📄 ${esc(f.name)}</div>`;
+    prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
   }
 });
 
@@ -530,7 +532,7 @@ document.getElementById('formHorario')?.addEventListener('submit', async (e) => 
     const anterior = pathDesdeUrlHorario(curso && curso.horario_url);
     if (anterior) await supabaseClient.storage.from(HORARIOS_BUCKET).remove([anterior]);
 
-    alert('¡Horario subido con éxito!');
+    alert('Horario subido con éxito');
     document.getElementById('formHorario').reset();
     document.getElementById('previewHorario').innerHTML = '';
     await inicializarPanel();
@@ -563,7 +565,7 @@ async function cargarHorariosAdmin() {
     const mini = !tiene
       ? `<div class="media-box" style="width:70px; aspect-ratio:1; cursor:default;">—</div>`
       : pdf
-        ? `<div class="media-box" style="width:70px; aspect-ratio:1;" onclick="verHorarioAdmin('${esc(c.id)}')">📄</div>`
+        ? `<div class="media-box" style="width:70px; aspect-ratio:1;" onclick="verHorarioAdmin('${esc(c.id)}')">PDF</div>`
         : `<div class="media-box" style="width:70px; aspect-ratio:1;" onclick="verHorarioAdmin('${esc(c.id)}')"><img src="${esc(c.horario_url)}" alt="Horario" loading="lazy"></div>`;
     return `
       <div style="background:var(--input-bg); border:1px solid var(--panel-border); padding:0.8rem 1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
@@ -604,6 +606,133 @@ async function eliminarHorario(id) {
     cargarHorariosAdmin();
   } catch (err) {
     alert('Error al quitar el horario: ' + err.message);
+  }
+}
+
+/* =========================================================
+   GESTIÓN DE LA GALERÍA WEB
+   ========================================================= */
+const GALERIA_BUCKET = 'fotos-galeria';
+
+document.getElementById('galeriaArchivoInput')?.addEventListener('change', (e) => {
+  const prev = document.getElementById('previewGaleriaAdmin');
+  const f = e.target.files[0];
+  if (!f) { prev.innerHTML = ''; return; }
+  if (f.type.startsWith('image/')) {
+    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:200px; border-radius:8px; border:1px solid var(--panel-border);">`;
+  } else {
+    prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
+  }
+});
+
+document.getElementById('formGaleriaAdmin')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const titulo = document.getElementById('galeriaTituloInput').value.trim();
+  const archivo = document.getElementById('galeriaArchivoInput').files[0];
+  if (!archivo) { alert('Selecciona una imagen.'); return; }
+
+  const btn = document.getElementById('btnSubirGaleriaAdmin');
+  btn.textContent = 'Subiendo...';
+  btn.disabled = true;
+
+  try {
+    const ext = (archivo.name.split('.').pop() || 'jpg').toLowerCase();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+    const filePath = `galeria_${fileName}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from(GALERIA_BUCKET)
+      .upload(filePath, archivo, { contentType: archivo.type });
+
+    if (uploadError) throw uploadError;
+
+    const { data: publicData } = supabaseClient.storage
+      .from(GALERIA_BUCKET)
+      .getPublicUrl(filePath);
+
+    const publicUrl = publicData.publicUrl;
+
+    const { error: dbError } = await supabaseClient
+      .from('galeria')
+      .insert([{ titulo: titulo || 'Actividad CEIC', imagen_url: publicUrl }]);
+
+    if (dbError) throw dbError;
+
+    alert('Imagen subida a la galeria con éxito');
+    document.getElementById('formGaleriaAdmin').reset();
+    document.getElementById('previewGaleriaAdmin').innerHTML = '';
+    cargarGaleriaAdmin();
+
+  } catch (err) {
+    alert('Error al subir la imagen: ' + err.message);
+  } finally {
+    btn.textContent = 'Subir a la Galeria';
+    btn.disabled = false;
+  }
+});
+
+async function cargarGaleriaAdmin() {
+  const contenedor = document.getElementById('listaGaleriaAdmin');
+  if (!contenedor) return;
+  contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">Cargando galeria...</p>';
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('galeria')
+      .select('*')
+      .order('id', { ascending: false });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">No hay imagenes cargadas en la galeria.</p>';
+      return;
+    }
+
+    contenedor.innerHTML = data.map(item => `
+      <div style="background:var(--input-bg); border:1px solid var(--panel-border); border-radius:8px; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="width:100%; height:150px; background:#000; overflow:hidden;">
+          <img src="${esc(item.imagen_url)}" alt="${esc(item.titulo)}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+        </div>
+        <div style="padding:0.7rem; display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:space-between;">
+          <div style="font-size:0.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(item.titulo)}">${esc(item.titulo || 'Sin titulo')}</div>
+          <button class="ficha-btn btn-bad" style="width:100%; padding:0.3rem;" onclick="eliminarFotoGaleria('${esc(item.id)}', '${esc(item.imagen_url)}')">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+
+  } catch (err) {
+    console.error('Error al cargar galeria admin:', err);
+    contenedor.innerHTML = '<p style="color:red; grid-column:1/-1;">Error al cargar las imagenes de la galeria.</p>';
+  }
+}
+
+function extraerPathGaleria(url) {
+  const m = url.match(/\/object\/public\/fotos-galeria\/([^?]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+async function eliminarFotoGaleria(id, url) {
+  if (!confirm('¿Estás seguro de eliminar esta imagen de la galeria?')) return;
+
+  try {
+    const { error: dbError } = await supabaseClient
+      .from('galeria')
+      .delete()
+      .eq('id', id);
+
+    if (dbError) throw dbError;
+
+    const path = extraerPathGaleria(url);
+    if (path) {
+      await supabaseClient.storage.from(GALERIA_BUCKET).remove([path]);
+    }
+
+    alert('Imagen eliminada de la galeria correctamente.');
+    cargarGaleriaAdmin();
+
+  } catch (err) {
+    alert('Error al eliminar la imagen: ' + err.message);
   }
 }
 
@@ -703,7 +832,7 @@ async function cargarPagos() {
 function mediaHTML(info, id, tipo) {
   if (!info || !info.url) return `<div class="media-box" style="cursor:default;">Sin archivo</div>`;
   const clic = `onclick="verMedia('${esc(id)}','${tipo}')"`;
-  if (info.pdf) return `<div class="media-box" ${clic}>📄 Ver PDF</div>`;
+  if (info.pdf) return `<div class="media-box" ${clic}>Ver PDF</div>`;
   return `<div class="media-box" ${clic}><img src="${esc(info.url)}" alt="${tipo}" loading="lazy"></div>`;
 }
 
@@ -753,9 +882,9 @@ function renderPagos() {
         </div>
         ${est === 'archivado' && motivo ? `<div class="pago-motivo"><strong>Motivo:</strong> ${esc(motivo)}</div>` : ''}
         <div class="pago-btns">
-          ${est !== 'aceptado' ? `<button class="ficha-btn btn-ok" onclick="aceptarPago('${id}')">✔ Aceptar</button>` : ''}
-          ${est !== 'archivado' ? `<button class="ficha-btn btn-warn" onclick="abrirArchivarPago('${id}')">🗂 Archivar</button>` : ''}
-          <button class="ficha-btn btn-bad" onclick="rechazarPago('${id}')">✖ Rechazar</button>
+          ${est !== 'aceptado' ? `<button class="ficha-btn btn-ok" onclick="aceptarPago('${id}')">Aceptar</button>` : ''}
+          ${est !== 'archivado' ? `<button class="ficha-btn btn-warn" onclick="abrirArchivarPago('${id}')">Archivar</button>` : ''}
+          <button class="ficha-btn btn-bad" onclick="rechazarPago('${id}')">Rechazar</button>
         </div>
         <button class="ficha-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted);" onclick="verFichaPorId('${id}')">Ver ficha completa</button>
       </div>`;

@@ -168,7 +168,6 @@
 
   .empty{padding:2.5rem 1rem; text-align:center; color:var(--text-faint); font-size:0.9rem;}
 
-  /* ---- Pagos ---- */
   .pagos-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1rem;}
   .pago-card{background:var(--panel-bg); backdrop-filter:blur(14px); border:1px solid var(--panel-border); border-radius:14px; padding:1rem; display:flex; flex-direction:column; gap:0.8rem;}
   .pago-top{display:flex; justify-content:space-between; align-items:flex-start; gap:0.6rem;}
@@ -244,18 +243,16 @@
 <div class="layout">
   <aside class="sidebar">
     <h3>Menú Principal</h3>
-    <div class="course-item active" onclick="cambiarVista('alumnos')" id="menuAlumnos"><span class="cname"> Todos los Inscritos</span></div>
-    <div class="course-item" onclick="cambiarVista('porCurso')" id="menuPorCurso"><span class="cname"> Alumnos por Curso</span></div>
-    <div class="course-item" onclick="cambiarVista('pagos')" id="menuPagos"><span class="cname"> Pagos de Inscripción<span class="menu-badge" id="badgePagos" style="display:none;">0</span></span></div>
-    <div class="course-item" onclick="cambiarVista('cursos')" id="menuCursos"><span class="cname"> Gestionar Cursos</span></div>
-    <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios"><span class="cname"> Subir Horarios</span></div>
-    <div class="course-item" onclick="cambiarVista('fechas')" id="menuFechas"><span class="cname"> Fechas de Inscripción</span></div>
-    <div class="course-item" onclick="cambiarVista('galeriamain')" id="menuGaleria"><span class="cname">Galería</span></div>
+    <div class="course-item active" onclick="cambiarVista('alumnos')" id="menuAlumnos"><span class="cname">Todos los Inscritos</span></div>
+    <div class="course-item" onclick="cambiarVista('porCurso')" id="menuPorCurso"><span class="cname">Alumnos por Curso</span></div>
+    <div class="course-item" onclick="cambiarVista('pagos')" id="menuPagos"><span class="cname">Pagos de Inscripción<span class="menu-badge" id="badgePagos" style="display:none;">0</span></span></div>
+    <div class="course-item" onclick="cambiarVista('cursos')" id="menuCursos"><span class="cname">Gestionar Cursos</span></div>
+    <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios"><span class="cname">Subir Horarios</span></div>
+    <div class="course-item" onclick="cambiarVista('fechas')" id="menuFechas"><span class="cname">Fechas de Inscripción</span></div>
+    <div class="course-item" onclick="cambiarVista('galeria')" id="menuGaleria"><span class="cname">Galeria</span></div>
   </aside>
 
   <main class="main">
-    
-
     <div id="seccionAlumnos" class="vista-panel">
       <div class="stats-row" id="statsRow"></div>
       <div class="main-header">
@@ -381,10 +378,38 @@
         <div id="mensajeFechas" style="margin-top: 1rem; font-size: 0.85rem; display: none;"></div>
       </div>
     </div>
+
+    <div id="seccionGaleria" class="vista-panel" style="display: none;">
+      <div class="main-header">
+        <div>
+          <h1>Gestion de Galeria</h1>
+          <p>Sube nuevas imagenes o elimina las existentes que se muestran en la galeria web</p>
+        </div>
+      </div>
+      <div class="panel" style="padding: 1.8rem; max-width: 600px; margin-bottom: 1.5rem;">
+        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Subir nueva foto</h3>
+        <form id="formGaleriaAdmin">
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Titulo o Descripcion</label>
+            <input type="text" id="galeriaTituloInput" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Actividad en el CEIC">
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Seleccionar Imagen</label>
+            <input type="file" id="galeriaArchivoInput" accept="image/*" required style="width: 100%; color: var(--text-main);">
+          </div>
+          <div id="previewGaleriaAdmin" style="margin-bottom: 1rem;"></div>
+          <button type="submit" class="ficha-btn" id="btnSubirGaleriaAdmin" style="width: 100%; padding: 0.7rem;">Subir a la Galeria</button>
+        </form>
+      </div>
+      <div class="panel" style="padding: 1.5rem;">
+        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Imagenes publicadas actualmente</h3>
+        <div id="listaGaleriaAdmin" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;"></div>
+      </div>
+    </div>
   </main>
 </div>
 
-<!-- MODAL FICHA DEL ESTUDIANTE -->
+<!-- MODALES -->
 <div class="overlay" id="fichaOverlay">
   <div class="ficha" id="fichaCard">
     <button class="ficha-close" id="fichaClose">X</button>
@@ -406,7 +431,6 @@
   </div>
 </div>
 
-<!-- MODAL EDITAR ESTUDIANTE (MODIFICAR TODOS LOS DATOS) -->
 <div class="overlay" id="modalEditarEstudianteOverlay">
   <div class="ficha" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
     <button class="ficha-close" id="modalEditarEstudianteClose">X</button>
@@ -418,7 +442,6 @@
     </div>
     <form id="formEditarEstudiante" style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem;">
       <input type="hidden" id="editEstudianteId">
-      
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex:1;">
           <label style="font-size: 0.8rem; font-weight: 600;">Nombres *</label>
@@ -429,7 +452,6 @@
           <input type="text" id="editApellido" required style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
         </div>
       </div>
-
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex: 0.7;">
           <label style="font-size: 0.8rem; font-weight: 600;">Nacionalidad</label>
@@ -440,7 +462,6 @@
           <input type="text" id="editCedula" required style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
         </div>
       </div>
-
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex:1;">
           <label style="font-size: 0.8rem; font-weight: 600;">Fecha de Nacimiento</label>
@@ -454,7 +475,6 @@
           </select>
         </div>
       </div>
-
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex:1;">
           <label style="font-size: 0.8rem; font-weight: 600;">Teléfono</label>
@@ -465,12 +485,10 @@
           <input type="text" id="editWhatsapp" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
         </div>
       </div>
-
       <div>
         <label style="font-size: 0.8rem; font-weight: 600;">Correo Electrónico</label>
         <input type="email" id="editCorreo" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
       </div>
-
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex:1;">
           <label style="font-size: 0.8rem; font-weight: 600;">Estado</label>
@@ -481,12 +499,10 @@
           <input type="text" id="editMunicipio" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
         </div>
       </div>
-
       <div>
         <label style="font-size: 0.8rem; font-weight: 600;">Dirección</label>
         <input type="text" id="editDireccion" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
       </div>
-
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex:1;">
           <label style="font-size: 0.8rem; font-weight: 600;">Ocupación</label>
@@ -497,7 +513,6 @@
           <input type="text" id="editNivelEducativo" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
         </div>
       </div>
-
       <div style="display: flex; gap: 0.5rem;">
         <div style="flex:1;">
           <label style="font-size: 0.8rem; font-weight: 600;">Institución / Empresa</label>
@@ -508,7 +523,6 @@
           <select id="editCursoSelect" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;"></select>
         </div>
       </div>
-
       <div class="ficha-actions" style="margin-top: 1rem;">
         <button type="button" class="btn-cancel" id="modalEditarEstudianteCancel">Cancelar</button>
         <button type="submit" class="btn-print">Guardar Cambios</button>
@@ -517,7 +531,6 @@
   </div>
 </div>
 
-<!-- MODAL NUEVO / EDITAR CURSO -->
 <div class="overlay" id="modalCursoOverlay">
   <div class="ficha" style="max-width: 500px;">
     <button class="ficha-close" id="modalCursoClose">✕</button>
@@ -565,7 +578,6 @@
   </div>
 </div>
 
-<!-- MODAL MOTIVO (ARCHIVAR) -->
 <div class="overlay" id="motivoOverlay">
   <div class="ficha" style="max-width:440px;">
     <button class="ficha-close" id="motivoClose">✕</button>
@@ -584,7 +596,6 @@
   </div>
 </div>
 
-<!-- VISOR DE IMAGEN / PDF -->
 <div class="overlay" id="visorOverlay">
   <div class="ficha visor">
     <button class="ficha-close" id="visorClose">✕</button>
