@@ -721,7 +721,17 @@ async function cargarGaleriaAdmin() {
 }
 
 function extraerPathGaleria(url) {
-  const m = url.match(/\/object\/public\/fotos-galeria\/([^?]+)/);
+  try {
+    const urlObj = new URL(url);
+    const partes = urlObj.pathname.split('/');
+    const indexBucket = partes.indexOf(GALERIA_BUCKET);
+    if (indexBucket !== -1 && indexBucket < partes.length - 1) {
+      return partes.slice(indexBucket + 1).join('/');
+    }
+  } catch (e) {
+    console.error('Error al parsear URL de galería:', e);
+  }
+  const m = url.match(/\/fotos-galeria\/([^?]+)/);
   return m ? decodeURIComponent(m[1]) : null;
 }
 
@@ -729,17 +739,19 @@ async function eliminarFotoGaleria(id, url) {
   if (!confirm('¿Estás seguro de eliminar esta imagen de la galeria?')) return;
 
   try {
+    // 1. Borrar del Storage de Supabase primero
+    const path = extraerPathGaleria(url);
+    if (path) {
+      await supabaseClient.storage.from(GALERIA_BUCKET).remove([path]);
+    }
+
+    // 2. Borrar el registro de la base de datos
     const { error: dbError } = await supabaseClient
       .from('galeria')
       .delete()
       .eq('id', id);
 
     if (dbError) throw dbError;
-
-    const path = extraerPathGaleria(url);
-    if (path) {
-      await supabaseClient.storage.from(GALERIA_BUCKET).remove([path]);
-    }
 
     alert('Imagen eliminada de la galeria correctamente.');
     cargarGaleriaAdmin();
