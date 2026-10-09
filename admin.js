@@ -20,6 +20,8 @@ function esc(v) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+const esPdf = s => /\.pdf(\?|$)/i.test(s || '');
+
 const SEAL_SVG = `
 <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
   <circle cx="200" cy="200" r="185" fill="none" stroke="#2B547E" stroke-width="18" />
