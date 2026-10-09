@@ -2,7 +2,7 @@
    CONFIGURACIÓN DE SUPABASE
    ========================================================= */
 const SUPABASE_URL = "https://fzvjhdeodahtxoolxzkx.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Control de Acceso
@@ -146,13 +146,15 @@ async function inicializarPanel() {
     aplicarBusquedaGeneral();
 
     const sel = document.getElementById('selectCurso');
-    const previo = sel.value;
-    sel.innerHTML = '<option value="">— Selecciona un curso —</option>' +
-      cursosGlobal.map(c => {
-        const n = alumnosGlobal.filter(a => String(a.curso_id) === String(c.id)).length;
-        return `<option value="${esc(c.id)}">${esc(c.nombre)} (${n})</option>`;
-      }).join('');
-    sel.value = previo;
+    if (sel) {
+      const previo = sel.value;
+      sel.innerHTML = '<option value="">— Selecciona un curso —</option>' +
+        cursosGlobal.map(c => {
+          const n = alumnosGlobal.filter(a => String(a.curso_id) === String(c.id)).length;
+          return `<option value="${esc(c.id)}">${esc(c.nombre)} (${n})</option>`;
+        }).join('');
+      sel.value = previo;
+    }
     mostrarAlumnosCurso();
     actualizarBadgePagos();
   } catch (err) {
@@ -163,6 +165,7 @@ async function inicializarPanel() {
 function renderizarAlumnos(lista, tbodyId, emptyId, mostrarCurso) {
   const tbody = document.getElementById(tbodyId);
   const empty = document.getElementById(emptyId);
+  if (!tbody || !empty) return;
   tbody.innerHTML = '';
 
   if (!lista.length) { empty.style.display = 'block'; return; }
@@ -207,19 +210,25 @@ function filtrar(lista, term) {
 }
 
 function aplicarBusquedaGeneral() {
-  const term = document.getElementById('searchInput').value;
+  const inputSearch = document.getElementById('searchInput');
+  if (!inputSearch) return;
+  const term = inputSearch.value;
   renderizarAlumnos(filtrar(alumnosGlobal, term), 'studentBody', 'emptyState', true);
 }
-document.getElementById('searchInput').addEventListener('input', aplicarBusquedaGeneral);
+document.getElementById('searchInput')?.addEventListener('input', aplicarBusquedaGeneral);
 
 function mostrarAlumnosCurso() {
-  const cursoId = document.getElementById('selectCurso').value;
-  const term = document.getElementById('searchCurso').value;
+  const selectCurso = document.getElementById('selectCurso');
+  const searchCurso = document.getElementById('searchCurso');
+  if (!selectCurso || !searchCurso) return;
+
+  const cursoId = selectCurso.value;
+  const term = searchCurso.value;
   const lista = cursoId ? alumnosGlobal.filter(a => String(a.curso_id) === String(cursoId)) : [];
   renderizarAlumnos(filtrar(lista, term), 'studentBodyCurso', 'emptyStateCurso', false);
 }
-document.getElementById('selectCurso').addEventListener('change', mostrarAlumnosCurso);
-document.getElementById('searchCurso').addEventListener('input', mostrarAlumnosCurso);
+document.getElementById('selectCurso')?.addEventListener('change', mostrarAlumnosCurso);
+document.getElementById('searchCurso')?.addEventListener('input', mostrarAlumnosCurso);
 
 /* =========================================================
    EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES
@@ -431,6 +440,7 @@ document.getElementById('formCrearCurso').addEventListener('submit', async (e) =
 
 async function cargarCursosAdmin() {
   const contenedor = document.getElementById('listaCursosAdmin');
+  if (!contenedor) return;
   contenedor.innerHTML = '<p style="color:var(--text-faint);">Cargando cursos...</p>';
 
   const { data, error } = await supabaseClient.from('cursos').select('*');
@@ -547,6 +557,7 @@ document.getElementById('formHorario')?.addEventListener('submit', async (e) => 
 
 async function cargarHorariosAdmin() {
   const cont = document.getElementById('listaHorariosAdmin');
+  if (!cont) return;
   cont.innerHTML = '<p style="color:var(--text-faint);">Cargando...</p>';
 
   const { data, error } = await supabaseClient.from('cursos').select('*');
@@ -763,7 +774,6 @@ const pick = (o, cols) => {
   return null;
 };
 const estadoDe = a => a[PAGOS_CFG.colEstado] || 'pendiente';
-const esPdf = s => /\.pdf(\?|$)/i.test(s || '');
 
 function extraerPath(url) {
   const m = url.match(/\/object\/(?:public|sign|authenticated)\/[^/]+\/([^?]+)/);
@@ -909,7 +919,7 @@ document.getElementById('visorClose').onclick = () => {
 };
 
 async function actualizarEstadoPago(id, estado, motivo) {
-  const { data, error } = await supabaseClient.from('inscripciones')
+  const { error } = await supabaseClient.from('inscripciones')
     .update({
       [PAGOS_CFG.colEstado]: estado,
       [PAGOS_CFG.colMotivo]: motivo || null,
