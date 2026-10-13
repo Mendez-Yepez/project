@@ -316,22 +316,82 @@
       <div id="listaPagos" class="pagos-grid"></div>
     </div>
 
-    <div id="seccionCursos" class="vista-panel" style="display: none;">
-      <div class="main-header">
-        <div>
-          <h1>Gestión de Cursos y Catálogo</h1>
-          <p>Agrega, edita o elimina cursos que se verán reflejados en el catálogo e inscripciones</p>
-        </div>
-        <button class="ficha-btn" onclick="abrirModalCurso()">+ Nuevo Curso</button>
-      </div>
-      <div class="panel" style="padding: 1.5rem;">
-        <div id="listaCursosAdmin" style="display: flex; flex-direction: column; gap: 0.8rem;"></div>
+    <div class="overlay" id="modalCursoOverlay">
+  <div class="ficha" style="max-width: 550px; max-height: 90vh; overflow-y: auto;">
+    <button class="ficha-close" id="modalCursoClose">✕</button>
+    <div class="ficha-head">
+      <div class="titles">
+        <div class="t1" id="modalCursoTitulo">Registrar Nuevo Curso</div>
+        <div class="t2">CEIC · Catálogo & Admin</div>
       </div>
     </div>
+    <form id="formCrearCurso" style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem;">
+      <input type="hidden" id="cursoIdEdit">
+      
+      <div>
+        <label style="font-size: 0.8rem; font-weight: 600;">Nombre del Curso *</label>
+        <input type="text" id="nuevoNombre" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+      </div>
+      
+      <div>
+        <label style="font-size: 0.8rem; font-weight: 600;">Descripción</label>
+        <textarea id="nuevoDesc" rows="2" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;"></textarea>
+      </div>
 
-    <div id="seccionHorarios" class="vista-panel" style="display: none;">
-      <div class="main-header">
-        <div>
+      <div style="display: flex; gap: 0.5rem;">
+        <div style="flex:1;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Modalidad</label>
+          <input type="text" id="nuevoModalidad" placeholder="Ej. Presencial" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Costo ($)</label>
+          <input type="number" id="nuevoCosto" step="0.01" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <div style="flex:1;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Cupo Máximo</label>
+          <input type="number" id="nuevoCupo" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Culminación</label>
+          <input type="date" id="nuevoFecha" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+        </div>
+      </div>
+
+      <!-- NUEVA SECCIÓN DE IMÁGENES E INSTRUCTOR -->
+      <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 0.5rem 0;">
+      <h4 style="font-size: 0.88rem; color: var(--primary-blue, #2b547e); font-weight: 700; margin-bottom: 0.2rem;">Imágenes e Instructor</h4>
+
+      <div>
+        <label style="font-size: 0.8rem; font-weight: 600;">URL de la Imagen del Curso</label>
+        <input type="text" id="nuevoImagenUrl" placeholder="https://..." style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <div style="flex:1;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Nombre del Instructor</label>
+          <input type="text" id="nuevoInstructorNombre" placeholder="Ej. Prof. Juan Pérez" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Título / Especialidad</label>
+          <input type="text" id="nuevoInstructorTitulo" placeholder="Ej. Ing. en Sistemas" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 0.8rem; font-weight: 600;">URL Foto del Instructor</label>
+        <input type="text" id="nuevoInstructorFoto" placeholder="https://..." style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #000;">
+      </div>
+
+      <div class="ficha-actions" style="margin-top: 1rem;">
+        <button type="button" class="btn-cancel" id="modalCursoCancel">Cancelar</button>
+        <button type="submit" class="btn-print" id="btnGuardarCursoData">Guardar Curso</button>
+      </div>
+    </form>
+  </div>
+</div>
           <h1>Subir Horarios por Curso</h1>
           <p>Sube la imagen del horario de cada curso de forma individual</p>
         </div>
