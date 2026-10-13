@@ -13,6 +13,7 @@
 </head>
 <body>
 
+    <!-- 1. BARRA SUPERIOR DE REDES SOCIALES -->
     <div class="top-bar py-1 d-none d-md-block">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="d-flex gap-3">
@@ -75,13 +76,13 @@
                 </ul>
 
                 <!-- BOTONES DE ACCIÓN (DINÁMICOS POR SCRIPT) -->
-               <!-- BOTONES DE ACCIÓN (DINÁMICOS POR SCRIPT) -->
                 <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
                     <a id="nav-btn-inscripcion" 
                        href="inscripcion.html" 
                        class="btn btn-outline-primary btn-sm fw-bold px-3 py-2 rounded-pill border-2 disabled" 
                        aria-disabled="true" 
-                       tabindex="-1">
+                       tabindex="-1"
+                       style="pointer-events: none;">
                         <i class="bi bi-card-checklist me-1"></i> INSCRIPCIÓN
                     </a>
                     <a href="login.html" class="btn text-white btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm" style="background-color: var(--primary-blue);">
@@ -316,11 +317,15 @@
                     
                     if (navBtnInscripcion) {
                         navBtnInscripcion.classList.remove('disabled');
+                        navBtnInscripcion.removeAttribute('aria-disabled');
+                        navBtnInscripcion.removeAttribute('tabindex');
                         navBtnInscripcion.setAttribute('href', 'inscripcion.html');
                         navBtnInscripcion.style.pointerEvents = 'auto';
                     }
                     if (btnPostulate) {
                         btnPostulate.classList.remove('disabled');
+                        btnPostulate.removeAttribute('aria-disabled');
+                        btnPostulate.removeAttribute('tabindex');
                         btnPostulate.setAttribute('href', 'inscripcion.html');
                         btnPostulate.style.pointerEvents = 'auto';
                     }
@@ -332,12 +337,16 @@
 
                     if (navBtnInscripcion) {
                         navBtnInscripcion.classList.add('disabled');
+                        navBtnInscripcion.setAttribute('aria-disabled', 'true');
+                        navBtnInscripcion.setAttribute('tabindex', '-1');
                         navBtnInscripcion.removeAttribute('href');
                         navBtnInscripcion.style.pointerEvents = 'none';
                     }
 
                     if (btnPostulate) {
                         btnPostulate.classList.add('disabled');
+                        btnPostulate.setAttribute('aria-disabled', 'true');
+                        btnPostulate.setAttribute('tabindex', '-1');
                         btnPostulate.removeAttribute('href');
                         btnPostulate.style.pointerEvents = 'none';
                     }
