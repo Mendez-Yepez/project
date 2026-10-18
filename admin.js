@@ -395,12 +395,15 @@ async function eliminarEstudiante(id, nombreCompleto) {
 }
 
 /* =========================================================
-   GESTIÓN DE CURSOS
+   GESTIÓN DE CURSOS E IMÁGENES
    ========================================================= */
 const modalCursoOverlay = document.getElementById('modalCursoOverlay');
 
 function abrirModalCurso(curso = null) {
   document.getElementById('formCrearCurso').reset();
+  const preview = document.getElementById('previewCursoAdmin');
+  if (preview) preview.innerHTML = '';
+
   if (curso) {
     document.getElementById('modalCursoTitulo').textContent = 'Modificar Curso';
     document.getElementById('cursoIdEdit').value = curso.id;
@@ -410,6 +413,10 @@ function abrirModalCurso(curso = null) {
     document.getElementById('nuevoCosto').value = curso.costo || '';
     document.getElementById('nuevoCupo').value = curso.cupo_maximo || curso.cupo || '';
     document.getElementById('nuevoFecha').value = curso.fecha_culminacion || curso.fecha || '';
+    
+    if (curso.imagen_url && preview) {
+      preview.innerHTML = `<img src="${esc(curso.imagen_url)}" alt="Imagen actual" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--panel-border);">`;
+    }
   } else {
     document.getElementById('modalCursoTitulo').textContent = 'Registrar Nuevo Curso';
     document.getElementById('cursoIdEdit').value = '';
@@ -421,6 +428,15 @@ function editarCursoPorId(id) {
   const curso = cursosGlobal.find(c => String(c.id) === String(id));
   if (curso) abrirModalCurso(curso);
 }
+
+document.getElementById('nuevoImagen')?.addEventListener('change', (e) => {
+  const prev = document.getElementById('previewCursoAdmin');
+  const f = e.target.files[0];
+  if (!f) return;
+  if (prev && f.type.startsWith('image/')) {
+    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="width: 80px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--panel-border);">`;
+  }
+});
 
 document.getElementById('modalCursoClose')?.addEventListener('click', () => modalCursoOverlay?.classList.remove('show'));
 document.getElementById('modalCursoCancel')?.addEventListener('click', () => modalCursoOverlay?.classList.remove('show'));
@@ -434,20 +450,41 @@ document.getElementById('formCrearCurso')?.addEventListener('submit', async (e) 
   const costo = document.getElementById('nuevoCosto').value ? parseFloat(document.getElementById('nuevoCosto').value) : 0;
   const cupo_maximo = document.getElementById('nuevoCupo').value ? parseInt(document.getElementById('nuevoCupo').value) : 30;
   const fecha_culminacion = document.getElementById('nuevoFecha').value || null;
+  const archivoImagen = document.getElementById('nuevoImagen').files[0];
 
   const btn = document.getElementById('btnGuardarCursoData');
   if (btn) { btn.textContent = 'Guardando...'; btn.disabled = true; }
 
   try {
+    let imagenUrl = null;
+    if (id) {
+      const cursoExistente = cursosGlobal.find(c => String(c.id) === String(id));
+      imagenUrl = cursoExistente ? cursoExistente.imagen_url : null;
+    }
+
+    if (archivoImagen) {
+      const ext = (archivoImagen.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `curso_img_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
+      const { error: errUp } = await supabaseClient.storage
+        .from(TUTORES_BUCKET)
+        .upload(path, archivoImagen, { contentType: archivoImagen.type });
+      if (errUp) throw errUp;
+
+      const { data: pub } = supabaseClient.storage.from(TUTORES_BUCKET).getPublicUrl(path);
+      imagenUrl = pub.publicUrl;
+    }
+
     if (id) {
       const { error } = await supabaseClient.from('cursos').update({
-        nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion
+        nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion,
+        ...(imagenUrl ? { imagen_url: imagenUrl } : {})
       }).eq('id', id);
       if (error) throw error;
       alert('Curso actualizado con éxito');
     } else {
       const { error } = await supabaseClient.from('cursos').insert([{
-        nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion
+        nombre, descripcion, modalidad, costo, cupo_maximo, fecha_culminacion,
+        imagen_url: imagenUrl
       }]);
       if (error) throw error;
       alert('Curso registrado con éxito');
@@ -484,11 +521,18 @@ async function cargarCursosAdmin() {
   cursosGlobal = data;
   contenedor.innerHTML = '';
   data.forEach(curso => {
+    const imgThumb = curso.imagen_url
+      ? `<img src="${esc(curso.imagen_url)}" alt="Curso" style="width: 50px; height: 40px; object-fit: cover; border-radius: 6px;">`
+      : `<div style="width: 50px; height: 40px; background: var(--chip-bg); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: var(--text-faint);">Sin foto</div>`;
+
     contenedor.innerHTML += `
       <div style="background:var(--input-bg); border:1px solid var(--panel-border); padding:1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-        <div>
-          <strong style="font-size:1rem; color:var(--text-main);">${esc(curso.nombre)}</strong>
-          <p style="font-size:0.8rem; color:var(--text-faint); margin-top:0.2rem;">${esc(curso.descripcion || 'Sin descripción')} | Modalidad: ${esc(curso.modalidad || 'N/A')} | Costo: $${esc(curso.costo || 0)}</p>
+        <div style="display:flex; align-items:center; gap:0.8rem;">
+          ${imgThumb}
+          <div>
+            <strong style="font-size:1rem; color:var(--text-main);">${esc(curso.nombre)}</strong>
+            <p style="font-size:0.8rem; color:var(--text-faint); margin-top:0.2rem;">${esc(curso.descripcion || 'Sin descripción')} | Modalidad: ${esc(curso.modalidad || 'N/A')} | Costo: $${esc(curso.costo || 0)}</p>
+          </div>
         </div>
         <div style="display:flex; gap:0.5rem;">
           <button class="ficha-btn" onclick="editarCursoPorId('${esc(curso.id)}')">Modificar</button>
