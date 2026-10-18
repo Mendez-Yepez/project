@@ -64,7 +64,10 @@
   }
   .admin-pill .dot{width:8px; height:8px; border-radius:50%; background:#3fae5c;}
 
-  .layout{display:flex; min-height:calc(100vh - 66px);}
+  .layout{
+    display:flex; 
+    min-height:calc(100vh - 66px);
+  }
 
   .sidebar{
     width:260px; flex-shrink:0; background:var(--sidebar-bg); backdrop-filter:blur(14px);
@@ -248,8 +251,9 @@
     <div class="course-item" onclick="cambiarVista('pagos')" id="menuPagos"><span class="cname">Pagos de Inscripción<span class="menu-badge" id="badgePagos" style="display:none;">0</span></span></div>
     <div class="course-item" onclick="cambiarVista('cursos')" id="menuCursos"><span class="cname">Gestionar Cursos</span></div>
     <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios"><span class="cname">Subir Horarios</span></div>
+    <div class="course-item" onclick="cambiarVista('tutores')" id="menuTutores"><span class="cname">Tutores / Instructores</span></div>
     <div class="course-item" onclick="cambiarVista('fechas')" id="menuFechas"><span class="cname">Fechas de Inscripción</span></div>
-    <div class="course-item" onclick="cambiarVista('galeria')" id="menuGaleria"><span class="cname">Galeria</span></div>
+    <div class="course-item" onclick="cambiarVista('galeria')" id="menuGaleria"><span class="cname">Galería</span></div>
   </aside>
 
   <main class="main">
@@ -267,7 +271,7 @@
       <div class="panel">
         <table>
           <thead>
-            <tr><th>Alumno</th><th>Curso</th><th>Cédula</th><th>Teléfono</th><th>Correo</th><th></th></tr>
+            <tr><th>Alumno</th><th>Curso</th><th>Cédula</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr>
           </thead>
           <tbody id="studentBody"></tbody>
         </table>
@@ -356,6 +360,41 @@
       </div>
     </div>
 
+    <div id="seccionTutores" class="vista-panel" style="display: none;">
+      <div class="main-header">
+        <div>
+          <h1>Gestión de Tutores por Curso</h1>
+          <p>Asigna o modifica la foto y el nombre del tutor/instructor para cada curso individual</p>
+        </div>
+      </div>
+      <div class="panel" style="padding: 1.8rem; max-width: 600px; margin-bottom: 1.2rem;">
+        <form id="formTutor">
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Curso *</label>
+            <select id="cursoTutor" class="search-box" style="width: 100%; color: var(--text-main);" required></select>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Nombre del Tutor / Instructor *</label>
+            <input type="text" id="nombreTutorInput" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Prof. Carlos Mendoza" required>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Título / Especialidad (Opcional)</label>
+            <input type="text" id="tituloTutorInput" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Especialista en Programación">
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Foto del Tutor (JPG, PNG)</label>
+            <input type="file" id="fotoTutorInput" accept="image/*" style="width: 100%; color: var(--text-main);">
+          </div>
+          <div id="previewTutor" style="margin-bottom: 1rem;"></div>
+          <button type="submit" class="ficha-btn" id="btnGuardarTutor" style="width: 100%; padding: 0.7rem;">Guardar Tutor</button>
+        </form>
+      </div>
+      <div class="panel" style="padding: 1.5rem;">
+        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Tutores asignados por curso</h3>
+        <div id="listaTutoresAdmin" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+      </div>
+    </div>
+
     <div id="seccionFechas" class="vista-panel" style="display: none;">
       <div class="main-header">
         <div>
@@ -382,15 +421,15 @@
     <div id="seccionGaleria" class="vista-panel" style="display: none;">
       <div class="main-header">
         <div>
-          <h1>Gestion de Galeria</h1>
-          <p>Sube nuevas imagenes o elimina las existentes que se muestran en la galeria web</p>
+          <h1>Gestión de Galería</h1>
+          <p>Sube nuevas imágenes o elimina las existentes que se muestran en la galería web</p>
         </div>
       </div>
       <div class="panel" style="padding: 1.8rem; max-width: 600px; margin-bottom: 1.5rem;">
         <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Subir nueva foto</h3>
         <form id="formGaleriaAdmin">
           <div style="margin-bottom: 1rem;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Titulo o Descripcion</label>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem;">Título o Descripción</label>
             <input type="text" id="galeriaTituloInput" class="search-box" style="width: 100%; border: 1px solid var(--panel-border); color: var(--text-main);" placeholder="Ej. Actividad en el CEIC">
           </div>
           <div style="margin-bottom: 1rem;">
@@ -398,11 +437,11 @@
             <input type="file" id="galeriaArchivoInput" accept="image/*" required style="width: 100%; color: var(--text-main);">
           </div>
           <div id="previewGaleriaAdmin" style="margin-bottom: 1rem;"></div>
-          <button type="submit" class="ficha-btn" id="btnSubirGaleriaAdmin" style="width: 100%; padding: 0.7rem;">Subir a la Galeria</button>
+          <button type="submit" class="ficha-btn" id="btnSubirGaleriaAdmin" style="width: 100%; padding: 0.7rem;">Subir a la Galería</button>
         </form>
       </div>
       <div class="panel" style="padding: 1.5rem;">
-        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Imagenes publicadas actualmente</h3>
+        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Imágenes publicadas actualmente</h3>
         <div id="listaGaleriaAdmin" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;"></div>
       </div>
     </div>
@@ -412,7 +451,7 @@
 <!-- MODALES -->
 <div class="overlay" id="fichaOverlay">
   <div class="ficha" id="fichaCard">
-    <button class="ficha-close" id="fichaClose">X</button>
+    <button class="ficha-close" id="fichaClose">✕</button>
     <div class="ficha-head">
       <div class="ficha-head-left">
         <div class="seal" id="sealSlot2"></div>
@@ -433,7 +472,7 @@
 
 <div class="overlay" id="modalEditarEstudianteOverlay">
   <div class="ficha" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
-    <button class="ficha-close" id="modalEditarEstudianteClose">X</button>
+    <button class="ficha-close" id="modalEditarEstudianteClose">✕</button>
     <div class="ficha-head">
       <div class="titles">
         <div class="t1">Modificar Datos del Estudiante</div>

@@ -1,11 +1,13 @@
 /* =========================================================
-   CONFIGURACIÓN DE SUPABASE
+   CONFIGURACIÓN DE SUPABASE Y CONTROL DE SESIÓN
    ========================================================= */
 const SUPABASE_URL = "https://fzvjhdeodahtxoolxzkx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Control de Acceso
+const TUTORES_BUCKET = 'documentos';
+
+// Control de Acceso por Sesión
 (function checkSession() {
   let role = null;
   try { role = sessionStorage.getItem('ceic_role'); } catch (e) {}
@@ -31,21 +33,24 @@ const SEAL_SVG = `
   <text x="200" y="288" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11.5" fill="#111" text-anchor="middle" letter-spacing="0.5">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</text>
 </svg>`;
 
-document.getElementById('sealSlot1').innerHTML = SEAL_SVG;
-document.getElementById('sealSlot2').innerHTML = SEAL_SVG;
+const sealSlot1 = document.getElementById('sealSlot1');
+const sealSlot2 = document.getElementById('sealSlot2');
+if (sealSlot1) sealSlot1.innerHTML = SEAL_SVG;
+if (sealSlot2) sealSlot2.innerHTML = SEAL_SVG;
 
 try {
   const adminName = sessionStorage.getItem('ceic_username') || 'admin';
-  document.getElementById('adminLabel').textContent = adminName;
+  const adminLabel = document.getElementById('adminLabel');
+  if (adminLabel) adminLabel.textContent = adminName;
 } catch (e) {}
 
 const root = document.documentElement;
-document.getElementById('themeToggle').addEventListener('click', () => {
+document.getElementById('themeToggle')?.addEventListener('click', () => {
   const current = root.getAttribute('data-theme');
   root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
-document.getElementById('logoutBtn').addEventListener('click', () => {
+document.getElementById('logoutBtn')?.addEventListener('click', () => {
   sessionStorage.removeItem('ceic_role');
   sessionStorage.removeItem('ceic_username');
   window.location.href = 'login.html';
@@ -64,32 +69,41 @@ function cambiarVista(vista) {
     pagos:    ['menuPagos',    'seccionPagos'],
     cursos:   ['menuCursos',   'seccionCursos'],
     horarios: ['menuHorarios', 'seccionHorarios'],
+    tutores:  ['menuTutores',  'seccionTutores'],
     fechas:   ['menuFechas',   'seccionFechas'],
     galeria:  ['menuGaleria',  'seccionGaleria']
   };
-  const [menu, seccion] = mapa[vista];
-  if (menu && seccion) {
-    document.getElementById(menu).classList.add('active');
-    document.getElementById(seccion).style.display = 'block';
+
+  if (mapa[vista]) {
+    const [menu, seccion] = mapa[vista];
+    document.getElementById(menu)?.classList.add('active');
+    const secEl = document.getElementById(seccion);
+    if (secEl) secEl.style.display = 'block';
   }
 
   if (vista === 'cursos') cargarCursosAdmin();
   if (vista === 'pagos') cargarPagos();
   if (vista === 'horarios') cargarHorariosAdmin();
+  if (vista === 'tutores') cargarTutoresAdmin();
   if (vista === 'fechas') cargarFechasInscripcion();
   if (vista === 'galeria') cargarGaleriaAdmin();
 }
 
+/* =========================================================
+   CONFIGURACIÓN DE FECHAS DE INSCRIPCIÓN
+   ========================================================= */
 async function cargarFechasInscripcion() {
   try {
     const { data, error } = await supabaseClient.from('configuracion').select('*');
     if (error) throw error;
-    data.forEach(item => {
+    data?.forEach(item => {
       if (item.clave === 'fecha_inicio_inscripcion') {
-        document.getElementById('fechaInicioInscripcion').value = item.valor.slice(0, 16);
+        const input = document.getElementById('fechaInicioInscripcion');
+        if (input) input.value = item.valor.slice(0, 16);
       }
       if (item.clave === 'fecha_limite_inscripcion') {
-        document.getElementById('fechaLimiteInscripcion').value = item.valor.slice(0, 16);
+        const input = document.getElementById('fechaLimiteInscripcion');
+        if (input) input.value = item.valor.slice(0, 16);
       }
     });
   } catch (err) {
@@ -109,20 +123,24 @@ document.getElementById('formFechasInscripcion')?.addEventListener('submit', asy
       { clave: 'fecha_limite_inscripcion', valor: limite }
     ]);
     if (e1) throw e1;
-    msg.style.display = 'block';
-    msg.style.color = '#3fae5c';
-    msg.textContent = 'Fechas guardadas exitosamente';
-    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    if (msg) {
+      msg.style.display = 'block';
+      msg.style.color = '#3fae5c';
+      msg.textContent = 'Fechas guardadas exitosamente';
+      setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    }
   } catch (err) {
     console.error(err);
-    msg.style.display = 'block';
-    msg.style.color = 'var(--accent-red)';
-    msg.textContent = 'Error al guardar las fechas.';
+    if (msg) {
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent-red)';
+      msg.textContent = 'Error al guardar las fechas.';
+    }
   }
 });
 
 /* =========================================================
-   DATOS: CURSOS E INSCRITOS
+   DATOS GENERALES: CURSOS E INSCRITOS
    ========================================================= */
 let cursosGlobal = [];
 let alumnosGlobal = [];
@@ -136,14 +154,18 @@ async function inicializarPanel() {
     if (e1) throw e1;
     cursosGlobal = cursos || [];
     llenarSelectHorario();
+    llenarSelectTutor();
 
     const { data: insc, error: e2 } = await supabaseClient.from('inscripciones').select('*');
     if (e2) throw e2;
     alumnosGlobal = insc || [];
 
-    document.getElementById('statsRow').innerHTML = `
-      <div class="stat"><div class="num">${alumnosGlobal.length}</div><div class="lbl">Total inscritos</div></div>
-      <div class="stat"><div class="num">${cursosGlobal.length}</div><div class="lbl">Cursos registrados</div></div>`;
+    const statsRow = document.getElementById('statsRow');
+    if (statsRow) {
+      statsRow.innerHTML = `
+        <div class="stat"><div class="num">${alumnosGlobal.length}</div><div class="lbl">Total inscritos</div></div>
+        <div class="stat"><div class="num">${cursosGlobal.length}</div><div class="lbl">Cursos registrados</div></div>`;
+    }
 
     aplicarBusquedaGeneral();
 
@@ -178,7 +200,7 @@ function renderizarAlumnos(lista, tbodyId, emptyId, mostrarCurso) {
     tr.innerHTML = `
       <td>
         <div class="stu-name">${esc(a.nombres)} ${esc(a.apellidos)}</div>
-        <div class="stu-sub">${esc(a.nacionalidad)}</div>
+        <div class="stu-sub">${esc(a.nacionalidad || 'V')}</div>
       </td>
       ${mostrarCurso ? `<td><span class="badge">${esc(nombreCurso(a.curso_id))}</span></td>` : ''}
       <td><span class="badge">${esc(a.numero_identificacion)}</span></td>
@@ -231,6 +253,48 @@ function mostrarAlumnosCurso() {
 }
 document.getElementById('selectCurso')?.addEventListener('change', mostrarAlumnosCurso);
 document.getElementById('searchCurso')?.addEventListener('input', mostrarAlumnosCurso);
+
+/* =========================================================
+   FICHA PERSONAL DE ESTUDIANTE Y EXP. PDF
+   ========================================================= */
+const fichaOverlay = document.getElementById('fichaOverlay');
+
+function verFicha(alumno) {
+  const fotoSlot = document.getElementById('fichaFotoSlot');
+  const urlFoto = alumno.foto_url || alumno.foto_carnet_url || alumno.foto;
+
+  if (fotoSlot) {
+    if (urlFoto) {
+      fotoSlot.innerHTML = `<img src="${esc(urlFoto)}" alt="Foto" onerror="this.parentNode.innerHTML='<span class=&quot;no-foto&quot;>Sin foto</span>'">`;
+    } else {
+      fotoSlot.innerHTML = `<span class="no-foto"><br>Sin foto</span>`;
+    }
+  }
+
+  const fields = document.getElementById('fichaFields');
+  if (fields) {
+    fields.innerHTML = `
+      <div class="ficha-field"><span class="k">Curso:</span><span class="v">${esc(nombreCurso(alumno.curso_id))}</span></div>
+      <div class="ficha-field"><span class="k">Nombres y Apellidos:</span><span class="v">${esc(alumno.nombres)} ${esc(alumno.apellidos)}</span></div>
+      <div class="ficha-field"><span class="k">Cédula / Identificación:</span><span class="v">${esc(alumno.nacionalidad || 'V')} ${esc(alumno.numero_identificacion)}</span></div>
+      <div class="ficha-field"><span class="k">Fecha de Nacimiento:</span><span class="v">${esc(alumno.fecha_nacimiento || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Sexo:</span><span class="v">${esc(alumno.sexo || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Teléfono / WhatsApp:</span><span class="v">${esc(alumno.telefono || 'N/A')} / ${esc(alumno.whatsapp || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Correo Electrónico:</span><span class="v">${esc(alumno.correo_electronico || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Ubicación:</span><span class="v">${esc(alumno.municipio_ciudad || '')}, ${esc(alumno.estado || '')}</span></div>
+      <div class="ficha-field"><span class="k">Dirección:</span><span class="v">${esc(alumno.direccion || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Ocupación:</span><span class="v">${esc(alumno.ocupacion || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Nivel Educativo:</span><span class="v">${esc(alumno.nivel_educativo || 'N/A')}</span></div>
+      <div class="ficha-field"><span class="k">Institución / Empresa:</span><span class="v">${esc(alumno.institucion || 'N/A')}</span></div>
+    `;
+  }
+
+  fichaOverlay?.classList.add('show');
+}
+
+document.getElementById('fichaClose')?.addEventListener('click', () => fichaOverlay?.classList.remove('show'));
+document.getElementById('fichaCancelBtn')?.addEventListener('click', () => fichaOverlay?.classList.remove('show'));
+document.getElementById('fichaPrintBtn')?.addEventListener('click', () => window.print());
 
 /* =========================================================
    EDICIÓN Y ELIMINACIÓN DE ESTUDIANTES
@@ -331,43 +395,6 @@ async function eliminarEstudiante(id, nombreCompleto) {
 }
 
 /* =========================================================
-   FICHA PERSONAL Y EXPORTAR A PDF
-   ========================================================= */
-const fichaOverlay = document.getElementById('fichaOverlay');
-
-function verFicha(alumno) {
-  const fotoSlot = document.getElementById('fichaFotoSlot');
-  const urlFoto = alumno.foto_url || alumno.foto_carnet_url || alumno.foto;
-
-  if (urlFoto) {
-    fotoSlot.innerHTML = `<img src="${esc(urlFoto)}" alt="Foto" onerror="this.parentNode.innerHTML='<span class=&quot;no-foto&quot;>Sin foto</span>'">`;
-  } else {
-    fotoSlot.innerHTML = `<span class="no-foto"><br>Sin foto</span>`;
-  }
-
-  document.getElementById('fichaFields').innerHTML = `
-    <div class="ficha-field"><span class="k">Curso:</span><span class="v">${esc(nombreCurso(alumno.curso_id))}</span></div>
-    <div class="ficha-field"><span class="k">Nombres y Apellidos:</span><span class="v">${esc(alumno.nombres)} ${esc(alumno.apellidos)}</span></div>
-    <div class="ficha-field"><span class="k">Cédula / Identificación:</span><span class="v">${esc(alumno.nacionalidad)} ${esc(alumno.numero_identificacion)}</span></div>
-    <div class="ficha-field"><span class="k">Fecha de Nacimiento:</span><span class="v">${esc(alumno.fecha_nacimiento || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Sexo:</span><span class="v">${esc(alumno.sexo || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Teléfono / WhatsApp:</span><span class="v">${esc(alumno.telefono || 'N/A')} / ${esc(alumno.whatsapp || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Correo Electrónico:</span><span class="v">${esc(alumno.correo_electronico || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Ubicación:</span><span class="v">${esc(alumno.municipio_ciudad)}, ${esc(alumno.estado)}</span></div>
-    <div class="ficha-field"><span class="k">Dirección:</span><span class="v">${esc(alumno.direccion || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Ocupación:</span><span class="v">${esc(alumno.ocupacion || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Nivel Educativo:</span><span class="v">${esc(alumno.nivel_educativo || 'N/A')}</span></div>
-    <div class="ficha-field"><span class="k">Institución / Empresa:</span><span class="v">${esc(alumno.institucion || 'N/A')}</span></div>
-  `;
-
-  fichaOverlay.classList.add('show');
-}
-
-document.getElementById('fichaClose').onclick = () => fichaOverlay.classList.remove('show');
-document.getElementById('fichaCancelBtn').onclick = () => fichaOverlay.classList.remove('show');
-document.getElementById('fichaPrintBtn').onclick = () => window.print();
-
-/* =========================================================
    GESTIÓN DE CURSOS
    ========================================================= */
 const modalCursoOverlay = document.getElementById('modalCursoOverlay');
@@ -381,13 +408,13 @@ function abrirModalCurso(curso = null) {
     document.getElementById('nuevoDesc').value = curso.descripcion || '';
     document.getElementById('nuevoModalidad').value = curso.modalidad || '';
     document.getElementById('nuevoCosto').value = curso.costo || '';
-    document.getElementById('nuevoCupo').value = curso.cupo_maximo || '';
-    document.getElementById('nuevoFecha').value = curso.fecha_culminacion || '';
+    document.getElementById('nuevoCupo').value = curso.cupo_maximo || curso.cupo || '';
+    document.getElementById('nuevoFecha').value = curso.fecha_culminacion || curso.fecha || '';
   } else {
     document.getElementById('modalCursoTitulo').textContent = 'Registrar Nuevo Curso';
     document.getElementById('cursoIdEdit').value = '';
   }
-  modalCursoOverlay.classList.add('show');
+  modalCursoOverlay?.classList.add('show');
 }
 
 function editarCursoPorId(id) {
@@ -395,10 +422,10 @@ function editarCursoPorId(id) {
   if (curso) abrirModalCurso(curso);
 }
 
-document.getElementById('modalCursoClose').onclick = () => modalCursoOverlay.classList.remove('show');
-document.getElementById('modalCursoCancel').onclick = () => modalCursoOverlay.classList.remove('show');
+document.getElementById('modalCursoClose')?.addEventListener('click', () => modalCursoOverlay?.classList.remove('show'));
+document.getElementById('modalCursoCancel')?.addEventListener('click', () => modalCursoOverlay?.classList.remove('show'));
 
-document.getElementById('formCrearCurso').addEventListener('submit', async (e) => {
+document.getElementById('formCrearCurso')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = document.getElementById('cursoIdEdit').value;
   const nombre = document.getElementById('nuevoNombre').value.trim();
@@ -409,8 +436,7 @@ document.getElementById('formCrearCurso').addEventListener('submit', async (e) =
   const fecha_culminacion = document.getElementById('nuevoFecha').value || null;
 
   const btn = document.getElementById('btnGuardarCursoData');
-  btn.textContent = 'Guardando...';
-  btn.disabled = true;
+  if (btn) { btn.textContent = 'Guardando...'; btn.disabled = true; }
 
   try {
     if (id) {
@@ -427,16 +453,15 @@ document.getElementById('formCrearCurso').addEventListener('submit', async (e) =
       alert('Curso registrado con éxito');
     }
 
-    modalCursoOverlay.classList.remove('show');
+    modalCursoOverlay?.classList.remove('show');
     await inicializarPanel();
-    if (document.getElementById('seccionCursos').style.display === 'block') {
+    if (document.getElementById('seccionCursos')?.style.display === 'block') {
       cargarCursosAdmin();
     }
   } catch (err) {
     alert('Error al guardar curso: ' + err.message);
   } finally {
-    btn.textContent = 'Guardar Curso';
-    btn.disabled = false;
+    if (btn) { btn.textContent = 'Guardar Curso'; btn.disabled = false; }
   }
 });
 
@@ -467,7 +492,7 @@ async function cargarCursosAdmin() {
         </div>
         <div style="display:flex; gap:0.5rem;">
           <button class="ficha-btn" onclick="editarCursoPorId('${esc(curso.id)}')">Modificar</button>
-          <button class="ficha-btn" style="background:var(--accent-red);" onclick="eliminarCurso('${esc(curso.id)}')">Eliminar</button>
+          <button class="ficha-btn btn-bad" onclick="eliminarCurso('${esc(curso.id)}')">Eliminar</button>
         </div>
       </div>
     `;
@@ -487,7 +512,7 @@ async function eliminarCurso(id) {
 }
 
 /* =========================================================
-   SUBIR HORARIOS
+   SUBIR Y CONTROL DE HORARIOS
    ========================================================= */
 const HORARIOS_BUCKET = 'horarios';
 
@@ -508,11 +533,13 @@ function pathDesdeUrlHorario(url) {
 document.getElementById('archivoHorario')?.addEventListener('change', (e) => {
   const prev = document.getElementById('previewHorario');
   const f = e.target.files[0];
-  if (!f) { prev.innerHTML = ''; return; }
-  if (f.type.startsWith('image/')) {
-    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--panel-border);">`;
-  } else {
-    prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
+  if (!f) { if (prev) prev.innerHTML = ''; return; }
+  if (prev) {
+    if (f.type.startsWith('image/')) {
+      prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--panel-border);">`;
+    } else {
+      prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
+    }
   }
 });
 
@@ -523,8 +550,7 @@ document.getElementById('formHorario')?.addEventListener('submit', async (e) => 
   if (!cursoId || !archivo) { alert('Selecciona un curso y un archivo.'); return; }
 
   const btn = document.getElementById('btnSubirHorario');
-  btn.textContent = 'Subiendo...';
-  btn.disabled = true;
+  if (btn) { btn.textContent = 'Subiendo...'; btn.disabled = true; }
 
   try {
     const curso = cursosGlobal.find(c => String(c.id) === String(cursoId));
@@ -537,8 +563,8 @@ document.getElementById('formHorario')?.addEventListener('submit', async (e) => 
 
     const { data: pub } = supabaseClient.storage.from(HORARIOS_BUCKET).getPublicUrl(path);
 
-    const { data: upd, error: errDb } = await supabaseClient.from('cursos')
-      .update({ horario_url: pub.publicUrl }).eq('id', cursoId).select();
+    const { error: errDb } = await supabaseClient.from('cursos')
+      .update({ horario_url: pub.publicUrl }).eq('id', cursoId);
     if (errDb) throw errDb;
 
     const anterior = pathDesdeUrlHorario(curso && curso.horario_url);
@@ -546,14 +572,14 @@ document.getElementById('formHorario')?.addEventListener('submit', async (e) => 
 
     alert('Horario subido con éxito');
     document.getElementById('formHorario').reset();
-    document.getElementById('previewHorario').innerHTML = '';
+    const prev = document.getElementById('previewHorario');
+    if (prev) prev.innerHTML = '';
     await inicializarPanel();
     cargarHorariosAdmin();
   } catch (err) {
     alert('Error al subir el horario: ' + err.message);
   } finally {
-    btn.textContent = 'Subir Horario';
-    btn.disabled = false;
+    if (btn) { btn.textContent = 'Subir Horario'; btn.disabled = false; }
   }
 });
 
@@ -591,7 +617,7 @@ async function cargarHorariosAdmin() {
         </div>
         <div style="display:flex; gap:0.5rem;">
           ${tiene ? `<button class="ficha-btn" onclick="verHorarioAdmin('${esc(c.id)}')">Ver</button>
-          <button class="ficha-btn" style="background:var(--accent-red);" onclick="eliminarHorario('${esc(c.id)}')">Quitar</button>` : ''}
+          <button class="ficha-btn btn-bad" onclick="eliminarHorario('${esc(c.id)}')">Quitar</button>` : ''}
         </div>
       </div>`;
   }).join('');
@@ -600,18 +626,21 @@ async function cargarHorariosAdmin() {
 function verHorarioAdmin(id) {
   const c = cursosGlobal.find(x => String(x.id) === String(id));
   if (!c || !c.horario_url) return;
-  document.getElementById('visorContenido').innerHTML = esPdf(c.horario_url)
-    ? `<iframe src="${esc(c.horario_url)}"></iframe>`
-    : `<img src="${esc(c.horario_url)}" alt="Horario">`;
-  visorOverlay.classList.add('show');
+  const visor = document.getElementById('visorContenido');
+  if (visor) {
+    visor.innerHTML = esPdf(c.horario_url)
+      ? `<iframe src="${esc(c.horario_url)}"></iframe>`
+      : `<img src="${esc(c.horario_url)}" alt="Horario">`;
+  }
+  document.getElementById('visorOverlay')?.classList.add('show');
 }
 
 async function eliminarHorario(id) {
   if (!confirm('¿Quitar el horario de este curso?')) return;
   const c = cursosGlobal.find(x => String(x.id) === String(id));
   try {
-    const { data, error } = await supabaseClient.from('cursos')
-      .update({ horario_url: null }).eq('id', id).select();
+    const { error } = await supabaseClient.from('cursos')
+      .update({ horario_url: null }).eq('id', id);
     if (error) throw error;
     const path = pathDesdeUrlHorario(c && c.horario_url);
     if (path) await supabaseClient.storage.from(HORARIOS_BUCKET).remove([path]);
@@ -623,6 +652,168 @@ async function eliminarHorario(id) {
 }
 
 /* =========================================================
+   GESTIÓN DE TUTORES / INSTRUCTORES POR CURSO
+   ========================================================= */
+function llenarSelectTutor() {
+  const sel = document.getElementById('cursoTutor');
+  if (!sel) return;
+  const previo = sel.value;
+  sel.innerHTML = '<option value="">— Selecciona un curso —</option>' +
+    cursosGlobal.map(c => `<option value="${esc(c.id)}">${esc(c.nombre)}</option>`).join('');
+  sel.value = previo;
+}
+
+document.getElementById('cursoTutor')?.addEventListener('change', (e) => {
+  const cursoId = e.target.value;
+  const curso = cursosGlobal.find(c => String(c.id) === String(cursoId));
+  const preview = document.getElementById('previewTutor');
+
+  if (curso) {
+    document.getElementById('nombreTutorInput').value = curso.instructor_nombre || '';
+    document.getElementById('tituloTutorInput').value = curso.instructor_titulo || '';
+    if (preview) {
+      preview.innerHTML = curso.instructor_foto
+        ? `<img src="${esc(curso.instructor_foto)}" alt="Foto tutor" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--primary-blue);">`
+        : '';
+    }
+  } else {
+    document.getElementById('nombreTutorInput').value = '';
+    document.getElementById('tituloTutorInput').value = '';
+    if (preview) preview.innerHTML = '';
+  }
+});
+
+document.getElementById('fotoTutorInput')?.addEventListener('change', (e) => {
+  const prev = document.getElementById('previewTutor');
+  const f = e.target.files[0];
+  if (!f) return;
+  if (prev && f.type.startsWith('image/')) {
+    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--primary-blue);">`;
+  }
+});
+
+document.getElementById('formTutor')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const cursoId = document.getElementById('cursoTutor').value;
+  const nombreTutor = document.getElementById('nombreTutorInput').value.trim();
+  const tituloTutor = document.getElementById('tituloTutorInput').value.trim();
+  const archivoFoto = document.getElementById('fotoTutorInput').files[0];
+
+  if (!cursoId || !nombreTutor) {
+    alert('Selecciona un curso e ingresa el nombre del tutor.');
+    return;
+  }
+
+  const btn = document.getElementById('btnGuardarTutor');
+  if (btn) { btn.textContent = 'Guardando...'; btn.disabled = true; }
+
+  try {
+    const curso = cursosGlobal.find(c => String(c.id) === String(cursoId));
+    let fotoUrl = curso?.instructor_foto || null;
+
+    if (archivoFoto) {
+      const ext = (archivoFoto.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `tutor_curso_${cursoId}_${Date.now()}.${ext}`;
+
+      const { error: errUp } = await supabaseClient.storage
+        .from(TUTORES_BUCKET)
+        .upload(path, archivoFoto, { contentType: archivoFoto.type });
+
+      if (errUp) throw errUp;
+
+      const { data: pub } = supabaseClient.storage.from(TUTORES_BUCKET).getPublicUrl(path);
+      fotoUrl = pub.publicUrl;
+    }
+
+    const { error: errDb } = await supabaseClient.from('cursos').update({
+      instructor_nombre: nombreTutor,
+      instructor_titulo: tituloTutor || null,
+      instructor_foto: fotoUrl
+    }).eq('id', cursoId);
+
+    if (errDb) throw errDb;
+
+    alert('Datos del tutor guardados con éxito.');
+    document.getElementById('formTutor').reset();
+    const prev = document.getElementById('previewTutor');
+    if (prev) prev.innerHTML = '';
+    await inicializarPanel();
+    cargarTutoresAdmin();
+
+  } catch (err) {
+    alert('Error al guardar tutor: ' + err.message);
+  } finally {
+    if (btn) { btn.textContent = 'Guardar Tutor'; btn.disabled = false; }
+  }
+});
+
+async function cargarTutoresAdmin() {
+  const cont = document.getElementById('listaTutoresAdmin');
+  if (!cont) return;
+  cont.innerHTML = '<p style="color:var(--text-faint);">Cargando tutores...</p>';
+
+  const { data, error } = await supabaseClient.from('cursos').select('*');
+  if (error) { cont.innerHTML = '<p style="color:red;">Error al cargar tutores.</p>'; return; }
+  cursosGlobal = data || [];
+  llenarSelectTutor();
+
+  if (!cursosGlobal.length) {
+    cont.innerHTML = '<p style="color:var(--text-faint);">No hay cursos registrados.</p>';
+    return;
+  }
+
+  cont.innerHTML = cursosGlobal.map(c => {
+    const tieneTutor = !!c.instructor_nombre;
+    const foto = c.instructor_foto
+      ? `<img src="${esc(c.instructor_foto)}" alt="Tutor" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">`
+      : `<div style="width:50px; height:50px; border-radius:50%; background:var(--chip-bg); display:flex; align-items:center; justify-content:center; font-weight:bold;">👤</div>`;
+
+    return `
+      <div style="background:var(--input-bg); border:1px solid var(--panel-border); padding:0.8rem 1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div style="display:flex; align-items:center; gap:0.8rem;">
+          ${foto}
+          <div>
+            <strong>${esc(c.nombre)}</strong>
+            <div style="font-size:0.85rem; color:var(--text-muted);">${tieneTutor ? esc(c.instructor_nombre) : 'Sin tutor asignado'} ${c.instructor_titulo ? `· ${esc(c.instructor_titulo)}` : ''}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="ficha-btn" onclick="editarTutorAdmin('${esc(c.id)}')">${tieneTutor ? 'Modificar' : 'Asignar'}</button>
+          ${tieneTutor ? `<button class="ficha-btn btn-bad" onclick="eliminarTutorAdmin('${esc(c.id)}')">Quitar Tutor</button>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function editarTutorAdmin(id) {
+  const sel = document.getElementById('cursoTutor');
+  if (sel) {
+    sel.value = id;
+    sel.dispatchEvent(new Event('change'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+async function eliminarTutorAdmin(id) {
+  if (!confirm('¿Seguro que deseas quitar la foto y datos del tutor de este curso?')) return;
+  try {
+    const { error } = await supabaseClient.from('cursos').update({
+      instructor_nombre: null,
+      instructor_titulo: null,
+      instructor_foto: null
+    }).eq('id', id);
+
+    if (error) throw error;
+
+    alert('Tutor eliminado del curso.');
+    await inicializarPanel();
+    cargarTutoresAdmin();
+  } catch (err) {
+    alert('Error al eliminar tutor: ' + err.message);
+  }
+}
+
+/* =========================================================
    GESTIÓN DE LA GALERÍA WEB
    ========================================================= */
 const GALERIA_BUCKET = 'fotos-galeria';
@@ -630,11 +821,13 @@ const GALERIA_BUCKET = 'fotos-galeria';
 document.getElementById('galeriaArchivoInput')?.addEventListener('change', (e) => {
   const prev = document.getElementById('previewGaleriaAdmin');
   const f = e.target.files[0];
-  if (!f) { prev.innerHTML = ''; return; }
-  if (f.type.startsWith('image/')) {
-    prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:200px; border-radius:8px; border:1px solid var(--panel-border);">`;
-  } else {
-    prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
+  if (!f) { if (prev) prev.innerHTML = ''; return; }
+  if (prev) {
+    if (f.type.startsWith('image/')) {
+      prev.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="Vista previa" style="max-width:100%; max-height:200px; border-radius:8px; border:1px solid var(--panel-border);">`;
+    } else {
+      prev.innerHTML = `<div class="stu-sub">${esc(f.name)}</div>`;
+    }
   }
 });
 
@@ -645,8 +838,7 @@ document.getElementById('formGaleriaAdmin')?.addEventListener('submit', async (e
   if (!archivo) { alert('Selecciona una imagen.'); return; }
 
   const btn = document.getElementById('btnSubirGaleriaAdmin');
-  btn.textContent = 'Subiendo...';
-  btn.disabled = true;
+  if (btn) { btn.textContent = 'Subiendo...'; btn.disabled = true; }
 
   try {
     const ext = (archivo.name.split('.').pop() || 'jpg').toLowerCase();
@@ -671,23 +863,23 @@ document.getElementById('formGaleriaAdmin')?.addEventListener('submit', async (e
 
     if (dbError) throw dbError;
 
-    alert('Imagen subida a la galeria con éxito');
+    alert('Imagen subida a la galería con éxito');
     document.getElementById('formGaleriaAdmin').reset();
-    document.getElementById('previewGaleriaAdmin').innerHTML = '';
+    const prev = document.getElementById('previewGaleriaAdmin');
+    if (prev) prev.innerHTML = '';
     cargarGaleriaAdmin();
 
   } catch (err) {
     alert('Error al subir la imagen: ' + err.message);
   } finally {
-    btn.textContent = 'Subir a la Galeria';
-    btn.disabled = false;
+    if (btn) { btn.textContent = 'Subir a la Galería'; btn.disabled = false; }
   }
 });
 
 async function cargarGaleriaAdmin() {
   const contenedor = document.getElementById('listaGaleriaAdmin');
   if (!contenedor) return;
-  contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">Cargando galeria...</p>';
+  contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">Cargando galería...</p>';
 
   try {
     const { data, error } = await supabaseClient
@@ -698,7 +890,7 @@ async function cargarGaleriaAdmin() {
     if (error) throw error;
 
     if (!data || data.length === 0) {
-      contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">No hay imagenes cargadas en la galeria.</p>';
+      contenedor.innerHTML = '<p style="color:var(--text-faint); grid-column:1/-1;">No hay imágenes cargadas en la galería.</p>';
       return;
     }
 
@@ -708,15 +900,15 @@ async function cargarGaleriaAdmin() {
           <img src="${esc(item.imagen_url)}" alt="${esc(item.titulo)}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
         </div>
         <div style="padding:0.7rem; display:flex; flex-direction:column; gap:0.4rem; flex:1; justify-content:space-between;">
-          <div style="font-size:0.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(item.titulo)}">${esc(item.titulo || 'Sin titulo')}</div>
+          <div style="font-size:0.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(item.titulo)}">${esc(item.titulo || 'Sin título')}</div>
           <button class="ficha-btn btn-bad" style="width:100%; padding:0.3rem;" onclick="eliminarFotoGaleria('${esc(item.id)}', '${esc(item.imagen_url)}')">Eliminar</button>
         </div>
       </div>
     `).join('');
 
   } catch (err) {
-    console.error('Error al cargar galeria admin:', err);
-    contenedor.innerHTML = '<p style="color:red; grid-column:1/-1;">Error al cargar las imagenes de la galeria.</p>';
+    console.error('Error al cargar galería admin:', err);
+    contenedor.innerHTML = '<p style="color:red; grid-column:1/-1;">Error al cargar las imágenes de la galería.</p>';
   }
 }
 
@@ -731,21 +923,19 @@ function extraerPathGaleria(url) {
   } catch (e) {
     console.error('Error al parsear URL de galería:', e);
   }
-  const m = url.match(/\/fotos-galeria\/([^?]+)/);
+  const m = (url || '').match(/\/fotos-galeria\/([^?]+)/);
   return m ? decodeURIComponent(m[1]) : null;
 }
 
 async function eliminarFotoGaleria(id, url) {
-  if (!confirm('¿Estás seguro de eliminar esta imagen de la galeria?')) return;
+  if (!confirm('¿Estás seguro de eliminar esta imagen de la galería?')) return;
 
   try {
-    // 1. Borrar del Storage de Supabase primero
     const path = extraerPathGaleria(url);
     if (path) {
       await supabaseClient.storage.from(GALERIA_BUCKET).remove([path]);
     }
 
-    // 2. Borrar el registro de la base de datos
     const { error: dbError } = await supabaseClient
       .from('galeria')
       .delete()
@@ -753,7 +943,7 @@ async function eliminarFotoGaleria(id, url) {
 
     if (dbError) throw dbError;
 
-    alert('Imagen eliminada de la galeria correctamente.');
+    alert('Imagen eliminada de la galería correctamente.');
     cargarGaleriaAdmin();
 
   } catch (err) {
@@ -762,7 +952,7 @@ async function eliminarFotoGaleria(id, url) {
 }
 
 /* =========================================================
-   PAGOS DE INSCRIPCIÓN
+   PAGOS DE INSCRIPCIÓN Y VALIDACIÓN DE COMPROBANTES
    ========================================================= */
 const PAGOS_CFG = {
   bucket: 'documentos-inscripcion',
@@ -784,13 +974,13 @@ let listadoCarpetas = {};
 let pagoArchivandoId = null;
 
 const pick = (o, cols) => {
-  for (const c of cols) if (o[c] !== undefined && o[c] !== null && o[c] !== '') return o[c];
+  for (const c of cols) if (o && o[c] !== undefined && o[c] !== null && o[c] !== '') return o[c];
   return null;
 };
 const estadoDe = a => a[PAGOS_CFG.colEstado] || 'pendiente';
 
 function extraerPath(url) {
-  const m = url.match(/\/object\/(?:public|sign|authenticated)\/[^/]+\/([^?]+)/);
+  const m = (url || '').match(/\/object\/(?:public|sign|authenticated)\/[^/]+\/([^?]+)/);
   return m ? decodeURIComponent(m[1]) : null;
 }
 
@@ -888,9 +1078,9 @@ function renderPagos() {
         <div class="pago-top">
           <div>
             <div class="stu-name">${esc(a.nombres)} ${esc(a.apellidos)}</div>
-            <div class="stu-sub">${esc(a.nacionalidad)} ${esc(a.numero_identificacion)}</div>
+            <div class="stu-sub">${esc(a.nacionalidad || 'V')} ${esc(a.numero_identificacion)}</div>
           </div>
-          <span class="badge st-${esc(est)}">${esc(est)}</span>
+          <span class="badge st-${esc(est)}">${esc(est.toUpperCase())}</span>
         </div>
         <div class="pago-media">
           <div><div class="media-cap">COMPROBANTE DE PAGO</div>${mediaHTML(c.pago, a.id, 'pago')}</div>
@@ -910,7 +1100,7 @@ function renderPagos() {
           ${est !== 'archivado' ? `<button class="ficha-btn btn-warn" onclick="abrirArchivarPago('${id}')">Archivar</button>` : ''}
           <button class="ficha-btn btn-bad" onclick="rechazarPago('${id}')">Rechazar</button>
         </div>
-        <button class="ficha-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted);" onclick="verFichaPorId('${id}')">Ver ficha completa</button>
+        <button class="ficha-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted); margin-top:0.4rem;" onclick="verFichaPorId('${id}')">Ver ficha completa</button>
       </div>`;
   }).join('');
 }
@@ -922,15 +1112,20 @@ const visorOverlay = document.getElementById('visorOverlay');
 function verMedia(id, tipo) {
   const info = (pagosCache[id] || {})[tipo];
   if (!info || !info.url) return;
-  document.getElementById('visorContenido').innerHTML = info.pdf
-    ? `<iframe src="${esc(info.url)}"></iframe>`
-    : `<img src="${esc(info.url)}" alt="${esc(tipo)}">`;
-  visorOverlay.classList.add('show');
+  const visor = document.getElementById('visorContenido');
+  if (visor) {
+    visor.innerHTML = info.pdf
+      ? `<iframe src="${esc(info.url)}"></iframe>`
+      : `<img src="${esc(info.url)}" alt="${esc(tipo)}">`;
+  }
+  visorOverlay?.classList.add('show');
 }
-document.getElementById('visorClose').onclick = () => {
-  visorOverlay.classList.remove('show');
-  document.getElementById('visorContenido').innerHTML = '';
-};
+
+document.getElementById('visorClose')?.addEventListener('click', () => {
+  visorOverlay?.classList.remove('show');
+  const visor = document.getElementById('visorContenido');
+  if (visor) visor.innerHTML = '';
+});
 
 async function actualizarEstadoPago(id, estado, motivo) {
   const { error } = await supabaseClient.from('inscripciones')
@@ -939,8 +1134,7 @@ async function actualizarEstadoPago(id, estado, motivo) {
       [PAGOS_CFG.colMotivo]: motivo || null,
       [PAGOS_CFG.colFechaRevision]: new Date().toISOString()
     })
-    .eq('id', id)
-    .select();
+    .eq('id', id);
   if (error) throw error;
 }
 
@@ -983,13 +1177,17 @@ async function aceptarPago(id) {
 const motivoOverlay = document.getElementById('motivoOverlay');
 function abrirArchivarPago(id) {
   pagoArchivandoId = id;
+  const txt = document.getElementById('motivoTexto');
+  if (txt) txt.value = '';
   motivoOverlay?.classList.add('show');
 }
+
 const cerrarMotivo = () => { motivoOverlay?.classList.remove('show'); pagoArchivandoId = null; };
-document.getElementById('motivoClose').onclick = cerrarMotivo;
-document.getElementById('motivoCancel').onclick = cerrarMotivo;
-document.getElementById('motivoConfirm').onclick = async () => {
-  const motivo = document.getElementById('motivoTexto').value.trim();
+document.getElementById('motivoClose')?.addEventListener('click', cerrarMotivo);
+document.getElementById('motivoCancel')?.addEventListener('click', cerrarMotivo);
+document.getElementById('motivoConfirm')?.addEventListener('click', async () => {
+  const motivoInput = document.getElementById('motivoTexto');
+  const motivo = motivoInput ? motivoInput.value.trim() : '';
   if (!motivo) { alert('Especifica el motivo.'); return; }
   try {
     await actualizarEstadoPago(pagoArchivandoId, 'archivado', motivo);
@@ -999,7 +1197,7 @@ document.getElementById('motivoConfirm').onclick = async () => {
   } catch (err) {
     alert('Error al archivar: ' + err.message);
   }
-};
+});
 
 async function rechazarPago(id) {
   if (!confirm('¿Rechazar y eliminar la inscripción de este alumno?')) return;
@@ -1013,6 +1211,9 @@ async function rechazarPago(id) {
   }
 }
 
+/* =========================================================
+   INICIALIZACIÓN AL CARGAR LA PÁGINA
+   ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
   inicializarPanel();
 });
