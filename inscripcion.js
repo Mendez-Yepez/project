@@ -47,25 +47,7 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
 
 
 
-    // 1. Cargar los cursos al abrir la página  
-async function cargarComunidades() {
-    const { data, error } = await supabaseClient.from('comunidades').select('id, nombre');
-    const select = document.getElementById('Comunidad/calleSelect');
     
-    if (error) {
-        console.error('Error cargando comunidades:', error);
-        select.innerHTML = '<option value="">Error al cargar comunidades</option>';
-        return;
-    }
-
-    select.innerHTML = '<option value="">Seleccione una comunidad...</option>';
-    data.forEach(comunidades => {
-        const option = document.createElement('option');
-        option.value = comunidades.id;
-        option.textContent = comunidades.nombre;
-        select.appendChild(option);
-    });
-}
 
 
     // ==========================================
