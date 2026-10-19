@@ -4,6 +4,38 @@ const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+
+// Función para cargar la lista de comunidades desde Supabase
+async function cargarComunidadesInscripcion() {
+    const select = document.getElementById('comunidadSelect');
+    if (!select) return;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('comunidades')
+            .select('id, nombre')
+            .order('nombre', { ascending: true });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            select.innerHTML = '<option value="">No hay comunidades disponibles</option>';
+            return;
+        }
+
+        // Llenar el desplegable con las opciones obtenidas
+        select.innerHTML = '<option value="">— Selecciona tu comunidad —</option>' +
+            data.map(c => `<option value="${c.nombre}">${c.nombre}</option>`).join('');
+
+    } catch (err) {
+        console.error('Error al cargar comunidades:', err.message);
+        select.innerHTML = '<option value="">Error al cargar comunidades</option>';
+    }
+}
+
+// Llamar a la función cuando el documento esté cargado
+document.addEventListener('DOMContentLoaded', cargarComunidadesInscripcion);
+
 // 1. Cargar los cursos al abrir la página  
 async function cargarCursos() {
     const { data, error } = await supabaseClient.from('cursos').select('id, nombre');
