@@ -71,6 +71,7 @@ function cambiarVista(vista) {
     horarios: ['menuHorarios', 'seccionHorarios'],
     tutores:  ['menuTutores',  'seccionTutores'],
     fechas:   ['menuFechas',   'seccionFechas'],
+    banco:    ['menuBanco',    'seccionBanco'],
     galeria:  ['menuGaleria',  'seccionGaleria']
   };
 
@@ -86,6 +87,7 @@ function cambiarVista(vista) {
   if (vista === 'horarios') cargarHorariosAdmin();
   if (vista === 'tutores') cargarTutoresAdmin();
   if (vista === 'fechas') cargarFechasInscripcion();
+  if (vista === 'banco') cargarCuentaBanco();
   if (vista === 'galeria') cargarGaleriaAdmin();
 }
 
@@ -136,6 +138,86 @@ document.getElementById('formFechasInscripcion')?.addEventListener('submit', asy
       msg.style.color = 'var(--accent-red)';
       msg.textContent = 'Error al guardar las fechas.';
     }
+  }
+});
+
+/* =========================================================
+   CUENTA DE BANCO
+   ========================================================= */
+function pintarResumenBanco(d) {
+  const cont = document.getElementById('resumenBanco');
+  if (!cont) return;
+  cont.innerHTML = '';
+  if (!d) {
+    cont.innerHTML = '<div class="empty" style="padding:1rem;">Aún no has registrado una cuenta.</div>';
+    return;
+  }
+  [
+    ['Banco', d.nombre_banco],
+    ['N° de cuenta', d.numero_cuenta],
+    ['RIF', d.rif],
+    ['A.C.', d.nombre_ac]
+  ].forEach(([k, v]) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const s1 = document.createElement('span'); s1.textContent = k;
+    const s2 = document.createElement('span'); s2.textContent = v || '—';
+    row.append(s1, s2);
+    cont.appendChild(row);
+  });
+}
+
+async function cargarCuentaBanco() {
+  try {
+    const { data, error } = await supabaseClient
+      .from('cuenta_banco').select('*').eq('id', 1).maybeSingle();
+    if (error) throw error;
+
+    document.getElementById('bancoNombre').value = data?.nombre_banco || '';
+    document.getElementById('bancoNumero').value = data?.numero_cuenta || '';
+    document.getElementById('bancoRif').value = data?.rif || '';
+    document.getElementById('bancoAc').value = data?.nombre_ac || '';
+    pintarResumenBanco(data);
+  } catch (err) {
+    console.error('Error al cargar cuenta de banco:', err);
+    pintarResumenBanco(null);
+  }
+}
+
+document.getElementById('formCuentaBanco')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btnGuardarBanco');
+  const msg = document.getElementById('mensajeBanco');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+
+  const payload = {
+    id: 1,
+    nombre_banco: document.getElementById('bancoNombre').value.trim(),
+    numero_cuenta: document.getElementById('bancoNumero').value.trim(),
+    rif: document.getElementById('bancoRif').value.trim().toUpperCase(),
+    nombre_ac: document.getElementById('bancoAc').value.trim(),
+    updated_at: new Date().toISOString()
+  };
+
+  try {
+    const { error } = await supabaseClient.from('cuenta_banco').upsert(payload);
+    if (error) throw error;
+    if (msg) {
+      msg.style.display = 'block';
+      msg.style.color = '#5fd07f';
+      msg.textContent = 'Cuenta guardada correctamente.';
+      setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    }
+    pintarResumenBanco(payload);
+  } catch (err) {
+    console.error(err);
+    if (msg) {
+      msg.style.display = 'block';
+      msg.style.color = '#e05d5d';
+      msg.textContent = 'No se pudo guardar: ' + err.message;
+    }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar Cuenta'; }
   }
 });
 

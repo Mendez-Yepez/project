@@ -197,6 +197,13 @@
   .visor iframe{width:100%; height:80vh; border:none; background:#fff;}
   .motivo-txt{width:100%; padding:0.6rem; border-radius:6px; border:1px solid #ccc; background:#fff; color:#000; margin-top:0.6rem;}
 
+  /* Cuenta de banco */
+  .banco-resumen{display:flex; flex-direction:column; gap:0.5rem; font-size:0.9rem;}
+  .banco-resumen .row{display:flex; justify-content:space-between; gap:1rem; padding:0.5rem 0; border-bottom:1px solid var(--divider);}
+  .banco-resumen .row:last-child{border-bottom:none;}
+  .banco-resumen .row span:first-child{color:var(--text-faint);}
+  .banco-resumen .row span:last-child{font-weight:600; text-align:right; word-break:break-all;}
+
   @media (max-width:800px){
     .layout{flex-direction:column;}
     .sidebar{width:100%; border-right:none; border-bottom:1px solid var(--panel-border);}
@@ -253,6 +260,7 @@
     <div class="course-item" onclick="cambiarVista('horarios')" id="menuHorarios"><span class="cname">Subir Horarios</span></div>
     <div class="course-item" onclick="cambiarVista('tutores')" id="menuTutores"><span class="cname">Tutores / Instructores</span></div>
     <div class="course-item" onclick="cambiarVista('fechas')" id="menuFechas"><span class="cname">Fechas de Inscripción</span></div>
+    <div class="course-item" onclick="cambiarVista('banco')" id="menuBanco"><span class="cname">Cuenta de Banco</span></div>
     <div class="course-item" onclick="cambiarVista('galeria')" id="menuGaleria"><span class="cname">Galería</span></div>
   </aside>
 
@@ -415,6 +423,42 @@
           <button type="submit" class="ficha-btn" style="width: 100%; padding: 0.7rem;">Guardar Fechas</button>
         </form>
         <div id="mensajeFechas" style="margin-top: 1rem; font-size: 0.85rem; display: none;"></div>
+      </div>
+    </div>
+
+    <!-- ===== CUENTA DE BANCO ===== -->
+    <div id="seccionBanco" class="vista-panel" style="display: none;">
+      <div class="main-header">
+        <div>
+          <h1>Cuenta de Banco</h1>
+          <p>Datos bancarios donde los inscritos realizarán sus pagos</p>
+        </div>
+      </div>
+      <div class="panel" style="padding: 1.8rem; max-width: 560px; margin-bottom: 1.2rem;">
+        <form id="formCuentaBanco">
+          <div style="margin-bottom: 1rem;">
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre del Banco *</label>
+            <input type="text" id="bancoNombre" class="search-box" style="width:100%; border:1px solid var(--panel-border); color:var(--text-main);" placeholder="Ej. Banco de Venezuela" required>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Número de Cuenta *</label>
+            <input type="text" id="bancoNumero" class="search-box" style="width:100%; border:1px solid var(--panel-border); color:var(--text-main);" placeholder="20 dígitos" inputmode="numeric" required>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">RIF *</label>
+            <input type="text" id="bancoRif" class="search-box" style="width:100%; border:1px solid var(--panel-border); color:var(--text-main);" placeholder="Ej. J-12345678-9" required>
+          </div>
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre de la A.C. (Titular) *</label>
+            <input type="text" id="bancoAc" class="search-box" style="width:100%; border:1px solid var(--panel-border); color:var(--text-main);" placeholder="Ej. Asociación Civil Centro Educativo..." required>
+          </div>
+          <button type="submit" class="ficha-btn" id="btnGuardarBanco" style="width:100%; padding:0.7rem;">Guardar Cuenta</button>
+        </form>
+        <div id="mensajeBanco" style="margin-top:1rem; font-size:0.85rem; display:none;"></div>
+      </div>
+      <div class="panel" style="padding: 1.5rem; max-width: 560px;">
+        <h3 class="serif" style="font-size:1rem; margin-bottom:0.9rem;">Cuenta publicada actualmente</h3>
+        <div id="resumenBanco" class="banco-resumen"></div>
       </div>
     </div>
 
@@ -649,5 +693,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="admin.js"></script>
+
 </body>
 </html>
