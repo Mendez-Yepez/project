@@ -1,616 +1,197 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inscripción a Cursos - CEIC</title>
-  <style>
-    :root {
-      --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
-      --primary-blue: #2b547e;
-      --accent-red: #800000;
-      --glass-bg: rgba(255, 255, 255, 0.82);
-      --glass-border: rgba(255, 255, 255, 0.5);
-      --input-bg: rgba(0, 0, 0, 0.04);
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --divider-color: rgba(0, 0, 0, 0.1);
-      --section-header-bg: rgba(43, 84, 126, 0.1);
+// Configuración de Supabase (Reemplaza con tus credenciales de tu proyecto)
+const SUPABASE_URL ='https://fzvjhdeodahtxoolxzkx.supabase.co'; 
+const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ6dmpoZGVvZGFodHhvb2x4emt4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxODc5NjYsImV4cCI6MjEwMzc2Mzk2Nn0.CdAgxnvtMwsv1ryyrqpEdmS8ShqQMLALz5_ZwHsjSHc';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+// 1. Cargar los cursos al abrir la página  
+async function cargarCursos() {
+    const { data, error } = await supabaseClient.from('cursos').select('id, nombre');
+    const select = document.getElementById('cursoSelect');
+    
+    if (error) {
+        console.error('Error cargando cursos:', error);
+        select.innerHTML = '<option value="">Error al cargar cursos</option>';
+        return;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background: var(--bg-gradient);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: clamp(1rem, 3vw, 2.5rem);
-    }
-
-    /* ===== TARJETA DE DATOS DE PAGO ===== */
-    .bank-card {
-      width: 100%;
-      max-width: 340px;
-      margin: 0 auto 1.4rem;
-      border-radius: 18px;
-      overflow: hidden;
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-      z-index: 10;
-    }
-    .bank-card[hidden] { display: none; }
-
-    .bk-top {
-      position: relative;
-      background: linear-gradient(135deg, #3d6b9e 0%, var(--primary-blue) 45%, #1d3d5c 100%);
-      color: #fff;
-      padding: 1rem 1.1rem 1.1rem;
-      border-radius: 0 0 18px 18px;
-    }
-    .bk-chip {
-      width: 40px; height: 30px; border-radius: 6px;
-      background: linear-gradient(135deg, #f3dc9a 0%, #d9b45a 50%, #f3dc9a 100%);
-      border: 1px solid rgba(0,0,0,0.25);
-      position: relative;
-    }
-    .bk-chip::before, .bk-chip::after {
-      content: ""; position: absolute; background: rgba(0,0,0,0.25);
-    }
-    .bk-chip::before { left: 33%; right: 33%; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.3); border-right: 1px solid rgba(0,0,0,0.3); background: none; }
-    .bk-chip::after { left: 0; right: 0; top: 50%; height: 1px; }
-
-    .bk-title {
-      position: absolute; top: 0.9rem; right: 1.1rem; text-align: right;
-      font-family: Georgia, 'Times New Roman', serif; font-weight: 700;
-      font-size: 1.25rem; line-height: 1.1;
-    }
-    .bk-label {
-      margin-top: 1.4rem; font-family: Georgia, serif; font-weight: 700; font-size: 0.78rem;
-      opacity: 0.9;
-    }
-    .bk-number-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-top: 0.3rem; }
-    .bk-number {
-      font-family: Georgia, 'Times New Roman', serif; font-weight: 700;
-      font-size: 1rem; letter-spacing: 0.5px; line-height: 1.3; overflow-wrap: anywhere;
-    }
-    .bk-copy {
-      flex-shrink: 0; border: 1px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.15);
-      color: #fff; border-radius: 6px; padding: 0.25rem 0.5rem; font-size: 0.68rem; font-weight: 600;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;
-    }
-    .bk-copy:hover { background: rgba(255,255,255,0.28); }
-
-    .bk-body { padding: 1rem 1.1rem 1.2rem; text-align: center; }
-    .bk-pill-main {
-      display: inline-block; background: var(--section-header-bg); color: var(--primary-blue);
-      font-weight: 700; font-size: 0.72rem; letter-spacing: 0.6px; padding: 0.4rem 0.9rem;
-      border-radius: 999px; border: 1px solid rgba(43,84,126,0.25); margin-bottom: 0.9rem;
-    }
-    .bk-item { margin-bottom: 0.8rem; }
-    .bk-tag {
-      display: inline-flex; align-items: center; gap: 0.45rem; background: var(--section-header-bg);
-      border-radius: 999px; padding: 0.15rem 0.8rem 0.15rem 0.15rem; color: var(--primary-blue);
-      font-weight: 700; font-size: 0.72rem; letter-spacing: 0.5px;
-    }
-    .bk-tag .ico {
-      width: 24px; height: 24px; border-radius: 50%; background: var(--primary-blue);
-      display: inline-flex; align-items: center; justify-content: center;
-    }
-    .bk-tag .ico svg { stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .bk-value {
-      font-family: Georgia, 'Times New Roman', serif; font-weight: 700; color: var(--text-main);
-      font-size: 0.98rem; line-height: 1.2; margin-top: 0.35rem; overflow-wrap: anywhere;
-    }
-    .bk-divider {
-      display: flex; align-items: center; gap: 0.5rem; margin: 0.9rem 0 0.7rem; color: var(--accent-red);
-    }
-    .bk-divider::before, .bk-divider::after { content: ""; flex: 1; border-top: 1px dotted rgba(0,0,0,0.3); }
-    .bk-send {
-      font-weight: 700; font-size: 0.74rem; letter-spacing: 0.4px; color: var(--primary-blue);
-      text-transform: uppercase; line-height: 1.25;
-    }
-    .bk-cta {
-      display: inline-block; margin-top: 0.6rem; background: var(--primary-blue); color: #fff;
-      text-decoration: none; font-weight: 700; font-size: 0.74rem; padding: 0.5rem 0.9rem; border-radius: 999px;
-    }
-    .bk-cta:hover { background: #3d6b9e; }
-
-    /* En pantallas anchas la tarjeta queda fija en la esquina superior izquierda */
-    @media (min-width: 1480px) {
-      .bank-card {
-        position: fixed; top: 1.5rem; left: 1rem; width: 260px; max-width: 260px; margin: 0;
-      }
-    }
-
-    .form-container {
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: clamp(1.2rem, 4vw, 2.5rem);
-      width: 100%;
-      max-width: 900px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.25rem;
-    }
-
-    .logo-badge {
-      width: clamp(80px, 15vw, 110px);
-      height: clamp(80px, 15vw, 110px);
-      border-radius: 50%;
-      background: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .logo-badge svg {
-      width: 100%;
-      height: 100%;
-      transform: scale(1.05);
-    }
-
-    .title {
-      color: var(--text-main);
-      font-size: clamp(1.3rem, 3vw, 1.7rem);
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 1.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: var(--section-header-bg);
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      border-left: 4px solid var(--primary-blue);
-      color: var(--text-main);
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
-      font-weight: 700;
-      margin: 1.8rem 0 1.2rem 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .section-header svg {
-      stroke: var(--primary-blue);
-      flex-shrink: 0;
-    }
-
-    .section-header:first-of-type {
-      margin-top: 0;
-    }
-
-    .form-group {
-      margin-bottom: 1.1rem;
-      width: 100%;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.1rem;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.1rem;
-    }
-
-    .grid-3-custom {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.1rem;
-    }
-
-    .form-label {
-      display: block;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 0.75rem 0.9rem;
-      background: var(--input-bg);
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-size: 0.92rem;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .input-field option {
-      background: #ffffff;
-      color: #0f172a;
-    }
-
-    .input-field:focus {
-      border-color: var(--primary-blue);
-      box-shadow: 0 0 10px rgba(43, 84, 126, 0.3);
-    }
-
-    .file-card {
-      background: var(--input-bg);
-      border: 1px dashed rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      padding: 0.8rem 1rem;
-    }
-
-    input[type="file"].input-field-file {
-      display: block;
-      width: 100%;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    input[type="file"]::-webkit-file-upload-button {
-      background: var(--primary-blue);
-      color: #ffffff;
-      border: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-right: 0.8rem;
-      font-weight: 600;
-      font-size: 0.8rem;
-      transition: background 0.3s ease;
-    }
-
-    input[type="file"]::-webkit-file-upload-button:hover {
-      background: #3b6b9e;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 1rem;
-      background: linear-gradient(135deg, var(--accent-red), #5a0000);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(128, 0, 0, 0.3);
-      margin-top: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .submit-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(128, 0, 0, 0.5);
-    }
-
-    .submit-btn:active {
-      transform: translateY(0);
-    }
-
-    @media (max-width: 480px) {
-      input[type="file"]::-webkit-file-upload-button {
-        display: block;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        margin-right: 0;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- ===== TARJETA DE DATOS DE PAGO (se llena desde la tabla cuenta_banco) ===== -->
-  <aside class="bank-card" id="bankCard" aria-label="Datos de pago" hidden>
-    <div class="bk-top">
-      <div class="bk-chip"></div>
-      <div class="bk-title">Datos<br>de pago</div>
-      <div class="bk-label">Número de cuenta</div>
-      <div class="bk-number-row">
-        <div class="bk-number" id="bkNumero">—</div>
-        <button type="button" class="bk-copy" id="bkCopy" aria-label="Copiar número de cuenta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          <span id="bkCopyTxt">Copiar</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="bk-body">
-      <div class="bk-pill-main">TRANSFERENCIA BANCARIA</div>
-
-      <div class="bk-item">
-        <span class="bk-tag"><span class="ico"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>NOMBRE</span>
-        <div class="bk-value" id="bkAc">—</div>
-      </div>
-
-      <div class="bk-item">
-        <span class="bk-tag"><span class="ico"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V10"></path><path d="M9 21V10"></path><path d="M15 21V10"></path><path d="M19 21V10"></path><path d="M12 3 2 9h20z"></path></svg></span>BANCO</span>
-        <div class="bk-value" id="bkBanco">—</div>
-      </div>
-
-      <div class="bk-item">
-        <span class="bk-tag"><span class="ico"><svg width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 10h4"></path><path d="M7 14h2"></path><path d="M15 10h2"></path></svg></span>RIF</span>
-        <div class="bk-value" id="bkRif">—</div>
-      </div>
-
-      <div class="bk-divider">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-      </div>
-
-      <div class="bk-send">Envía tu comprobante<br>de pago</div>
-      <a class="bk-cta" href="#comprobantePago">Adjúntalo en el formulario</a>
-    </div>
-  </aside>
-
-  <div class="form-container">
-    <div class="logo-container">
-      <div class="logo-badge">
-        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="200" cy="200" r="185" fill="none" stroke="#2B547E" stroke-width="18" />
-          <path d="M 140 70 Q 160 70 160 90 L 160 110 Q 160 135 140 145 Q 120 135 120 110 L 120 90 Q 120 70 140 70 Z" fill="#800000" />
-          <path d="M 140 70 Q 160 70 160 90 L 160 110 Q 160 135 140 145 Z" fill="#2B547E" />
-          <path d="M 130 95 L 150 85 M 130 108 L 152 97 M 130 120 L 152 110" stroke="white" stroke-width="3" stroke-linecap="round" />
-          <path d="M 230 100 L 260 85 L 290 100 Z" fill="#2B547E" />
-          <rect x="232" y="100" width="56" height="6" fill="#2B547E" />
-          <circle cx="260" cy="94" r="3" fill="white" />
-          <rect x="237" y="110" width="6" height="25" fill="#2B547E" />
-          <rect x="248" y="110" width="6" height="25" fill="#2B547E" />
-          <rect x="259" y="110" width="6" height="25" fill="#2B547E" />
-          <rect x="270" y="110" width="6" height="25" fill="#2B547E" />
-          <rect x="281" y="110" width="6" height="25" fill="#2B547E" />
-          <rect x="232" y="137" width="56" height="5" fill="#2B547E" />
-          <path d="M 180 135 Q 190 128 200 135 Q 210 128 220 135 L 220 160 Q 210 153 200 160 Q 190 153 180 160 Z" fill="#800000" />
-          <path d="M 200 135 L 200 160" stroke="white" stroke-width="2" />
-          <line x1="80" y1="145" x2="110" y2="145" stroke="#000" stroke-width="5" />
-          <line x1="80" y1="155" x2="110" y2="155" stroke="#000" stroke-width="5" />
-          <line x1="290" y1="145" x2="320" y2="145" stroke="#000" stroke-width="5" />
-          <line x1="290" y1="155" x2="320" y2="155" stroke="#000" stroke-width="5" />
-          <text x="200" y="255" font-family="'Times New Roman', Times, serif" font-weight="bold" font-size="95" fill="#000" text-anchor="middle" letter-spacing="2">CEIC</text>
-          <text x="200" y="288" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11.5" fill="#111" text-anchor="middle" letter-spacing="0.5">CENTRO EDUCATIVO INTEGRAL COMUNITARIO</text>
-        </svg>
-      </div>
-    </div>
-
-<center><h3 class="fw-bold fs-5 text-primary mb-2">⚠️ Antes de realizar su pago de inscripcion procure ver el apartado de los cursos para asegurarse de que queden cupos para ese curso ⚠️</h3></center>
-    <h2 class="title">Formulario de Inscripción</h2>
-
-    <form id="formInscripcion">
-
-      <!-- SECCIÓN 1: SELECCIÓN DE CURSO -->
-      <div class="section-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-        <span>Oferta Académica</span>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="cursoSelect">Curso a Inscribir:</label>
-        <select id="cursoSelect" class="input-field" required>
-          <option value="">Cargando cursos...</option>
-        </select>
-      </div>
-
-      <!-- SECCIÓN 2: DATOS PERSONALES -->
-      <div class="section-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span>Datos Personales</span>
-      </div>
-
-      <div class="grid-3-custom">
-        <div class="form-group">
-          <label class="form-label" for="nacionalidad">Nacionalidad:</label>
-          <select id="nacionalidad" class="input-field" required>
-            <option value="">Seleccione...</option>
-            <option value="Venezolana">Venezolana</option>
-            <option value="Extranjero">Extranjero</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="identificacion">N° de Identificación / Cédula:</label>
-          <input type="text" id="identificacion" class="input-field" maxlength="10" pattern="[0-9]+" title="Los datos no son válidos: En la Cédula de Identidad solo se permiten números" placeholder="Ej: 25123456" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="sexo">Sexo:</label>
-          <select id="sexo" class="input-field" required>
-            <option value="">Seleccione...</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Femenino">Femenino</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label" for="nombres">Nombres:</label>
-          <input type="text" id="nombres" class="input-field" maxlength="20" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En los Nombres solo se permiten letras" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="apellidos">Apellidos:</label>
-          <input type="text" id="apellidos" class="input-field" maxlength="20" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En los Apellidos solo se permiten letras" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="fechaNacimiento">Fecha de Nacimiento:</label>
-        <input type="date" id="fechaNacimiento" class="input-field" required>
-      </div>
-
-      <!-- SECCIÓN 3: UBICACIÓN Y CONTACTO -->
-      <div class="section-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        <span>Información de Contacto y Ubicación</span>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label" for="telefono">Teléfono Principal:</label>
-          <input type="tel" id="telefono" class="input-field" maxlength="11" pattern="[0-9]+" title="Los datos no son válidos: En Teléfono solo se permiten números" placeholder="04123456789" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="whatsapp">WhatsApp:</label>
-          <input type="tel" id="whatsapp" class="input-field" maxlength="11" pattern="[0-9]+" title="Los datos no son válidos: En WhatsApp solo se permiten números" placeholder="04123456789" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="correo">Correo Electrónico:</label>
-        <input type="email" id="correo" class="input-field" placeholder="ejemplo@correo.com" required>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label" for="estado">Estado:</label>
-          <select id="estado" class="input-field" required>
-            <option value="">Seleccione un estado...</option>
-            <option value="Amazonas">Amazonas</option>
-            <option value="Anzoátegui">Anzoátegui</option>
-            <option value="Apure">Apure</option>
-            <option value="Aragua">Aragua</option>
-            <option value="Barinas">Barinas</option>
-            <option value="Bolívar">Bolívar</option>
-            <option value="Carabobo">Carabobo</option>
-            <option value="Cojedes">Cojedes</option>
-            <option value="Delta Amacuro">Delta Amacuro</option>
-            <option value="Distrito Capital">Distrito Capital</option>
-            <option value="Falcón">Falcón</option>
-            <option value="Guárico">Guárico</option>
-            <option value="Lara">Lara</option>
-            <option value="Mérida">Mérida</option>
-            <option value="Miranda">Miranda</option>
-            <option value="Monagas">Monagas</option>
-            <option value="Nueva Esparta">Nueva Esparta</option>
-            <option value="Portuguesa">Portuguesa</option>
-            <option value="Sucre">Sucre</option>
-            <option value="Táchira">Táchira</option>
-            <option value="Trujillo">Trujillo</option>
-            <option value="La Guaira">La Guaira</option>
-            <option value="Yaracuy">Yaracuy</option>
-            <option value="Zulia">Zulia</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="municipio">Municipio / Ciudad:</label>
-          <input type="text" id="municipio" class="input-field" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En Municipio / Ciudad solo se permiten letras" required>
-
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="direccion">Dirección Habitación (Habitación/Sector/Calle):</label>
-        <input type="text" id="direccion" class="input-field" required>
-        
-       
-      </div>
-
-      <!-- SECCIÓN 4: INFORMACIÓN ACADÉMICA / LABORAL -->
-      <div class="section-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        <span>Perfil Académico y Laboral</span>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label" for="nivelEducativo">Nivel Educativo de Instrucción:</label>
-          <select id="nivelEducativo" class="input-field" required>
-            <option value="">Seleccione nivel...</option>
-            <option value="Primaria">Primaria</option>
-            <option value="Bachillerato / Secundaria">Bachillerato / Secundaria</option>
-            <option value="Técnico Medio / Superior">Técnico Medio / Superior</option>
-            <option value="Universitario (En curso)">Universitario (En curso)</option>
-            <option value="Universitario (Graduado)">Universitario (Graduado)</option>
-            <option value="Postgrado">Postgrado</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="ocupacion">Ocupación Actual:</label>
-          <input type="text" id="ocupacion" class="input-field" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="institucion">Institución o Empresa donde Estudia / Trabaja:</label>
-        <input type="text" id="institucion" class="input-field" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Los datos no son válidos: En Institución solo se permiten letras" placeholder="Indique el nombre del centro educativo o laboral" required>
-      </div>
-
-      <!-- SECCIÓN 5: REQUISITOS Y COMPROBANTES -->
-      <div class="section-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        <span>Documentación Digital Requerida</span>
-      </div>
-
-      <div class="grid-3">
-        <div class="form-group file-card">
-          <label class="form-label" for="fotoCarnet">Foto tipo Carnet:</label>
-          <input type="file" id="fotoCarnet" class="input-field-file" accept="image/*" required>
-        </div>
-
-        <div class="form-group file-card">
-          <label class="form-label" for="fotoCedula">Foto Cédula Identidad:</label>
-          <input type="file" id="fotoCedula" class="input-field-file" accept="image/*,.pdf" required>
-        </div>
-
-        <div class="form-group file-card">
-          <label class="form-label" for="comprobantePago">Comprobante de Pago:</label>
-          <input type="file" id="comprobantePago" class="input-field-file" accept="image/*,.pdf" required>
-        </div>
-      </div>
-
-      <button type="submit" id="btnEnviar" class="submit-btn">Enviar Inscripción</button>
-    </form>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="inscripcion.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const soloLetras = (e) => {
-        e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
-      };
-
-      const soloNumeros = (e) => {
-        e.target.value = e.target.value.replace(/[^0-9]/g, '');
-      };
-
-      document.getElementById('nombres').addEventListener('input', soloLetras);
-      document.getElementById('apellidos').addEventListener('input', soloLetras);
-      document.getElementById('municipio').addEventListener('input', soloLetras);
-      document.getElementById('institucion').addEventListener('input', soloLetras);
-
-      document.getElementById('identificacion').addEventListener('input', soloNumeros);
-      document.getElementById('telefono').addEventListener('input', soloNumeros);
-      document.getElementById('whatsapp').addEventListener('input', soloNumeros);
+    select.innerHTML = '<option value="">Seleccione un curso...</option>';
+    data.forEach(curso => {
+        const option = document.createElement('option');
+        option.value = curso.id;
+        option.textContent = curso.nombre;
+        select.appendChild(option);
     });
-  </script>
+}
 
-</body>
-</html>
+
+async function subirArchivo(file, carpeta) {
+    const fileName = `${Date.now()}_${file.name}`;
+    const { data, error } = await supabaseClient.storage
+        .from('documentos-inscripcion')
+        .upload(`${carpeta}/${fileName}`, file);
+
+    if (error) throw error;
+
+    const { data: publicUrlData } = supabaseClient.storage
+        .from('documentos-inscripcion')
+        .getPublicUrl(data.path);
+
+    return publicUrlData.publicUrl;
+}
+
+document.getElementById('formInscripcion').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btnEnviar = document.getElementById('btnEnviar');
+
+
+
+    
+
+
+    // ==========================================
+    // VALIDACIONES DE CAMPOS
+    // ==========================================
+    // Capturar valores
+    const cedula = document.getElementById('identificacion').value.trim();
+    const nacionalidad = document.getElementById('nacionalidad').value;
+    const nombres = document.getElementById('nombres').value.trim();
+    const apellidos = document.getElementById('apellidos').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const municipio = document.getElementById('municipio').value.trim();
+    const ocupacion = document.getElementById('ocupacion').value.trim();
+    const institucion = document.getElementById('institucion').value.trim();
+
+    // Expresiones regulares
+    const soloNumeros = /^[0-9]+$/;
+    const soloLetrasYEspacios = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+    // ==========================================
+    // NUEVAS REGLAS DE VALIDACIÓN
+    // ==========================================
+
+    // 1. Validación de Cédula según Nacionalidad y tamaño
+    if (!soloNumeros.test(cedula)) {
+        alert('La Cédula de Identidad solo debe contener números.');
+        document.getElementById('identificacion').focus();
+        return;
+    }
+
+    if (nacionalidad === 'Venezolana') {
+        // Cédula venezolana típica (ej. 6 a 8 dígitos)
+        if (cedula.length < 6 || cedula.length > 8) {
+            alert('Para nacionalidad Venezolana, la cédula debe tener entre 6 y 8 dígitos.');
+            document.getElementById('identificacion').focus();
+            return;
+        } 
+    } else if (nacionalidad === 'Extranjero') {
+        // Cédula de extranjero / pasaporte (suele ser más grande, ej. mayor a 8 o hasta 12 dígitos)
+        if (cedula.length < 7 || cedula.length > 15) {
+            alert('Para extranjeros, la cédula o documento debe ser válido (entre 7 y 15 dígitos).');
+            document.getElementById('identificacion').focus();
+            return;
+        }
+    }
+
+    // 2. Validación de Nombres y Apellidos (Máximo 20 caracteres)
+    if (!soloLetrasYEspacios.test(nombres) || !soloLetrasYEspacios.test(apellidos)) {
+        alert('Los Nombres y Apellidos solo deben contener letras.');
+        return;
+    }
+
+    if (nombres.length > 20 || apellidos.length > 20) {
+        alert('Los Nombres y Apellidos no pueden tener más de 20 caracteres cada uno.');
+        return;
+    }
+
+    // 3. Validación de Teléfonos (Solo números y longitud coherente, ej. mínimo 10, máximo 15)
+    if (!soloNumeros.test(telefono) || !soloNumeros.test(whatsapp)) {
+        alert('Los campos de Teléfono y WhatsApp solo deben contener números.');
+        return;
+    }
+
+    if (telefono.length < 10 || telefono.length > 15 || whatsapp.length < 10 || whatsapp.length > 15) {
+        alert('El número de teléfono o WhatsApp debe tener una longitud válida (entre 10 y 15 dígitos).');
+        return;
+    }
+
+    // 4. Otros campos de texto
+    if (!soloLetrasYEspacios.test(municipio) || !soloLetrasYEspacios.test(ocupacion) || !soloLetrasYEspacios.test(institucion)) {
+        alert('Los campos de Municipio, Ocupación e Institución no deben contener números ni caracteres especiales.');
+        return;
+    }
+    // ==========================================
+    // ==========================================
+
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = 'Procesando inscripción...';
+
+    try {
+        const cursoId = document.getElementById('cursoSelect').value;
+
+        // Validar límite de 30 cupos en el curso seleccionado
+        const { count, error: countError } = await supabaseClient
+            .from('inscripciones')
+            .select('*', { count: 'exact', head: true })
+            .eq('curso_id', cursoId);
+
+        if (countError) throw countError;
+
+        if (count >= 30) {
+            alert('Lo sentimos, este curso ya alcanzó el límite máximo de 30 personas.');
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = 'Enviar Inscripción';
+            return;
+        }
+
+        // Subir archivos al Storage
+        const carnetFile = document.getElementById('fotoCarnet').files[0];
+        const cedulaFile = document.getElementById('fotoCedula').files[0];
+        const pagoFile = document.getElementById('comprobantePago').files[0];
+
+        const carnetUrl = await subirArchivo(carnetFile, 'carnets');
+        const cedulaUrl = await subirArchivo(cedulaFile, 'cedulas');
+        const pagoUrl = await subirArchivo(pagoFile, 'pagos');
+
+        // Insertar datos en la base de datos
+        const { error: insertError } = await supabaseClient.from('inscripciones').insert([
+            {
+                curso_id: cursoId,
+                numero_identificacion: cedula,
+                nacionalidad: document.getElementById('nacionalidad').value,
+                nombres: nombres,
+                apellidos: apellidos,
+                fecha_nacimiento: document.getElementById('fechaNacimiento').value,
+                sexo: document.getElementById('sexo').value,
+                telefono: telefono,
+                whatsapp: whatsapp,
+                correo_electronico: document.getElementById('correo').value,
+                direccion: document.getElementById('direccion').value,
+                municipio_ciudad: municipio,
+                estado: document.getElementById('estado').value,
+                ocupacion: ocupacion,
+                nivel_educativo: document.getElementById('nivelEducativo').value,
+                institucion: institucion,
+                foto_carnet_url: carnetUrl,
+                foto_cedula_url: cedulaUrl,
+                comprobante_pago_url: pagoUrl
+            }
+        ]);
+
+        if (insertError) throw insertError;
+
+        alert('¡Inscripción realizada con éxito! Sus datos y documentos han sido guardados.');
+        document.getElementById('formInscripcion').reset();
+
+    } catch (error) {
+        console.error('Error en el proceso:', error);
+        alert('Hubo un error al procesar la inscripción: ' + error.message);
+    } finally {
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = 'Enviar Inscripción';
+    }
+});
+// Inicializar la carga de cursos al cargar la ventana
+window.onload = cargarCursos;
