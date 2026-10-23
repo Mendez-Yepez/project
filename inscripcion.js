@@ -26,6 +26,60 @@ async function cargarCursos() {
 }
 
 
+// ==========================================
+// TARJETA DE DATOS DE PAGO (tabla cuenta_banco)
+// ==========================================
+let numeroCuentaPlano = '';
+
+function formatearCuenta(v) {
+    const limpio = String(v || '').replace(/\s+/g, '');
+    return /^\d+$/.test(limpio) ? (limpio.match(/.{1,4}/g) || []).join(' ') : String(v || '');
+}
+
+async function cargarDatosPago() {
+    const card = document.getElementById('bankCard');
+    if (!card) return;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('cuenta_banco')
+            .select('*')
+            .eq('id', 1)
+            .maybeSingle();
+
+        // Sin datos registrados: la tarjeta queda oculta
+        if (error || !data || !data.numero_cuenta) return;
+
+        numeroCuentaPlano = String(data.numero_cuenta).replace(/\s+/g, '');
+        document.getElementById('bkNumero').textContent = formatearCuenta(data.numero_cuenta);
+        document.getElementById('bkAc').textContent = data.nombre_ac || '—';
+        document.getElementById('bkBanco').textContent = data.nombre_banco || '—';
+        document.getElementById('bkRif').textContent = data.rif || '—';
+        card.hidden = false;
+    } catch (err) {
+        console.error('No se pudieron cargar los datos de pago:', err);
+    }
+}
+
+document.getElementById('bkCopy')?.addEventListener('click', async () => {
+    const txt = document.getElementById('bkCopyTxt');
+    try {
+        await navigator.clipboard.writeText(numeroCuentaPlano);
+    } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = numeroCuentaPlano;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        ta.remove();
+    }
+    if (txt) {
+        txt.textContent = '¡Copiado!';
+        setTimeout(() => { txt.textContent = 'Copiar'; }, 1800);
+    }
+});
+
+
 async function subirArchivo(file, carpeta) {
     const fileName = `${Date.now()}_${file.name}`;
     const { data, error } = await supabaseClient.storage
@@ -193,5 +247,8 @@ document.getElementById('formInscripcion').addEventListener('submit', async (e) 
         btnEnviar.textContent = 'Enviar Inscripción';
     }
 });
-// Inicializar la carga de cursos al cargar la ventana
-window.onload = cargarCursos;
+// Inicializar la carga de cursos y de los datos de pago al cargar la ventana
+window.onload = () => {
+    cargarCursos();
+    cargarDatosPago();
+};

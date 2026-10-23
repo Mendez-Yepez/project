@@ -28,10 +28,109 @@
     body {
       background: var(--bg-gradient);
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    /* ===== TARJETA DE DATOS DE PAGO ===== */
+    .bank-card {
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto 1.4rem;
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      z-index: 10;
+    }
+    .bank-card[hidden] { display: none; }
+
+    .bk-top {
+      position: relative;
+      background: linear-gradient(135deg, #3d6b9e 0%, var(--primary-blue) 45%, #1d3d5c 100%);
+      color: #fff;
+      padding: 1rem 1.1rem 1.1rem;
+      border-radius: 0 0 18px 18px;
+    }
+    .bk-chip {
+      width: 40px; height: 30px; border-radius: 6px;
+      background: linear-gradient(135deg, #f3dc9a 0%, #d9b45a 50%, #f3dc9a 100%);
+      border: 1px solid rgba(0,0,0,0.25);
+      position: relative;
+    }
+    .bk-chip::before, .bk-chip::after {
+      content: ""; position: absolute; background: rgba(0,0,0,0.25);
+    }
+    .bk-chip::before { left: 33%; right: 33%; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.3); border-right: 1px solid rgba(0,0,0,0.3); background: none; }
+    .bk-chip::after { left: 0; right: 0; top: 50%; height: 1px; }
+
+    .bk-title {
+      position: absolute; top: 0.9rem; right: 1.1rem; text-align: right;
+      font-family: Georgia, 'Times New Roman', serif; font-weight: 700;
+      font-size: 1.25rem; line-height: 1.1;
+    }
+    .bk-label {
+      margin-top: 1.4rem; font-family: Georgia, serif; font-weight: 700; font-size: 0.78rem;
+      opacity: 0.9;
+    }
+    .bk-number-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-top: 0.3rem; }
+    .bk-number {
+      font-family: Georgia, 'Times New Roman', serif; font-weight: 700;
+      font-size: 1rem; letter-spacing: 0.5px; line-height: 1.3; overflow-wrap: anywhere;
+    }
+    .bk-copy {
+      flex-shrink: 0; border: 1px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.15);
+      color: #fff; border-radius: 6px; padding: 0.25rem 0.5rem; font-size: 0.68rem; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;
+    }
+    .bk-copy:hover { background: rgba(255,255,255,0.28); }
+
+    .bk-body { padding: 1rem 1.1rem 1.2rem; text-align: center; }
+    .bk-pill-main {
+      display: inline-block; background: var(--section-header-bg); color: var(--primary-blue);
+      font-weight: 700; font-size: 0.72rem; letter-spacing: 0.6px; padding: 0.4rem 0.9rem;
+      border-radius: 999px; border: 1px solid rgba(43,84,126,0.25); margin-bottom: 0.9rem;
+    }
+    .bk-item { margin-bottom: 0.8rem; }
+    .bk-tag {
+      display: inline-flex; align-items: center; gap: 0.45rem; background: var(--section-header-bg);
+      border-radius: 999px; padding: 0.15rem 0.8rem 0.15rem 0.15rem; color: var(--primary-blue);
+      font-weight: 700; font-size: 0.72rem; letter-spacing: 0.5px;
+    }
+    .bk-tag .ico {
+      width: 24px; height: 24px; border-radius: 50%; background: var(--primary-blue);
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .bk-tag .ico svg { stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .bk-value {
+      font-family: Georgia, 'Times New Roman', serif; font-weight: 700; color: var(--text-main);
+      font-size: 0.98rem; line-height: 1.2; margin-top: 0.35rem; overflow-wrap: anywhere;
+    }
+    .bk-divider {
+      display: flex; align-items: center; gap: 0.5rem; margin: 0.9rem 0 0.7rem; color: var(--accent-red);
+    }
+    .bk-divider::before, .bk-divider::after { content: ""; flex: 1; border-top: 1px dotted rgba(0,0,0,0.3); }
+    .bk-send {
+      font-weight: 700; font-size: 0.74rem; letter-spacing: 0.4px; color: var(--primary-blue);
+      text-transform: uppercase; line-height: 1.25;
+    }
+    .bk-cta {
+      display: inline-block; margin-top: 0.6rem; background: var(--primary-blue); color: #fff;
+      text-decoration: none; font-weight: 700; font-size: 0.74rem; padding: 0.5rem 0.9rem; border-radius: 999px;
+    }
+    .bk-cta:hover { background: #3d6b9e; }
+
+    /* En pantallas anchas la tarjeta queda fija en la esquina superior izquierda */
+    @media (min-width: 1480px) {
+      .bank-card {
+        position: fixed; top: 1.5rem; left: 1rem; width: 260px; max-width: 260px; margin: 0;
+      }
     }
 
     .form-container {
@@ -230,6 +329,48 @@
   </style>
 </head>
 <body>
+
+  <!-- ===== TARJETA DE DATOS DE PAGO (se llena desde la tabla cuenta_banco) ===== -->
+  <aside class="bank-card" id="bankCard" aria-label="Datos de pago" hidden>
+    <div class="bk-top">
+      <div class="bk-chip"></div>
+      <div class="bk-title">Datos<br>de pago</div>
+      <div class="bk-label">Número de cuenta</div>
+      <div class="bk-number-row">
+        <div class="bk-number" id="bkNumero">—</div>
+        <button type="button" class="bk-copy" id="bkCopy" aria-label="Copiar número de cuenta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span id="bkCopyTxt">Copiar</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="bk-body">
+      <div class="bk-pill-main">TRANSFERENCIA BANCARIA</div>
+
+      <div class="bk-item">
+        <span class="bk-tag"><span class="ico"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>NOMBRE</span>
+        <div class="bk-value" id="bkAc">—</div>
+      </div>
+
+      <div class="bk-item">
+        <span class="bk-tag"><span class="ico"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V10"></path><path d="M9 21V10"></path><path d="M15 21V10"></path><path d="M19 21V10"></path><path d="M12 3 2 9h20z"></path></svg></span>BANCO</span>
+        <div class="bk-value" id="bkBanco">—</div>
+      </div>
+
+      <div class="bk-item">
+        <span class="bk-tag"><span class="ico"><svg width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 10h4"></path><path d="M7 14h2"></path><path d="M15 10h2"></path></svg></span>RIF</span>
+        <div class="bk-value" id="bkRif">—</div>
+      </div>
+
+      <div class="bk-divider">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </div>
+
+      <div class="bk-send">Envía tu comprobante<br>de pago</div>
+      <a class="bk-cta" href="#comprobantePago">Adjúntalo en el formulario</a>
+    </div>
+  </aside>
 
   <div class="form-container">
     <div class="logo-container">
