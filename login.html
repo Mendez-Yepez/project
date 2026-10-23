@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login CEIC - Glassmorphism</title>
+  <title>Iniciar Sesión · CEIC</title>
   <style>
-    /* Variables para Modo Oscuro (Por defecto) */
+    /* ===== Variables: Modo Oscuro (por defecto) ===== */
     :root[data-theme="dark"] {
       --bg-gradient: linear-gradient(135deg, #0d131a 0%, #1e2b3a 50%, #0d131a 100%);
       --primary-blue: #2b547e;
+      --primary-blue-light: #4a82bd;
       --accent-red: #800000;
-      --glass-bg: rgba(22, 30, 39, 0.65);
+      --glass-bg: rgba(22, 30, 39, 0.68);
       --glass-border: rgba(255, 255, 255, 0.12);
       --input-bg: rgba(255, 255, 255, 0.07);
+      --input-bg-focus: rgba(255, 255, 255, 0.11);
       --text-main: #ffffff;
       --text-muted: #cbd5e1;
+      --text-faint: #8fa1b3;
       --theme-btn-bg: rgba(255, 255, 255, 0.1);
       --btn-secondary-border: rgba(255, 255, 255, 0.25);
       --btn-secondary-hover: rgba(255, 255, 255, 0.1);
+      --orb-1: rgba(43, 84, 126, 0.55);
+      --orb-2: rgba(128, 0, 0, 0.35);
+      --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
       --error-bg: rgba(128, 0, 0, 0.18);
       --error-border: rgba(255, 120, 120, 0.4);
       --error-text: #ffb3b3;
@@ -26,19 +32,25 @@
       --success-text: #a6f0bd;
     }
 
-    /* Variables para Modo Claro */
+    /* ===== Variables: Modo Claro ===== */
     :root[data-theme="light"] {
       --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
       --primary-blue: #2b547e;
+      --primary-blue-light: #3d6b9e;
       --accent-red: #800000;
-      --glass-bg: rgba(255, 255, 255, 0.65);
-      --glass-border: rgba(255, 255, 255, 0.4);
+      --glass-bg: rgba(255, 255, 255, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.6);
       --input-bg: rgba(0, 0, 0, 0.04);
+      --input-bg-focus: rgba(255, 255, 255, 0.9);
       --text-main: #0f172a;
       --text-muted: #475569;
+      --text-faint: #64748b;
       --theme-btn-bg: rgba(0, 0, 0, 0.05);
       --btn-secondary-border: #2b547e;
       --btn-secondary-hover: rgba(43, 84, 126, 0.08);
+      --orb-1: rgba(43, 84, 126, 0.28);
+      --orb-2: rgba(128, 0, 0, 0.16);
+      --card-shadow: 0 20px 60px rgba(15, 23, 42, 0.22);
       --error-bg: rgba(128, 0, 0, 0.08);
       --error-border: rgba(128, 0, 0, 0.35);
       --error-text: #800000;
@@ -52,8 +64,9 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
+
+    html, body { min-height: 100%; }
 
     body {
       background: var(--bg-gradient);
@@ -62,15 +75,39 @@
       align-items: center;
       min-height: 100vh;
       padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
     }
 
-    /* Botón de cambio de tema */
+    /* Luces de fondo difuminadas */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 420px; height: 420px;
+      background: var(--orb-1);
+      top: -120px; left: -120px;
+    }
+    body::after {
+      width: 380px; height: 380px;
+      background: var(--orb-2);
+      bottom: -120px; right: -100px;
+    }
+
+    /* ===== Botón de tema ===== */
     .theme-toggle-btn {
       position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.2rem;
+      right: 1.2rem;
       background: var(--theme-btn-bg);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
       color: var(--text-main);
       width: 44px;
@@ -82,181 +119,223 @@
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       z-index: 10;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
+    .theme-toggle-btn:hover { transform: scale(1.08) rotate(15deg); }
 
-    .theme-toggle-btn:hover {
-      transform: scale(1.05);
-    }
-
-    /* Tarjeta con efecto Glassmorphism */
+    /* ===== Tarjeta ===== */
     .login-card {
+      position: relative;
+      z-index: 1;
       background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 2.5rem;
+      border-radius: 20px;
+      padding: 2.2rem 2.2rem 1.8rem;
       width: 100%;
-      max-width: 420px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+      max-width: 430px;
+      box-shadow: var(--card-shadow);
+      transition: background 0.3s ease, border-color 0.3s ease;
+      animation: entrada 0.5s ease both;
+    }
+    @keyframes entrada {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Franja superior de color */
+    .login-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 24px; right: 24px;
+      height: 3px;
+      border-radius: 0 0 6px 6px;
+      background: linear-gradient(90deg, var(--primary-blue), var(--accent-red));
+    }
+
+    /* ===== Logo ===== */
+    .logo-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+    .logo-badge {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28), 0 0 0 4px rgba(43, 84, 126, 0.35);
+    }
+    .logo-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    #alt-logo-header {
+      display: none;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary-blue);
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .org-name {
+      margin-top: 0.8rem;
+      font-size: 0.7rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      text-align: center;
+      font-weight: 600;
+    }
 
     .title {
       color: var(--text-main);
-      font-size: 1.5rem;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.7rem;
       font-weight: 700;
       text-align: center;
-      margin-bottom: 1.8rem;
+      margin-bottom: 0.3rem;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      text-align: center;
+      margin-bottom: 1.6rem;
     }
 
-    /* Formulario */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
+    /* ===== Formulario ===== */
+    .form-group { margin-bottom: 1.15rem; }
 
     .form-label {
       display: block;
       color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.74rem;
+      font-weight: 700;
       margin-bottom: 0.4rem;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.7px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-faint);
+      pointer-events: none;
+      display: flex;
     }
 
     .input-field {
       width: 100%;
-      padding: 0.8rem 1rem;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
       background: var(--input-bg);
       border: 1px solid var(--glass-border);
-      border-radius: 8px;
+      border-radius: 10px;
       color: var(--text-main);
       font-size: 0.95rem;
       outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     }
-
-    .input-field::placeholder {
-      color: var(--text-muted);
-      opacity: 0.6;
-    }
-
+    .input-field::placeholder { color: var(--text-muted); opacity: 0.55; }
     .input-field:focus {
-      border-color: var(--primary-blue);
-      box-shadow: 0 0 12px rgba(43, 84, 126, 0.3);
+      background: var(--input-bg-focus);
+      border-color: var(--primary-blue-light);
+      box-shadow: 0 0 0 3px rgba(74, 130, 189, 0.25);
     }
+    .input-wrap:focus-within .input-icon { color: var(--primary-blue-light); }
 
-    /* Campo con botón de ver contraseña */
-    .password-container {
-      position: relative;
-    }
-
-    .password-container .input-field {
-      padding-right: 2.8rem;
-    }
+    .password-container .input-field { padding-right: 2.9rem; }
 
     .toggle-btn {
       position: absolute;
-      right: 0.8rem;
+      right: 0.55rem;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: var(--text-faint);
       cursor: pointer;
       display: flex;
       align-items: center;
+      padding: 0.35rem;
+      border-radius: 6px;
     }
+    .toggle-btn:hover { color: var(--text-main); background: var(--btn-secondary-hover); }
 
-    .toggle-btn:hover {
-      color: var(--text-main);
-    }
-
-    /* Checkbox personalizado */
+    /* ===== Recordarme ===== */
     .remember-container {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      gap: 0.55rem;
+      margin-bottom: 1.4rem;
       cursor: pointer;
+      user-select: none;
     }
-
     .remember-container input[type="checkbox"] {
       accent-color: var(--accent-red);
       width: 16px;
       height: 16px;
       cursor: pointer;
     }
+    .remember-container span { color: var(--text-muted); font-size: 0.88rem; }
 
-    .remember-container span {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* Mensajes de estado */
+    /* ===== Mensajes ===== */
     .status-message {
       display: none;
-      border-radius: 8px;
-      padding: 0.65rem 0.9rem;
+      border-radius: 10px;
+      padding: 0.7rem 0.95rem;
       font-size: 0.85rem;
       margin-bottom: 1.1rem;
+      line-height: 1.35;
     }
     .status-message.show { display: block; }
-    .status-message.error {
-      background: var(--error-bg);
-      border: 1px solid var(--error-border);
-      color: var(--error-text);
-    }
-    .status-message.success {
-      background: var(--success-bg);
-      border: 1px solid var(--success-border);
-      color: var(--success-text);
-    }
+    .status-message.error { background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error-text); }
+    .status-message.success { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
 
-    /* Contenedor para acciones/botones */
-    .actions-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+    /* ===== Botones ===== */
+    .actions-container { display: flex; flex-direction: column; gap: 0.8rem; }
 
-    /* Botón Submit */
     .submit-btn {
       width: 100%;
-      padding: 0.85rem;
-      background: linear-gradient(135deg, var(--primary-blue), #1e3d5c);
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--primary-blue-light), var(--primary-blue) 60%, #1e3d5c);
       color: #ffffff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.4px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(43, 84, 126, 0.4);
+      box-shadow: 0 6px 20px rgba(43, 84, 126, 0.45);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(43, 84, 126, 0.6); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-    .submit-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(43, 84, 126, 0.6);
+    @media (max-width: 480px) {
+      .login-card { padding: 1.8rem 1.3rem 1.5rem; border-radius: 16px; }
+      .title { font-size: 1.45rem; }
     }
-
-    .submit-btn:active {
-      transform: translateY(0);
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    
   </style>
 </head>
 <body>
 
   <!-- Botón de cambio Claro/Oscuro -->
   <button class="theme-toggle-btn" id="themeToggle" aria-label="Cambiar tema">
-    <svg id="themeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <svg id="themeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
       <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -269,33 +348,42 @@
     </svg>
   </button>
 
-  <center>
-      <header class="top-header py-3 border-bottom text-center">
-        <div class="container d-flex flex-column align-items-center">
-            <div class="logo-box mb-2">
-                <img src="ceic.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 90px;" onerror="this.style.display='none'; document.getElementById('alt-logo-header').style.display='block';">
-                <div id="alt-logo-header" class="fw-bold fs-2" style="color: var(--primary-blue); display: none;">CEIC IUNAV</div>
-            </div>
-        </div>
-    </header>
-          </center>
+  <main class="login-card">
 
-    <h2 class="title">Iniciar Sesión</h2>
+    <!-- Logo -->
+    <div class="logo-box">
+      <div class="logo-badge">
+        <img src="ceic.jpeg" alt="Logo CEIC" onerror="this.style.display='none'; document.getElementById('alt-logo-header').style.display='block';">
+        <div id="alt-logo-header">CEIC<br>IUNAV</div>
+      </div>
+      <div class="org-name">Centro Educativo Integral Comunitario</div>
+    </div>
 
-    <div class="status-message" id="statusMessage"></div>
+    <h1 class="title">Iniciar Sesión</h1>
+    <p class="subtitle">Ingresa tus credenciales para continuar</p>
+
+    <div class="status-message" id="statusMessage" role="alert"></div>
 
     <form id="loginForm">
       <div class="form-group">
         <label class="form-label" for="username">Tu nombre de usuario</label>
-        <input type="text" id="username" class="input-field" placeholder="Tu nombre de usuario o N° de estudiante" required autocomplete="username">
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </span>
+          <input type="text" id="username" class="input-field" placeholder="Usuario o N° de estudiante" required autocomplete="username">
+        </div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="password">Contraseña</label>
-        <div class="password-container">
+        <div class="input-wrap password-container">
+          <span class="input-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </span>
           <input type="password" id="password" class="input-field" placeholder="********" minlength="8" required autocomplete="current-password">
-          <button type="button" class="toggle-btn" id="togglePassword">
-            <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <button type="button" class="toggle-btn" id="togglePassword" aria-label="Mostrar u ocultar contraseña">
+            <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
@@ -310,18 +398,9 @@
 
       <div class="actions-container">
         <button type="submit" class="submit-btn" id="submitBtn">Ingresar</button>
-        <a href="nadmin.html" class="register-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="8.5" cy="7" r="4"></circle>
-            <line x1="20" y1="8" x2="20" y2="14"></line>
-            <line x1="23" y1="11" x2="17" y2="11"></line>
-          </svg>
-          Registrar nuevo admin
-        </a>
       </div>
     </form>
-  </div>
+  </main>
 
   <!-- Cliente de Supabase (build para navegador) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
