@@ -1,172 +1,63 @@
-/* Variables de Color (Vinotinto, Azul y Blanco) */
 :root {
-    --primary-vinotinto: #6b1d2f;
-    --vinotinto-subtle: #f9eef1;
-    --vinotinto-dark: #4a1320;
-    --primary-blue: #1d4ed8;
-    --blue-accent: #2563eb;
-    --blue-subtle: #eff6ff;
-    --blue-light: #f8fafc;
-    --bg-light: #fbfbfe;
+    --primary-navy: #0e2a47;      /* Azul marino oscuro principal */
+    --navy-subtle: #e8eef5;
+    --blue-light: #1e88e5;        /* Azul claro para resaltados */
+    --blue-subtle: #e3f2fd;
+    --emerald-green: #10b981;    /* Verde del badge de inscripción */
+    --teal-bg: #e6f4f1;
+    --gold-accent: #c59b27;       /* Dorado fino de la barra divisoria */
+    --bg-light: #f8fafc;
 }
 
-/* Estilos Generales */
+/* Aplicación de Colores */
 body {
-    font-family: 'Open Sans', sans-serif;
     background-color: var(--bg-light);
-    color: #334155;
 }
 
-h1, h2, h3, h4, h5, h6, .navbar-brand {
-    font-family: 'Montserrat', sans-serif;
+.top-bar {
+    background-color: var(--primary-navy);
 }
 
-.fw-black { font-weight: 900; }
-.text-vinotinto { color: var(--primary-vinotinto) !important; }
-.bg-vinotinto { background-color: var(--primary-vinotinto) !important; }
-.bg-vinotinto-subtle { background-color: var(--vinotinto-subtle) !important; }
-.text-blue-accent { color: var(--blue-accent) !important; }
-.bg-blue-accent { background-color: var(--blue-accent) !important; }
+.text-navy { color: var(--primary-navy) !important; }
+.bg-navy { background-color: var(--primary-navy) !important; }
+.bg-navy-subtle { background-color: var(--navy-subtle) !important; }
+
+.bg-emerald { background-color: var(--emerald-green) !important; }
+.bg-teal-banner { background-color: #d1fae5; border-bottom: 1px solid #a7f3d0; }
+
+.text-blue-light { color: var(--blue-light) !important; }
 .bg-blue-subtle { background-color: var(--blue-subtle) !important; }
 
-/* Barra Superior */
-.top-bar {
-    background-color: var(--primary-vinotinto);
-    font-size: 0.825rem;
-    border-bottom: 2px solid var(--blue-accent);
-}
+.text-gold { color: var(--gold-accent) !important; }
+.gold-divider { width: 80px; height: 3px; background-color: var(--gold-accent); border-radius: 2px; }
 
-.top-bar .slogan {
-    letter-spacing: 0.5px;
-    font-style: italic;
-}
-
-/* Navegación */
-.main-nav {
-    background-color: rgba(255, 255, 255, 0.90);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.brand-logo-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-vinotinto), var(--vinotinto-dark));
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 6px -1px rgba(107, 29, 47, 0.2);
+/* Alineación Centrada del Menú */
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-nav {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
 }
 
 .nav-link {
-    color: var(--primary-vinotinto) !important;
-    font-weight: 600;
-    font-size: 0.85rem;
-    transition: all 0.2s ease;
+    color: var(--primary-navy) !important;
 }
 
-.nav-link:hover, .nav-link.active {
-    background-color: var(--vinotinto-subtle);
-    color: var(--primary-vinotinto) !important;
+.nav-link.active, .nav-link:hover {
+    background-color: var(--navy-subtle);
 }
 
-/* Botones */
-.btn-vinotinto {
-    background-color: var(--primary-vinotinto);
-    color: #ffffff;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-.btn-vinotinto:hover {
-    background-color: var(--vinotinto-dark);
-    color: #ffffff;
-}
-
-.btn-outline-vinotinto {
-    border: 1.5px solid var(--primary-vinotinto);
-    color: var(--primary-vinotinto);
-}
-
-.btn-outline-vinotinto:hover {
-    background-color: var(--primary-vinotinto);
-    color: #ffffff;
-}
-
-/* Efecto Glassmorphism (Fondo Traslúcido con toque blanco pulido) */
+/* Glassmorphism */
 .glass-card {
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(107, 29, 47, 0.08);
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(14, 42, 71, 0.08);
     border-radius: 1.25rem;
-    box-shadow: 0 10px 30px -5px rgba(107, 29, 47, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 25px -5px rgba(14, 42, 71, 0.05);
 }
 
-.glass-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px -5px rgba(107, 29, 47, 0.12);
+.footer-navy {
+    background-color: var(--primary-navy);
+    border-top: 3px solid var(--gold-accent);
 }
-
-/* Iconos Cuadrados con Bordes Redondeados */
-.icon-shape {
-    width: 60px;
-    height: 60px;
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-shape-sm {
-    width: 42px;
-    height: 42px;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Divisor Vinotinto */
-.vinotinto-divider {
-    width: 60px;
-    height: 3px;
-    background-color: var(--primary-vinotinto);
-    border-radius: 2px;
-}
-
-/* Tarjetas de Recursos e Imágenes */
-.resource-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.resource-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px -5px rgba(107, 29, 47, 0.15) !important;
-}
-
-.resource-img {
-    height: 180px;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.resource-card:hover .resource-img {
-    transform: scale(1.04);
-}
-
-/* Pie de Página */
-.footer-vinotinto {
-    background-color: var(--primary-vinotinto);
-    border-top: 3px solid var(--blue-accent);
-}
-
-/* Clases de Utilidad */
-.max-w-700 { max-width: 700px; }
-.max-w-400 { max-width: 400px; }
-.hover-blue:hover { color: var(--blue-accent) !important; }
