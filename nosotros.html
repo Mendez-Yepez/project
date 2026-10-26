@@ -34,38 +34,61 @@
     </div>
 
     <!-- Navegación Principal -->
-    <nav class="navbar navbar-expand-lg sticky-top main-nav shadow-sm">
+    <nav class="navbar navbar-expand-lg sticky-top navbar-floating py-2 border-bottom shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="index.html">
-                <div class="brand-logo-circle">
-                    <i class="bi bi-shield-check"></i>
-                </div>
-                <div>
-                    <span class="d-block fw-extrabold text-vinotinto lh-1" style="font-size: 1.25rem;">IUNAV</span>
-                    <span class="d-block text-muted small uppercase tracking-wider" style="font-size: 0.65rem;">Centro Integral Comunitario</span>
-                </div>
+            <!-- LOGO PEQUEÑO DE NAVEGACIÓN -->
+            <a class="navbar-brand me-auto d-flex align-items-center" href="index.html">
+                <img src="images.png" alt="Logo CEIC" class="img-fluid" style="max-height: 50px;" onerror="this.style.display='none'; document.getElementById('alt-logo-nav').style.display='block';">
+                <span id="alt-logo-nav" style="display:none;" class="fw-bold text-dark fs-5">CEIC IUNAV</span>
             </a>
-            
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+
+            <!-- BOTÓN MENÚ MÓVIL -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navMenu">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-1 my-3 my-lg-0">
-                    <li class="nav-item"><a class="nav-link px-3 rounded-pill" href="index.html"><i class="bi bi-house me-1"></i> INICIO</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 rounded-pill active" href="nosotros.html"><i class="bi bi-people-fill me-1"></i> NOSOTROS</a></li>
+            <!-- ENLACES Y MENÚS DESPLEGABLES -->
+            <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
+                <ul class="navbar-nav gap-2 fw-bold align-items-center me-lg-4 my-2 my-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 rounded-pill active" href="index.html"><i class="bi bi-house-door me-1"></i> INICIO</a>
+                    </li>
+                   <!-- <li class="nav-item dropdown">
+                        <a class="nav-link px-3 rounded-pill dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-people me-1"></i>NOSOTROS
+                        </a>-->
+                        <!--<ul class="dropdown-menu p-3 shadow-lg border-0 rounded-4 mt-2">
+                            <li><h6 class="dropdown-header px-0 text-uppercase fw-bold" style="color: var(--primary-blue);">Nuestros Valores</h6></li>
+                            <li class="dropdown-item-text px-0 small text-muted">
+                                <p class="mb-2"><strong>Amor y Servicio:</strong> Reflejar el carácter de Cristo mediante el cuidado y el apoyo mutuo.</p>
+                                <p class="mb-2"><strong>Integridad:</strong> Actuar con honestidad, ética y congruencia con los principios de la fe cristiana.</p>
+                                <p class="mb-2"><strong>Excelencia:</strong> Buscar la máxima calidad en la enseñanza, el aprendizaje y la gestión institucional.</p>
+                                <p class="mb-0"><strong>Fe Bíblica:</strong> Fundamentar el conocimiento y la vida diaria en las Sagradas Escrituras.</p>
+                            </li>-->
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link px-3 rounded-pill" href="nosotros.html"><i class="bi bi-people-fill me-1"></i>NOSOTROS</a></li>
                     <li class="nav-item"><a class="nav-link px-3 rounded-pill" href="galeria.html"><i class="bi bi-images me-1"></i> GALERÍA</a></li>
                     <li class="nav-item"><a class="nav-link px-3 rounded-pill" href="catalogo.html"><i class="bi bi-journal-bookmark me-1"></i> CURSOS</a></li>
                     <li class="nav-item"><a class="nav-link px-3 rounded-pill" href="https://www.instagram.com/ceic_iunav/" target="_blank"><i class="bi bi-share me-1"></i> REDES SOCIALES</a></li>
                 </ul>
-                <div class="d-flex gap-2 ms-lg-3 mt-2 mt-lg-0">
-                    <a href="inscripcion.html" class="btn btn-outline-vinotinto rounded-pill px-3 py-1-5 text-uppercase fw-bold"><i class="bi bi-card-checklist me-1"></i> Inscripción</a>
-                    <a href="login.html" class="btn btn-vinotinto rounded-pill px-3 py-1-5 text-uppercase fw-bold"><i class="bi bi-person-fill me-1"></i> Acceder</a>
+                <!-- BOTONES DE ACCIÓN (DINÁMICOS POR SCRIPT) -->
+               <!-- BOTONES DE ACCIÓN (DINÁMICOS POR SCRIPT) -->
+                <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                    <a id="nav-btn-inscripcion" 
+                       href="inscripcion.html" 
+                       class="btn btn-outline-primary btn-sm fw-bold px-3 py-2 rounded-pill border-2 disabled" 
+                       aria-disabled="true" 
+                       tabindex="-1">
+                        <i class="bi bi-card-checklist me-1"></i> INSCRIPCIÓN
+                    </a>
+                    <a href="login.html" class="btn text-white btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm" style="background-color: var(--primary-blue);">
+                        <i class="bi bi-person-fill me-1"></i> ACCEDER
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
-
     <!-- Banner de Estado -->
     <div class="bg-blue-light py-2 border-bottom border-blue-subtle">
         <div class="container text-center">
