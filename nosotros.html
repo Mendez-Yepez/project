@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre Nosotros | CEIC - IUNAV</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome & Lucide Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Estilos Personalizados -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen relative font-sans overflow-x-hidden">
+
+  <!-- Fondos y Decoración con Degradados -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-600/20 blur-[120px] animate-pulse"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-600/20 blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+    <div class="absolute top-[40%] left-[30%] w-[35vw] h-[35vw] rounded-full bg-amber-500/10 blur-[100px] animate-pulse" style="animation-delay: 4s;"></div>
+  </div>
+
+  <div class="relative z-10">
+    <!-- Navegación -->
+    <nav class="sticky top-0 z-40 backdrop-blur-md bg-slate-900/60 border-b border-white/10 px-6 py-4 transition-all duration-300">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30">
+            C
+          </div>
+          <div>
+            <span class="text-xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-amber-300">CEIC</span>
+            <span class="text-xs text-slate-400 block -mt-1 font-semibold">IUNAV</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Inicio</a>
+          <a href="#" class="text-sm font-medium text-blue-400 font-semibold">Nosotros</a>
+          <a href="#" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Cursos</a>
+          <a href="#" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Contacto</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Encabezado Hero -->
+    <header class="max-w-5xl mx-auto text-center pt-16 pb-12 px-6">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-6 shadow-inner">
+        <i data-lucide="sparkles" class="w-4 h-4"></i> Centro de Extensión e Investigación Comunitaria
+      </div>
+      <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight mb-6">
+        Transformando comunidades mediante la <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-amber-300">Educación y Tecnología</span>
+      </h1>
+      <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+        Somos el puente institucional entre el IUNAV y nuestro entorno social, comprometidos con el desarrollo integral, la formación continua y la innovación comunitaria en Nirgua y Yaracuy.
+      </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 space-y-20 pb-20">
+
+      <!-- Sección Tarjetas con Efecto Glassmorphism -->
+      <section class="grid md:grid-cols-3 gap-8">
+        <!-- Misión -->
+        <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group hover:border-blue-500/50 transition-all duration-300">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition-all"></div>
+          <div class="w-14 h-14 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 mb-6">
+            <i data-lucide="target" class="w-7 h-7"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">Nuestra Misión</h3>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Formar, capacitar e integrar a las comunidades mediante programas educativos accesibles y proyectos comunitarios de alto valor, promoviendo el desarrollo integral, ético y técnico bajo los principios e ideales de la institución.
+          </p>
+        </div>
+
+        <!-- Visión -->
+        <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group hover:border-indigo-500/50 transition-all duration-300">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-all"></div>
+          <div class="w-14 h-14 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-400 mb-6">
+            <i data-lucide="eye" class="w-7 h-7"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">Nuestra Visión</h3>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Ser un centro de referencia regional e institucional en extensión universitaria e innovación comunitaria, reconocido por la excelencia en sus programas de capacitación y la automatización transparente de sus servicios.
+          </p>
+        </div>
+
+        <!-- Valores -->
+        <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-xl group-hover:bg-amber-500/20 transition-all"></div>
+          <div class="w-14 h-14 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 mb-6">
+            <i data-lucide="heart" class="w-7 h-7"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">Nuestros Valores</h3>
+          <ul class="text-slate-300 text-sm leading-relaxed space-y-2">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400"></i> Compromiso Social y Vocación</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400"></i> Excelencia y Transparencia</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400"></i> Innovación Tecnológica</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400"></i> Trabajo Colaborativo</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Estadísticas e Impacto -->
+      <section class="glass-panel rounded-3xl p-8 md:p-12 border border-white/10 relative overflow-hidden">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <h2 class="text-3xl font-extrabold text-white mb-3">Nuestro Impacto en Números</h2>
+          <p class="text-slate-400 text-sm">Resultados alcanzados a través de talleres, cursos y proyectos de servicio comunitario.</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div class="text-4xl font-black text-blue-400 mb-1" id="counter1">0</div>
+            <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Participantes Inscritos</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div class="text-4xl font-black text-indigo-400 mb-1" id="counter2">0</div>
+            <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Cursos Impartidos</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div class="text-4xl font-black text-amber-400 mb-1" id="counter3">0</div>
+            <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Proyectos Comunitarios</div>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div class="text-4xl font-black text-emerald-400 mb-1" id="counter4">0</div>
+            <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Horas de Formación</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Galería de Galería con Descargas -->
+      <section>
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <h2 class="text-3xl font-bold text-white mb-2">Galería de Actividades y Recursos</h2>
+            <p class="text-slate-400 text-sm">Explora las imágenes de nuestros talleres e infografías institucionales descargables.</p>
+          </div>
+          <!-- Botones de Filtro -->
+          <div class="flex items-center gap-2 p-1.5 glass-panel rounded-xl border border-white/10 self-start md:self-auto">
+            <button class="filter-btn active px-4 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 transition-all" data-filter="all">Todos</button>
+            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all" data-filter="talleres">Talleres</button>
+            <button class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all" data-filter="infografias">Infografías</button>
+          </div>
+        </div>
+
+        <!-- Grid de Galería -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-grid">
+          
+          <!-- Item 1 -->
+          <div class="gallery-item talleres glass-panel rounded-2xl overflow-hidden group border border-white/10 hover:border-blue-500/50 transition-all duration-300">
+            <div class="relative overflow-hidden aspect-video">
+              <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80" alt="Taller Tecnológico" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+              <div class="absolute top-3 right-3 flex gap-2">
+                <a href="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80" download="CEIC_Taller_Capacitacion.jpg" class="p-2.5 rounded-xl glass-panel text-white hover:bg-blue-600 transition-colors shadow-lg" title="Descargar imagen">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">Taller</span>
+              <h3 class="text-lg font-bold text-white mt-2">Capacitación de Herramientas Digitales</h3>
+              <p class="text-xs text-slate-400 mt-1">Jornada de formación práctica orientada a la alfabetización digital comunitaria.</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="gallery-item infografias glass-panel rounded-2xl overflow-hidden group border border-white/10 hover:border-indigo-500/50 transition-all duration-300">
+            <div class="relative overflow-hidden aspect-video">
+              <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80" alt="Infografía del Proyecto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+              <div class="absolute top-3 right-3 flex gap-2">
+                <a href="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80" download="CEIC_Flujograma_Inscripcion.jpg" class="p-2.5 rounded-xl glass-panel text-white hover:bg-indigo-600 transition-colors shadow-lg" title="Descargar imagen">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-md border border-indigo-500/20">Infografía</span>
+              <h3 class="text-lg font-bold text-white mt-2">Pasos para la Inscripción Web</h3>
+              <p class="text-xs text-slate-400 mt-1">Guía visual del proceso de registro y solicitud de cupos en el portal.</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="gallery-item talleres glass-panel rounded-2xl overflow-hidden group border border-white/10 hover:border-amber-500/50 transition-all duration-300">
+            <div class="relative overflow-hidden aspect-video">
+              <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Trabajo en Equipo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+              <div class="absolute top-3 right-3 flex gap-2">
+                <a href="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" download="CEIC_Equipo_Servicio_Comunitario.jpg" class="p-2.5 rounded-xl glass-panel text-white hover:bg-amber-600 transition-colors shadow-lg" title="Descargar imagen">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">Comunidad</span>
+              <h3 class="text-lg font-bold text-white mt-2">Desarrolladores de Servicio Comunitario</h3>
+              <p class="text-xs text-slate-400 mt-1">Estudiantes de Informática colaborando en el diseño y despliegue del software.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Equipo de Trabajo -->
+      <section class="space-y-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="text-3xl font-bold text-white mb-2">Equipo Detrás de la Plataforma</h2>
+          <p class="text-slate-400 text-sm">Integración entre la coordinación académica y el equipo técnico de desarrollo.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Coordinación -->
+          <div class="glass-panel p-8 rounded-2xl flex items-center gap-6 border border-white/10">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-2xl font-bold text-white shadow-lg shrink-0">
+              IUNAV
+            </div>
+            <div>
+              <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Coordinación Académica</span>
+              <h3 class="text-xl font-bold text-white mt-0.5">Gestión CEIC - IUNAV</h3>
+              <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+                Supervisión institucional de los cursos, proyectos de vinculación comunitaria y aprobación oficial de constancias.
+              </p>
+            </div>
+          </div>
+
+          <!-- Desarrolladores -->
+          <div class="glass-panel p-8 rounded-2xl flex items-center gap-6 border border-white/10">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500 to-indigo-600 flex items-center justify-center text-2xl font-bold text-white shadow-lg shrink-0">
+              <i data-lucide="code-2" class="w-10 h-10"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Desarrollo Web & Software</span>
+              <h3 class="text-xl font-bold text-white mt-0.5">Servicio Comunitario de Informática</h3>
+              <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+                Diseño de arquitectura backend (NestJS/PostgreSQL) e interfaz pública responsiva desarrollada por los estudiantes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Pie de Página -->
+    <footer class="border-t border-white/10 bg-slate-950/80 backdrop-blur-md py-10 px-6 text-center text-slate-400 text-xs">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <p class="font-semibold text-slate-300">Centro de Extensión e Investigación Comunitaria (CEIC)</p>
+          <p class="mt-0.5 text-slate-500">Instituto Universitario Adventista de Venezuela — Nirgua, Yaracuy</p>
+        </div>
+        <p>© 2026 CEIC IUNAV. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Script Principal -->
+  <script src="script.js"></script>
+</body>
+</html>
