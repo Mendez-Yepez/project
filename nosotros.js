@@ -1,21 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Agrandar imagen en modal o interactividad opcional de descargas
+    // 1. Registro opcional para descargas directas de infografías/recursos
     const downloadButtons = document.querySelectorAll('a[download]');
     
     downloadButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            // Confirmación o registro suave al descargar un recurso
-            console.log(`Recurso descargado: ${button.getAttribute('download')}`);
+        button.addEventListener('click', () => {
+            console.log(`Recurso descargado exitosamente: ${button.getAttribute('download')}`);
         });
     });
 
-    // 2. Transición suave de la barra superior al hacer scroll
+    // 2. Sombra dinámica en la barra de navegación al hacer scroll
     const navbar = document.querySelector('.main-nav');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 40) {
-            navbar.classList.add('shadow');
+            navbar.classList.add('shadow-md');
         } else {
-            navbar.classList.remove('shadow');
+            navbar.classList.remove('shadow-md');
         }
     });
 });
