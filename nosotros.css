@@ -1,43 +1,188 @@
-/* Configuración y Ajustes Personalizados */
-
-/* Efecto de Cristal Traslúcido (Glassmorphism) */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+/* Variables de Color Institucionales IUNAV */
+:root {
+    --primary-navy: #0a2540;
+    --navy-subtle: #e6edf5;
+    --primary-gold: #c59b27;
+    --gold-subtle: #fdf8e7;
+    --gold-dark: #8c6d12;
+    --primary-teal: #0d9488;
+    --teal-subtle: #e6f4f1;
+    --teal-dark: #065f56;
+    --bg-light: #f8fafc;
 }
 
-/* Transiciones Suaves */
-.gallery-item {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* Estilos Generales */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: #334155;
 }
 
-.gallery-item.hidden-item {
-  opacity: 0;
-  transform: scale(0.9);
-  pointer-events: none;
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Montserrat', sans-serif;
 }
 
-/* Barra de Desplazamiento Personalizada */
-::-webkit-scrollbar {
-  width: 10px;
+.fw-black { font-weight: 900; }
+.text-navy { color: var(--primary-navy) !important; }
+.bg-navy { background-color: var(--primary-navy) !important; }
+.bg-navy-subtle { background-color: var(--navy-subtle) !important; }
+.text-gold { color: var(--primary-gold) !important; }
+.text-gold-dark { color: var(--gold-dark) !important; }
+.bg-gold { background-color: var(--primary-gold) !important; }
+.bg-gold-subtle { background-color: var(--gold-subtle) !important; }
+.text-teal { color: var(--primary-teal) !important; }
+.text-teal-dark { color: var(--teal-dark) !important; }
+.bg-teal { background-color: var(--primary-teal) !important; }
+.bg-teal-subtle { background-color: var(--teal-subtle) !important; }
+
+/* Barra Superior */
+.top-bar {
+    background-color: var(--primary-navy);
+    font-size: 0.825rem;
+    border-bottom: 2px solid var(--primary-gold);
 }
-::-webkit-scrollbar-track {
-  background: #0f172a;
+
+.top-bar .slogan {
+    letter-spacing: 0.5px;
+    font-style: italic;
 }
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 5px;
-  border: 2px solid #0f172a;
+
+/* Navegación */
+.main-nav {
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e2e8f0;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+
+.brand-logo-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-navy), #1e3a8a);
+    color: var(--primary-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
+
+.nav-link {
+    color: var(--primary-navy) !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: var(--navy-subtle);
+    color: var(--primary-navy) !important;
+}
+
+/* Botones */
+.btn-navy {
+    background-color: var(--primary-navy);
+    color: #ffffff;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-navy:hover {
+    background-color: #153e67;
+    color: #ffffff;
+}
+
+.btn-outline-custom {
+    border: 1.5px solid var(--primary-navy);
+    color: var(--primary-navy);
+}
+
+.btn-outline-custom:hover {
+    background-color: var(--primary-navy);
+    color: #ffffff;
+}
+
+.btn-outline-navy {
+    border: 1px solid var(--primary-navy);
+    color: var(--primary-navy);
+}
+
+.btn-outline-navy:hover {
+    background-color: var(--primary-navy);
+    color: #ffffff;
+}
+
+/* Efecto Glassmorphism (Fondo Traslúcido Elegante) */
+.glass-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px -5px rgba(10, 37, 64, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px -5px rgba(10, 37, 64, 0.1);
+}
+
+/* Iconos Cuadrados con Bordes Redondeados */
+.icon-shape {
+    width: 60px;
+    height: 60px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-shape-sm {
+    width: 42px;
+    height: 42px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Divisor Dorado */
+.gold-divider {
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-gold);
+    border-radius: 2px;
+}
+
+/* Tarjetas de Recursos e Imágenes */
+.resource-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px -5px rgba(0,0,0,0.12) !important;
+}
+
+.resource-img {
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.resource-card:hover .resource-img {
+    transform: scale(1.04);
+}
+
+/* Pie de Página */
+.footer-navy {
+    background-color: var(--primary-navy);
+    border-top: 3px solid var(--primary-gold);
+}
+
+/* Clases de Utilidad */
+.max-w-700 { max-width: 700px; }
+.max-w-400 { max-width: 400px; }
+.hover-gold:hover { color: var(--primary-gold) !important; }
