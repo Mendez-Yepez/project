@@ -1,135 +1,385 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const VALUES = [
-        { t: "Fe y servicio", d: "Poner los conocimientos y capacidades al servicio de los demás.", i: "bi-heart-fill", c: "espiritual", color: "#dc2626" },
-        { t: "Respeto", d: "Valorar la dignidad, las diferencias y los derechos de cada persona.", i: "bi-hand-thumbs-up-fill", c: "social", color: "#2563eb" },
-        { t: "Responsabilidad", d: "Cumplir con los compromisos asumidos y cuidar los recursos del centro.", i: "bi-check2-square", c: "personal", color: "#7c3aed" },
-        { t: "Integridad", d: "Actuar con honestidad, transparencia y coherencia.", i: "bi-shield-check", c: "espiritual", color: "#0891b2" },
-        { t: "Solidaridad", d: "Promover el apoyo mutuo y la sensibilidad frente a las necesidades de la comunidad.", i: "bi-people-fill", c: "social", color: "#ea580c" },
-        { t: "Excelencia", d: "Procurar calidad, orden y mejora continua en la enseñanza y en la gestión.", i: "bi-award-fill", c: "profesional", color: "#d97706" },
-        { t: "Inclusión", d: "Favorecer oportunidades de formación sin discriminación.", i: "bi-universal-access", c: "social", color: "#059669" },
-        { t: "Trabajo y emprendimiento", d: "Promover la iniciativa, la productividad y la autonomía económica.", i: "bi-rocket-takeoff-fill", c: "profesional", color: "#0f766e" },
-        { t: "Vida saludable", d: "Fomentar hábitos de cuidado personal, prevención y bienestar integral.", i: "bi-activity", c: "personal", color: "#16a34a" }
-    ];
-    const CAT = { espiritual: "Espiritual", social: "Social", profesional: "Trabajo y excelencia", personal: "Personal" };
+document.addEventListener("DOMContentLoaded", () => {
 
-    // Render de valores
-    const grid = document.getElementById('valuesGrid');
-    if (grid) {
-        VALUES.forEach((v, idx) => {
-            const col = document.createElement('div');
-            col.className = 'col-md-6 col-lg-4 value-item';
-            col.dataset.cat = v.c;
-            col.dataset.idx = idx;
-            col.innerHTML = `
-                <div class="custom-card value-card" style="--accent:${v.color}" tabindex="0" role="button" aria-label="Ver detalle de ${v.t}">
-                    <span class="value-num">${String(idx + 1).padStart(2, '0')}</span>
-                    <div class="icon-box mb-3" style="background:${v.color}15; color:${v.color}"><i class="bi ${v.i} fs-4"></i></div>
-                    <h4 class="h5 fw-bold" style="color: var(--navy-primary);">${v.t}</h4>
-                    <p class="text-muted small mb-0">${v.d}</p>
-                    <i class="bi bi-arrow-right-circle-fill more"></i>
-                </div>`;
-            grid.appendChild(col);
-        });
+/* ==========================
+   BARRA PROGRESO SCROLL
+========================== */
+
+const progressBar = document.getElementById("scrollProgress");
+
+window.addEventListener("scroll", () => {
+
+    const totalHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+
+    const progress =
+        (window.pageYOffset / totalHeight) * 100;
+
+    progressBar.style.width = progress + "%";
+});
+
+
+/* ==========================
+   BOTON VOLVER ARRIBA
+========================== */
+
+const toTop = document.getElementById("toTop");
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 400) {
+        toTop.style.display = "flex";
+    } else {
+        toTop.style.display = "none";
     }
+});
 
-    // Filtros
-    const filtersContainer = document.getElementById('valueFilters');
-    if (filtersContainer) {
-        filtersContainer.addEventListener('click', e => {
-            const btn = e.target.closest('.filter-chip');
-            if (!btn) return;
-            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const f = btn.dataset.filter;
-            document.querySelectorAll('.value-item').forEach(el => {
-                el.classList.toggle('hide', f !== 'all' && el.dataset.cat !== f);
-            });
-        });
-    }
+toTop.addEventListener("click", () => {
 
-    // Modal
-    const modalEl = document.getElementById('valueModal');
-    let modal;
-    let current = 0;
-    if (modalEl) {
-        modal = new bootstrap.Modal(modalEl);
-    }
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
-    function visibleIdx() {
-        return [...document.querySelectorAll('.value-item:not(.hide)')].map(e => +e.dataset.idx);
-    }
+});
 
-    function showValue(idx) {
-        current = idx;
-        const v = VALUES[idx];
-        const list = visibleIdx();
-        document.getElementById('mIcon').innerHTML = `<i class="bi ${v.i} fs-1"></i>`;
-        document.getElementById('mIcon').style.cssText = `width:80px;height:80px;border-radius:1rem;background:${v.color}22;color:${v.color};display:inline-flex;align-items:center;justify-content:center;`;
-        const cat = document.getElementById('mCat');
-        cat.textContent = CAT[v.c];
-        cat.style.cssText = `background:${v.color}22;color:${v.color};font-weight:600;`;
-        document.getElementById('mTitle').textContent = v.t;
-        document.getElementById('mDesc').textContent = v.d;
-        document.getElementById('mCount').textContent = `${list.indexOf(idx) + 1} de ${list.length}`;
-        modal.show();
-    }
 
-    function step(dir) {
-        const list = visibleIdx();
-        const pos = list.indexOf(current);
-        showValue(list[(pos + dir + list.length) % list.length]);
-    }
+/* ==========================
+   ANIMACIONES REVEAL
+========================== */
 
-    if (grid) {
-        grid.addEventListener('click', e => {
-            const item = e.target.closest('.value-item');
-            if (item) showValue(+item.dataset.idx);
-        });
-    }
+const reveals =
+document.querySelectorAll(".reveal");
 
-    const mPrev = document.getElementById('mPrev');
-    const mNext = document.getElementById('mNext');
-    if (mPrev) mPrev.onclick = () => step(-1);
-    if (mNext) mNext.onclick = () => step(1);
+const revealOnScroll = () => {
 
-    // Tabs Misión / Visión
-    const tabs = [...document.querySelectorAll('.mv-tab')];
-    const pill = document.getElementById('mvPill');
-    function movePill() {
-        const active = document.querySelector('.mv-tab.active');
-        if (active && pill && tabs.length > 0) {
-            pill.style.width = active.offsetWidth + 'px';
-            pill.style.transform = `translateX(${active.offsetLeft - tabs[0].offsetLeft}px)`;
+    reveals.forEach(el => {
+
+        const top =
+        el.getBoundingClientRect().top;
+
+        if (top < window.innerHeight - 100) {
+            el.classList.add("active");
         }
+
+    });
+};
+
+window.addEventListener(
+    "scroll",
+    revealOnScroll
+);
+
+revealOnScroll();
+
+
+/* ==========================
+   MISIÓN Y VISIÓN
+========================== */
+
+const tabs =
+document.querySelectorAll(".mv-tab");
+
+const panels =
+document.querySelectorAll(".mv-panel");
+
+const pill =
+document.getElementById("mvPill");
+
+tabs.forEach((tab, index) => {
+
+    tab.addEventListener("click", () => {
+
+        tabs.forEach(t =>
+            t.classList.remove("active")
+        );
+
+        panels.forEach(p =>
+            p.classList.remove("active")
+        );
+
+        tab.classList.add("active");
+
+        document
+            .getElementById(
+                tab.dataset.target
+            )
+            .classList.add("active");
+
+        if (index === 0) {
+            pill.style.transform =
+            "translateX(0)";
+        } else {
+            pill.style.transform =
+            "translateX(100%)";
+        }
+
+    });
+
+});
+
+
+/* ==========================
+   VALORES
+========================== */
+
+const valores = [
+
+{
+    titulo:"Fe",
+    categoria:"espiritual",
+    icono:"bi-heart-fill",
+    color:"primary",
+    descripcion:
+    "Creemos en Dios como fundamento de toda verdadera educación y desarrollo humano."
+},
+
+{
+    titulo:"Servicio",
+    categoria:"social",
+    icono:"bi-people-fill",
+    color:"success",
+    descripcion:
+    "Promovemos la ayuda desinteresada y el compromiso con la comunidad."
+},
+
+{
+    titulo:"Integridad",
+    categoria:"personal",
+    icono:"bi-shield-check",
+    color:"warning",
+    descripcion:
+    "Actuamos con honestidad, ética y coherencia en todas nuestras acciones."
+},
+
+{
+    titulo:"Excelencia",
+    categoria:"profesional",
+    icono:"bi-star-fill",
+    color:"danger",
+    descripcion:
+    "Buscamos calidad y mejora continua en cada actividad desarrollada."
+},
+
+{
+    titulo:"Respeto",
+    categoria:"social",
+    icono:"bi-hand-thumbs-up-fill",
+    color:"info",
+    descripcion:
+    "Valoramos la dignidad, opiniones y diversidad de las personas."
+},
+
+{
+    titulo:"Responsabilidad",
+    categoria:"personal",
+    icono:"bi-check-circle-fill",
+    color:"secondary",
+    descripcion:
+    "Cumplimos nuestros compromisos con disciplina y compromiso."
+},
+
+{
+    titulo:"Emprendimiento",
+    categoria:"profesional",
+    icono:"bi-lightbulb-fill",
+    color:"success",
+    descripcion:
+    "Impulsamos iniciativas innovadoras para generar oportunidades."
+},
+
+{
+    titulo:"Esperanza",
+    categoria:"espiritual",
+    icono:"bi-sun-fill",
+    color:"primary",
+    descripcion:
+    "Inspiramos confianza en un futuro mejor mediante los principios cristianos."
+}
+
+];
+
+const grid =
+document.getElementById("valuesGrid");
+
+let currentFilter = "all";
+
+function renderValues() {
+
+    grid.innerHTML = "";
+
+    let filtered =
+    currentFilter === "all"
+    ? valores
+    : valores.filter(
+        v => v.categoria === currentFilter
+      );
+
+    filtered.forEach((valor,index)=>{
+
+        grid.innerHTML += `
+        <div class="col-md-6 col-lg-4">
+            <div class="custom-card p-4 h-100 value-card"
+                 data-index="${valores.indexOf(valor)}">
+
+                <div class="icon-box bg-${valor.color}-subtle mb-3"
+                     style="width:70px;height:70px">
+
+                    <i class="bi ${valor.icono}
+                    fs-3 text-${valor.color}"></i>
+
+                </div>
+
+                <h5 class="fw-bold">
+                    ${valor.titulo}
+                </h5>
+
+                <p class="text-muted small">
+                    ${valor.descripcion.substring(0,70)}...
+                </p>
+
+            </div>
+        </div>`;
+    });
+
+    activateCards();
+}
+
+renderValues();
+
+
+/* ==========================
+   FILTROS
+========================== */
+
+const filters =
+document.querySelectorAll(".filter-chip");
+
+filters.forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        filters.forEach(f =>
+            f.classList.remove("active")
+        );
+
+        btn.classList.add("active");
+
+        currentFilter =
+        btn.dataset.filter;
+
+        renderValues();
+
+    });
+
+});
+
+
+/* ==========================
+   MODAL
+========================== */
+
+const modalElement =
+document.getElementById("valueModal");
+
+const valueModal =
+new bootstrap.Modal(modalElement);
+
+const mTitle =
+document.getElementById("mTitle");
+
+const mDesc =
+document.getElementById("mDesc");
+
+const mIcon =
+document.getElementById("mIcon");
+
+const mCat =
+document.getElementById("mCat");
+
+const mCount =
+document.getElementById("mCount");
+
+let currentIndex = 0;
+
+function openModal(index){
+
+    currentIndex = index;
+
+    const valor = valores[index];
+
+    mTitle.textContent =
+    valor.titulo;
+
+    mDesc.textContent =
+    valor.descripcion;
+
+    mCat.textContent =
+    valor.categoria.toUpperCase();
+
+    mCat.className =
+    `badge bg-${valor.color}`;
+
+    mIcon.innerHTML = `
+    <i class="bi ${valor.icono}
+    fs-1 text-${valor.color}"></i>`;
+
+    mCount.textContent =
+    `${index + 1} / ${valores.length}`;
+
+    valueModal.show();
+}
+
+
+function activateCards(){
+
+    document
+    .querySelectorAll(".value-card")
+    .forEach(card => {
+
+        card.addEventListener("click",()=>{
+
+            openModal(
+                Number(card.dataset.index)
+            );
+
+        });
+
+    });
+
+}
+
+
+document
+.getElementById("mPrev")
+.addEventListener("click",()=>{
+
+    currentIndex--;
+
+    if(currentIndex < 0){
+        currentIndex =
+        valores.length - 1;
     }
-    tabs.forEach(t => t.addEventListener('click', () => {
-        tabs.forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-        document.querySelectorAll('.mv-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(t.dataset.target).classList.add('active');
-        movePill();
-    }));
-    window.addEventListener('load', movePill);
-    window.addEventListener('resize', movePill);
 
-    // Reveal on scroll
-    const io = new IntersectionObserver(entries => {
-        entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    openModal(currentIndex);
 
-    // Progreso, navbar y botón subir
-    const bar = document.getElementById('scrollProgress');
-    const nav = document.getElementById('mainNav');
-    const toTop = document.getElementById('toTop');
-    window.addEventListener('scroll', () => {
-        const h = document.documentElement;
-        if (bar) bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
-        if (nav) nav.classList.toggle('scrolled', h.scrollTop > 80);
-        if (toTop) toTop.classList.toggle('show', h.scrollTop > 400);
-    }, { passive: true });
+});
 
-    if (toTop) {
-        toTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+document
+.getElementById("mNext")
+.addEventListener("click",()=>{
+
+    currentIndex++;
+
+    if(
+        currentIndex >= valores.length
+    ){
+        currentIndex = 0;
     }
+
+    openModal(currentIndex);
+
+});
+
 });

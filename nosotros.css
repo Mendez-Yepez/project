@@ -1,6 +1,6 @@
-/* ===========================
-   VARIABLES GLOBALES CEIC
-=========================== */
+/* ==========================================
+   VARIABLES GLOBALES CEIC - IUNAV
+========================================== */
 :root{
     --navy:#0F2D52;
     --navy-light:#1E4976;
@@ -11,28 +11,33 @@
     --light:#f8fafc;
     --gray:#64748b;
 
-    --shadow:
-    0 10px 30px rgba(15,45,82,.12);
-
+    --shadow:0 10px 30px rgba(15,45,82,.12);
     --radius:20px;
 }
 
-/* ===========================
+/* ==========================================
    ESTILOS GENERALES
-=========================== */
+========================================== */
+
+html{
+    scroll-behavior:smooth;
+}
 
 body{
     font-family:'Open Sans',sans-serif;
     background:
-        radial-gradient(circle at top right,
-        rgba(212,160,23,.08),
-        transparent 35%),
-        #f8fafc;
+    radial-gradient(
+    circle at top right,
+    rgba(212,160,23,.08),
+    transparent 35%),
+    #f8fafc;
+
     color:#334155;
     overflow-x:hidden;
+    line-height:1.7;
 }
 
-h1,h2,h3,h4,h5{
+h1,h2,h3,h4,h5,h6{
     font-family:'Montserrat',sans-serif;
 }
 
@@ -44,9 +49,27 @@ h1,h2,h3,h4,h5{
     font-weight:900;
 }
 
-/* ===========================
-   BARRA SUPERIOR
-=========================== */
+/* ==========================================
+   BARRA DE PROGRESO
+========================================== */
+
+#scrollProgress{
+    position:fixed;
+    top:0;
+    left:0;
+    width:0;
+    height:5px;
+    z-index:9999;
+
+    background:linear-gradient(
+    90deg,
+    var(--gold),
+    var(--emerald));
+}
+
+/* ==========================================
+   TOP BAR
+========================================== */
 
 .top-bar{
     background:linear-gradient(
@@ -66,48 +89,71 @@ h1,h2,h3,h4,h5{
     transform:translateY(-3px);
 }
 
-/* ===========================
+/* ==========================================
    HEADER
-=========================== */
+========================================== */
 
 .top-header{
-    backdrop-filter: blur(10px);
-    background:rgba(255,255,255,.94);
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(10px);
+}
+
+.logo-box{
+    animation:float 5s ease-in-out infinite;
 }
 
 .logo-box img{
-    transition:.5s;
+    transition:.4s;
 }
 
 .logo-box img:hover{
-    transform:scale(1.08) rotate(2deg);
+    transform:scale(1.05);
 }
 
 .slogan{
     letter-spacing:.5px;
 }
 
-/* ===========================
-   NAVBAR PREMIUM
-=========================== */
+/* ==========================================
+   ANIMACION LOGO
+========================================== */
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+/* ==========================================
+   NAVBAR
+========================================== */
 
 .navbar-custom{
-    background:rgba(255,255,255,.90);
-    backdrop-filter:blur(16px);
-    box-shadow:0 10px 30px rgba(0,0,0,.05);
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(15px);
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
 }
 
 .nav-link-custom{
     color:var(--navy);
     font-weight:700;
     border-radius:50px;
+    padding:.8rem 1.2rem;
     transition:.3s;
-    padding:.8rem 1.1rem;
 }
 
 .nav-link-custom:hover{
     background:rgba(15,45,82,.08);
-    color:var(--navy);
 }
 
 .nav-link-custom.active{
@@ -118,91 +164,106 @@ h1,h2,h3,h4,h5{
     color:white !important;
 }
 
-/* ===========================
-   HERO SECTION
-=========================== */
+/* ==========================================
+   BANNER ESTADO
+========================================== */
+
+.banner-status{
+    background:linear-gradient(
+    135deg,
+    rgba(31,169,113,.10),
+    rgba(212,160,23,.10)
+    );
+}
+
+.bg-emerald-green{
+    background:var(--emerald);
+}
+
+/* ==========================================
+   HERO
+========================================== */
 
 .hero-section{
-    padding:120px 20px;
     position:relative;
     overflow:hidden;
+    padding:120px 20px;
 }
 
 .hero-section::before{
-    content:'';
+    content:"";
     position:absolute;
     inset:0;
 
-    background:
-    linear-gradient(
+    background:linear-gradient(
     135deg,
     rgba(15,45,82,.95),
-    rgba(31,169,113,.85)
-    );
-
-    clip-path:
-    ellipse(85% 100% at center top);
+    rgba(31,169,113,.85));
 
     z-index:-2;
 }
 
 .hero-section::after{
-    content:'';
+    content:"";
     position:absolute;
     inset:0;
+    opacity:.10;
 
-    background:
-    url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1")
+    background:url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1")
     center/cover;
 
-    opacity:.12;
     z-index:-1;
 }
 
 .hero-section h1{
     color:white;
-    letter-spacing:2px;
 }
 
 .hero-section p{
-    color:rgba(255,255,255,.90) !important;
+    color:rgba(255,255,255,.88) !important;
 }
 
 .gold-divider{
-    width:100px;
+    width:120px;
     height:5px;
-    background:
-    linear-gradient(
+
+    background:linear-gradient(
     90deg,
     transparent,
     var(--gold),
     transparent);
+
     border-radius:50px;
 }
 
-/* ===========================
+/* ==========================================
    BOTONES
-=========================== */
+========================================== */
 
 .btn-nav-solid{
+    border:none;
+
     background:linear-gradient(
     135deg,
     var(--gold),
     var(--gold-light));
-    border:none;
-    color:#222;
+
+    color:#1f2937;
     font-weight:700;
+
     border-radius:50px;
+
     box-shadow:0 10px 25px rgba(212,160,23,.35);
+
     transition:.3s;
 }
 
 .btn-nav-solid:hover{
-    transform:translateY(-4px);
+    transform:translateY(-3px);
 }
 
 .btn-nav-outline{
-    border:2px solid var(--white);
+    border:2px solid white;
     color:white;
     border-radius:50px;
     font-weight:700;
@@ -213,9 +274,9 @@ h1,h2,h3,h4,h5{
     color:var(--navy);
 }
 
-/* ===========================
-   CARDS
-=========================== */
+/* ==========================================
+   TARJETAS
+========================================== */
 
 .custom-card{
     background:white;
@@ -224,7 +285,7 @@ h1,h2,h3,h4,h5{
     box-shadow:
     0 20px 50px rgba(15,45,82,.08);
 
-    transition:.4s;
+    transition:.3s;
 }
 
 .custom-card:hover{
@@ -242,58 +303,82 @@ h1,h2,h3,h4,h5{
     0 8px 25px rgba(0,0,0,.08);
 }
 
-/* ===========================
-   TABS MISIÓN / VISIÓN
-=========================== */
+/* ==========================================
+   MISION Y VISION
+========================================== */
 
 .mv-tabs{
     display:inline-flex;
     position:relative;
+
     padding:6px;
     border-radius:60px;
+
     background:white;
+
     box-shadow:var(--shadow);
 }
 
 .mv-tab{
     border:none;
     background:none;
-    padding:12px 30px;
+
+    padding:12px 35px;
+
     border-radius:50px;
     font-weight:700;
     z-index:2;
 }
 
+.mv-tab.active{
+    color:white;
+}
+
 .mv-pill{
     position:absolute;
-    top:6px;
     left:6px;
-    height:calc(100% - 12px);
-    width:140px;
+    top:6px;
 
-    background:
-    linear-gradient(
-    135deg,
-    var(--navy),
-    var(--emerald)
-    );
+    width:140px;
+    height:calc(100% - 12px);
 
     border-radius:50px;
+
+    background:linear-gradient(
+    135deg,
+    var(--navy),
+    var(--emerald));
+
     transition:.4s;
+
     z-index:1;
 }
 
-/* ===========================
-   FILTROS VALORES
-=========================== */
+.mv-panel{
+    display:none;
+}
+
+.mv-panel.active{
+    display:block;
+    animation:fadeIn .5s ease;
+}
+
+/* ==========================================
+   FILTROS
+========================================== */
 
 .filter-chip{
     border:none;
-    border-radius:40px;
-    padding:.8rem 1.4rem;
     background:white;
+
+    padding:.8rem 1.3rem;
+
+    border-radius:50px;
+
     font-weight:600;
+
     box-shadow:var(--shadow);
+
     transition:.3s;
 }
 
@@ -306,18 +391,40 @@ h1,h2,h3,h4,h5{
     135deg,
     var(--navy),
     var(--emerald));
+
     color:white;
 }
 
-/* ===========================
-   ACORDEÓN
-=========================== */
+/* ==========================================
+   VALORES
+========================================== */
+
+.value-card{
+    cursor:pointer;
+    overflow:hidden;
+}
+
+.value-card:hover{
+    transform:
+    translateY(-8px)
+    scale(1.02);
+
+    box-shadow:
+    0 25px 50px rgba(15,45,82,.15);
+}
+
+/* ==========================================
+   ACORDEON
+========================================== */
 
 .accordion-item{
     border:none;
-    margin-bottom:1rem;
-    border-radius:18px !important;
     overflow:hidden;
+
+    border-radius:18px !important;
+
+    margin-bottom:1rem;
+
     box-shadow:var(--shadow);
 }
 
@@ -326,21 +433,32 @@ h1,h2,h3,h4,h5{
 }
 
 .accordion-button:not(.collapsed){
-    background:
-    linear-gradient(
+    background:linear-gradient(
     135deg,
     var(--navy),
     var(--navy-light));
+
     color:white;
 }
 
-/* ===========================
+/* ==========================================
+   MODAL
+========================================== */
+
+.modal-content{
+    border-radius:25px;
+}
+
+.modal-body{
+    padding:2rem;
+}
+
+/* ==========================================
    FOOTER
-=========================== */
+========================================== */
 
 .footer-custom{
-    background:
-    linear-gradient(
+    background:linear-gradient(
     135deg,
     #091C35,
     #122C4C);
@@ -348,47 +466,56 @@ h1,h2,h3,h4,h5{
 
 .footer-custom h5,
 .footer-custom h6{
-    letter-spacing:1px;
+    color:var(--gold);
 }
 
-/* ===========================
-   BOTON SCROLL TOP
-=========================== */
+/* ==========================================
+   BOTON SUBIR
+========================================== */
 
 #toTop{
     position:fixed;
-    right:25px;
+
     bottom:25px;
+    right:25px;
 
     width:55px;
     height:55px;
 
     border:none;
+
+    display:none;
+    justify-content:center;
+    align-items:center;
+
     border-radius:50%;
 
-    background:
-    linear-gradient(
+    background:linear-gradient(
     135deg,
     var(--gold),
-    #FFD56A);
+    var(--gold-light));
 
     color:#222;
+
     font-size:1.2rem;
 
     box-shadow:
-    0 10px 25px rgba(0,0,0,.2);
+    0 10px 25px rgba(0,0,0,.25);
+
+    cursor:pointer;
+
+    z-index:999;
 
     transition:.3s;
-    z-index:999;
 }
 
 #toTop:hover{
     transform:translateY(-5px);
 }
 
-/* ===========================
-   ANIMACIONES
-=========================== */
+/* ==========================================
+   REVEAL ANIMATION
+========================================== */
 
 .reveal{
     opacity:0;
@@ -401,12 +528,40 @@ h1,h2,h3,h4,h5{
     transform:translateY(0);
 }
 
-@keyframes float{
-    0%{transform:translateY(0)}
-    50%{transform:translateY(-10px)}
-    100%{transform:translateY(0)}
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
 }
 
-.logo-box{
-    animation:float 5s ease-in-out infinite;
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+    .hero-section{
+        padding:80px 20px;
+    }
+
+    .hero-section h1{
+        font-size:2.2rem;
+    }
+
+    .mv-tab{
+        padding:10px 18px;
+    }
+
+    .mv-pill{
+        width:110px;
+    }
+
 }
