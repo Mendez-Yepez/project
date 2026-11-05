@@ -382,4 +382,37 @@ document
 
 });
 
+
+/* ==========================
+   GALERIA INTERACTIVA
+========================== */
+
+const galleryImages =
+document.querySelectorAll(".gallery-img");
+
+const modalImage =
+document.getElementById("modalImage");
+
+const galleryModalElement =
+document.getElementById("galleryModal");
+
+if(galleryModalElement){
+
+    const galleryModal =
+    new bootstrap.Modal(galleryModalElement);
+
+    galleryImages.forEach(img => {
+
+        img.addEventListener("click", () => {
+
+            modalImage.src = img.src;
+
+            galleryModal.show();
+
+        });
+
+    });
+
+}
+
 });
