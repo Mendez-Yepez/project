@@ -1,9 +1,10 @@
+
 :root {
-    --navy-primary: #041e42; /* Azul marino institucional idéntico a la referencia */
-    --navy-dark: #020f21;
-    --emerald-green: #10b981;
-    --gold-accent: #d97706;
-    --bg-light: #f8fafc;
+  --ceic-blue: #2b5278;
+  --ceic-blue-dark: #1e3a57;
+  --ceic-light-gray: #f8f9fa;
+  --ceic-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --ceic-transition: all 0.3s ease-in-out;
 }
 
 body {
