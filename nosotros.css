@@ -118,10 +118,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .nav-link {
   align-items: center;
   background: transparent;
 }
-.btn-nav-outline:hover {
-  background-color: rgba(43, 82, 120, 0.06);
-  color: var(--ceic-blue);
-}
+
 
 .btn-nav-solid {
   background-color: var(--ceic-blue);
