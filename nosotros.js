@@ -1,20 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Registro opcional para descargas directas de infografías/recursos
-    const downloadButtons = document.querySelectorAll('a[download]');
-    
-    downloadButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            console.log(`Recurso descargado exitosamente: ${button.getAttribute('download')}`);
-        });
-    });
+document.addEventListener("DOMContentLoaded", function () {
+            // Activar efecto sutil de resaltado en tarjetas al hacer hover o clic
+            const cards = document.querySelectorAll('.custom-card, .resource-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.borderColor = '#94a3b8';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.borderColor = '#e2e8f0';
+                });
+            });
 
-    // 2. Sombra dinámica en la barra de navegación al hacer scroll
-    const navbar = document.querySelector('.main-nav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 40) {
-            navbar.classList.add('shadow-md');
-        } else {
-            navbar.classList.remove('shadow-md');
-        }
-    });
-});
+            // Registro en consola de carga correcta de componentes interactivos
+            console.log("CEIC IUNAV - Módulo 'Nosotros' inicializado correctamente con fondo gris azulado.");
+        });
