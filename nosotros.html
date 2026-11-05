@@ -4,289 +4,257 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nosotros | CEIC - IUNAV</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Hoja de Estilos Externa -->
     <link rel="stylesheet" href="nosotros.css">
+    <script src="nosotros.js"></script>
 </head>
 <body>
+    <div id="scrollProgress"></div>
 
     <!-- 1. BARRA SUPERIOR -->
     <div class="top-bar py-2 d-none d-md-block">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="d-flex gap-3">
-                <a href="https://www.instagram.com/ceic_iunav/" target="_blank" class="social-link"><i class="bi bi-instagram me-1"></i></a>
-                <a href="#" class="social-link"><i class="bi bi-facebook me-1"></i></a>
-                <a href="https://wa.me/584121372484?text=Hola,%20deseo%20más%20información%20sobre%20las%20inscripciones%20del%20CEIC" target="_blank" rel="noopener noreferrer" class="social-link"><i class="bi bi-whatsapp me-1"></i></a>
-                <a href="#" class="social-link"><i class="bi bi-youtube me-1"></i></a>
+                <a href="https://www.instagram.com/ceic_iunav/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                <a href="https://wa.me/584121372484?text=Hola,%20deseo%20más%20información%20sobre%20las%20inscripciones%20del%20CEIC" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+                <a href="#" class="social-link" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
             </div>
             <span class="small text-white-50"><i class="bi bi-geo-alt-fill me-1"></i> Nirgua, Yaracuy</span>
         </div>
     </div>
 
-    <!-- 2. HEADER SUPERIOR -->
-    <header class="top-header py-4 text-center">
+    <!-- 2. HEADER SUPERIOR CON LOGO PRINCIPAL -->
+    <header class="top-header py-3 text-center">
         <div class="container d-flex flex-column align-items-center">
-            <div class="logo-box mb-2">
-                <img src="Logoceic.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 90px;" onerror="this.style.display='none'; document.getElementById('alt-logo-header').style.display='block';">
-                <div id="alt-logo-header" class="fw-bold fs-2" style="color: var(--navy-brand); display: none;">CEIC IUNAV</div>
+            <div class="logo-box mb-1">
+                <img src="Logoceic.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 85px;" onerror="this.style.display='none'; document.getElementById('alt-logo-header').style.display='block';">
+                <div id="alt-logo-header" class="fw-bold fs-2" style="color: var(--navy-primary); display: none;">CEIC IUNAV</div>
             </div>
-            <p class="slogan mb-0 fst-italic text-muted small fw-semibold">Formando Valores para la Vida y la Eternidad</p>
+            <p class="mb-0 fst-italic text-secondary small">Formando Valores para la Vida y la Eternidad</p>
         </div>
     </header>
 
-    <!-- 3. NAVEGACIÓN PRINCIPAL -->
-    <nav class="navbar navbar-expand-lg sticky-top navbar-custom py-2">
-            <div class="container">
-            <a class="navbar-brand me-lg-4 d-flex align-items-center" href="index.html">
-                <img src="images.png" alt="Logo CEIC" class="img-fluid" style="max-height: 45px;" onerror="this.style.display='none'; document.getElementById('alt-logo-nav').style.display='block';">
+    <!-- 3. BARRA DE NAVEGACIÓN PRINCIPAL -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-custom py-2" id="mainNav">
+        <div class="container">
+            <!-- LOGO PEQUEÑO DE NAVEGACIÓN -->
+            <a class="navbar-brand me-lg-3 d-flex align-items-center" href="index.html">
+                <img src="images.png" alt="Logo CEIC" class="img-fluid" style="max-height: 42px;" onerror="this.style.display='none'; document.getElementById('alt-logo-nav').style.display='block';">
                 <span id="alt-logo-nav" style="display:none;" class="fw-bold fs-5 text-dark">CEIC IUNAV</span>
             </a>
 
-
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- BOTÓN MENÚ MÓVIL -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Menú">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-
-            <div class="collapse navbar-collapse text-center" id="mainNavbar">
-
-                <ul class="navbar-nav mx-auto gap-2 align-items-center my-2 my-lg-0">
+            <!-- ENLACES DE NAVEGACIÓN Y BOTONES -->
+            <div class="collapse navbar-collapse justify-content-between text-center" id="mainNavbar">
+                <ul class="navbar-nav mx-auto gap-1 align-items-center my-2 my-lg-0">
                     <li class="nav-item">
-
                         <a class="nav-link nav-link-custom" href="index.html"><i class="bi bi-house-door me-1"></i> INICIO</a>
                     </li>
                     <li class="nav-item">
-
                         <a class="nav-link nav-link-custom active" href="nosotros.html"><i class="bi bi-people-fill me-1"></i> NOSOTROS</a>
                     </li>
                     <li class="nav-item">
-
                         <a class="nav-link nav-link-custom" href="galeria.html"><i class="bi bi-images me-1"></i> GALERÍA</a>
                     </li>
                     <li class="nav-item">
-
                         <a class="nav-link nav-link-custom" href="catalogo.html"><i class="bi bi-journal-bookmark me-1"></i> CURSOS</a>
                     </li>
                     <li class="nav-item">
-
-                        <a class="nav-link nav-link-custom" href="https://www.instagram.com/ceic_iunav/" target="_blank"><i class="bi bi-share me-1"></i> REDES SOCIALES</a>
+                        <a class="nav-link nav-link-custom" href="https://www.instagram.com/ceic_iunav/" target="_blank" rel="noopener"><i class="bi bi-share me-1"></i> REDES SOCIALES</a>
                     </li>
                 </ul>
+                <div class="d-flex align-items-center justify-content-center gap-2 mt-3 mt-lg-0">
+                    <a href="catalogo.html" class="btn-nav-outline"><i class="bi bi-journal-text me-1"></i> INSCRIPCIÓN</a>
+                    <a href="#" class="btn-nav-solid"><i class="bi bi-person-fill me-1"></i> ACCEDER</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- 4. BANNER DE ESTADO -->
-
+    <!-- BANNER DE ESTADO -->
     <div class="banner-status py-2">
         <div class="container text-center">
-
-
             <span class="badge bg-emerald-green rounded-pill px-3 py-2 text-uppercase fw-bold text-white me-2">
                 <i class="bi bi-check-circle-fill me-1"></i> Proceso de Inscripción Abierto
             </span>
-            <span class="fw-semibold small text-slate-700">Conoce el propósito institucional y el equipo detrás de la plataforma CEIC.</span>
+            <span class="fw-semibold small text-success-emphasis">Conoce el propósito institucional y el equipo detrás de la plataforma CEIC.</span>
         </div>
     </div>
 
-    <!-- 5. HERO HEADER -->
-    <header class="hero-section text-center position-relative">
+    <!-- HERO -->
+    <header class="hero-section text-center">
         <div class="container">
-            <span class="badge bg-white text-navy-brand shadow-sm border rounded-pill px-3 py-2 uppercase mb-3 fw-bold">
-
+            <span class="badge bg-white text-dark shadow-sm border rounded-pill px-3 py-2 mb-3 fw-bold">
                 <i class="bi bi-building me-1 text-primary"></i> Centro de Extensión e Investigación Comunitaria
             </span>
-            <h1 class="display-4 fw-extrabold text-navy-brand mb-3">SOBRE EL CEIC</h1>
-
+            <h1 class="display-4 fw-extrabold text-navy-primary mb-3">SOBRE EL CEIC</h1>
             <p class="lead text-muted mx-auto fs-5" style="max-width: 700px;">
                 Un programa del Centro Integral Comunitario respaldado por el IUNAV para promover el crecimiento personal, valores y oportunidades en Nirgua.
             </p>
             <div class="gold-divider mx-auto my-4"></div>
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a href="#mision-vision" class="btn btn-nav-solid px-4"><i class="bi bi-compass me-1"></i> Misión y Visión</a>
+                <a href="#valores" class="btn btn-nav-outline px-4"><i class="bi bi-stars me-1"></i> Nuestros valores</a>
+            </div>
         </div>
     </header>
 
-
-    <!-- 6. SECCIÓN PRINCIPAL -->
     <main class="container mb-5">
-        
-        <!-- Misión y Visión -->
-        <div class="row g-4 mb-5">
-            <div class="col-md-6">
-                <div class="custom-card p-4 p-lg-5 h-100">
-
-                    <div class="icon-box text-primary mb-4" style="background-color: #eff6ff;">
-                        <i class="bi bi-target fs-2"></i>
-                    </div>
-                    <h3 class="h4 fw-bold text-navy-brand mb-3">Nuestra Misión</h3>
-
-                    <p class="text-muted lh-lg mb-0">
-                        Formar, capacitar e integrar a las comunidades mediante programas educativos accesibles y proyectos de vinculación comunitaria. Promovemos el desarrollo integral, ético y técnico de cada participante bajo los valores fundamentales de la institución.
-                    </p>
+        <!-- MISIÓN Y VISIÓN INTERACTIVA -->
+        <section id="mision-vision" class="py-5 reveal">
+            <div class="text-center mb-4">
+                <div class="mv-tabs" id="mvTabs" role="tablist">
+                    <span class="mv-pill" id="mvPill"></span>
+                    <button class="mv-tab active" data-target="mision" role="tab"><i class="bi bi-bullseye me-1"></i> Misión</button>
+                    <button class="mv-tab" data-target="vision" role="tab"><i class="bi bi-eye me-1"></i> Visión</button>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="custom-card p-4 p-lg-5 h-100">
-                    <div class="icon-box mb-4" style="background-color: #f0fdf4;">
-                        <i class="bi bi-eye fs-2 text-emerald-green"></i>
-                    </div>
-                    <h3 class="h4 fw-bold text-navy-brand mb-3">Nuestra Visión</h3>
-                    <p class="text-muted lh-lg mb-0">
-                        Ser un centro de referencia en extensión comunitaria e innovación social en Yaracuy, reconocido por la excelencia de sus talleres prácticos y la automatización transparente de todos sus servicios administrativos.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Valores y Propósito -->
-        <div class="row g-4 mb-5">
-            <div class="col-lg-4">
-                <div class="custom-card p-4 h-100">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="icon-box bg-danger-subtle text-danger" style="width: 44px; height: 44px;">
-                            <i class="bi bi-heart-fill"></i>
+            <div class="custom-card p-4 p-lg-5">
+                <div class="mv-panel active" id="mision">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-2 text-center">
+                            <div class="icon-box" style="background:#eff6ff; width:84px; height:84px;"><i class="bi bi-bullseye fs-1 text-primary"></i></div>
                         </div>
-                        <h4 class="h5 fw-bold text-navy-brand m-0">Amor y Servicio</h4>
-                    </div>
-                    <p class="text-muted small mb-0">Reflejar vocación de servicio mediante el acompañamiento continuo, la empatía y la formación accesible.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="custom-card p-4 h-100">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="icon-box bg-primary-subtle text-primary" style="width: 44px; height: 44px;">
-                            <i class="bi bi-shield-check"></i>
-                        </div>
-                        <h4 class="h5 fw-bold text-navy-brand m-0">Integridad y Ética</h4>
-                    </div>
-                    <p class="text-muted small mb-0">Gestión transparente y congruente con la fe cristiana y los valores institucionales del IUNAV.</p>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="custom-card p-4 h-100">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="icon-box bg-warning-subtle text-warning" style="width: 44px; height: 44px;">
-                            <i class="bi bi-award-fill"></i>
-                        </div>
-                        <h4 class="h5 fw-bold text-navy-brand m-0">Excelencia Educativa</h4>
-                    </div>
-                    <p class="text-muted small mb-0">Calidad comprobada en talleres de oficios prácticos, capacitación técnica y certificación académica.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recursos Descargables -->
-        <section class="custom-card p-4 p-lg-5 mb-5">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-                <div>
-                    <h3 class="h4 fw-bold text-navy-brand mb-1"><i class="bi bi-download text-primary me-2"></i>Recursos e Infografías Descargables</h3>
-                    <p class="text-muted small mb-0">Obtén las guías oficiales, flujogramas de inscripción y material promocional del CEIC.</p>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card resource-card h-100 shadow-sm overflow-hidden">
-                        <div class="position-relative">
-                            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80" class="card-img-top resource-img" alt="Flujograma de Inscripciones">
-                            <span class="badge bg-dark position-absolute top-0 start-0 m-3 rounded-pill">Guía Visual</span>
-                        </div>
-                        <div class="card-body p-4 d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="card-title fw-bold text-navy-brand fs-6">Flujograma del Proceso de Inscripción</h5>
-                                <p class="card-text text-muted small">Paso a paso sobre cómo registrarte en los cursos comunitarios y subir los recaudos digitales.</p>
+                        <div class="col-lg-10">
+                            <h2 class="h3 fw-bold text-navy-primary mb-3">Nuestra Misión</h2>
+                            <p class="text-muted lh-lg mb-3 fs-6">
+                                Brindar a la comunidad oportunidades de formación integral, práctica y accesible mediante cursos de capacitación técnica, ocupacional y humana, sustentados en principios y valores cristianos, que fortalezcan las competencias para el trabajo, el emprendimiento, el servicio y la sana convivencia, contribuyendo al desarrollo personal, familiar y comunitario.
+                            </p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-light text-primary border px-3 py-2 rounded-pill">Formación integral</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 rounded-pill">Cursos técnicos y ocupacionales</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 rounded-pill">Principios cristianos</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 rounded-pill">Emprendimiento</span>
+                                <span class="badge bg-light text-primary border px-3 py-2 rounded-pill">Sana convivencia</span>
                             </div>
-                            <a href="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80" download="CEIC_Flujograma_Inscripciones.jpg" class="btn btn-custom-navy btn-sm rounded-pill w-100 mt-3 fw-semibold">
-                                <i class="bi bi-download me-1"></i> Descargar Imagen (JPG)
-                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card resource-card h-100 shadow-sm overflow-hidden">
-                        <div class="position-relative">
-                            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80" class="card-img-top resource-img" alt="Reglamento Comunitario">
-                            <span class="badge bg-emerald-green position-absolute top-0 start-0 m-3 rounded-pill text-white">Infografía</span>
+                <div class="mv-panel" id="vision">
+                    <div class="row align-items-center g-4">
+                        <div class="col-lg-2 text-center">
+                            <div class="icon-box" style="background:#f0fdf4; width:84px; height:84px;"><i class="bi bi-eye fs-1 text-success"></i></div>
                         </div>
-                        <div class="card-body p-4 d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="card-title fw-bold text-navy-brand fs-6">Infografía de Requisitos y Talleres</h5>
-                                <p class="card-text text-muted small">Resumen gráfico de recaudos, modalidades y beneficios de los programas de formación.</p>
+                        <div class="col-lg-10">
+                            <h2 class="h3 fw-bold text-navy-primary mb-3">Nuestra Visión</h2>
+                            <p class="text-muted lh-lg mb-3 fs-6">
+                                Ser un centro educativo comunitario reconocido en Nirgua y zonas aledañas por la calidad y pertinencia de sus programas, su cercanía con la comunidad y su contribución a la formación de personas íntegras, competentes, emprendedoras y comprometidas con el servicio y el desarrollo de su entorno.
+                            </p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-light text-success border px-3 py-2 rounded-pill">Reconocimiento en Nirgua</span>
+                                <span class="badge bg-light text-success border px-3 py-2 rounded-pill">Calidad y pertinencia</span>
+                                <span class="badge bg-light text-success border px-3 py-2 rounded-pill">Cercanía con la comunidad</span>
+                                <span class="badge bg-light text-success border px-3 py-2 rounded-pill">Personas íntegras</span>
+                                <span class="badge bg-light text-success border px-3 py-2 rounded-pill">Servicio y desarrollo</span>
                             </div>
-                            <a href="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80" download="CEIC_Infografia_Requisitos.jpg" class="btn btn-custom-navy btn-sm rounded-pill w-100 mt-3 fw-semibold">
-                                <i class="bi bi-download me-1"></i> Descargar Imagen (JPG)
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card resource-card h-100 shadow-sm overflow-hidden">
-                        <div class="position-relative">
-                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" class="card-img-top resource-img" alt="Equipo de Trabajo">
-                            <span class="badge bg-dark position-absolute top-0 start-0 m-3 rounded-pill">Comunidad</span>
-                        </div>
-                        <div class="card-body p-4 d-flex flex-column justify-content-between">
-                            <div>
-                                <h5 class="card-title fw-bold text-navy-brand fs-6">Afiche de Proyectos Comunitarios</h5>
-                                <p class="card-text text-muted small">Fotografía oficial del equipo de estudiantes e instructores del programa.</p>
-                            </div>
-                            <a href="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" download="CEIC_Afiche_Comunitario.jpg" class="btn btn-custom-navy btn-sm rounded-pill w-100 mt-3 fw-semibold">
-                                <i class="bi bi-download me-1"></i> Descargar Imagen (JPG)
-                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Equipo de Desarrollo -->
-        <div class="custom-card p-4 p-lg-5">
-            <div class="row align-items-center g-4">
-                <div class="col-lg-8">
-                    <span class="text-primary fw-bold text-uppercase tracking-wider small d-block mb-1">Innovación Tecnológica</span>
-                    <h3 class="h4 fw-bold text-navy-brand mb-3">Desarrollo Web y Automatización</h3>
-                    <p class="text-muted mb-0">
-                        Esta plataforma web ha sido concebida, diseñada y desarrollada por estudiantes de la carrera de <strong>Informática del IUNAV</strong> como parte de su proyecto de <strong>Servicio Comunitario</strong>, digitalizando la gestión del CEIC para eliminar carpetas físicas y agilizar la postulación de los participantes.
-                    </p>
+        <!-- VALORES -->
+        <section id="valores" class="pb-5 reveal">
+            <div class="text-center mb-4">
+                <span class="text-primary fw-bold text-uppercase small d-block mb-1">Lo que nos define</span>
+                <h2 class="fw-extrabold text-navy-primary">Valores Institucionales</h2>
+                <p class="text-muted">Haz clic en cada valor para conocer su significado.</p>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="valueFilters">
+                <button class="filter-chip active" data-filter="all">Todos</button>
+                <button class="filter-chip" data-filter="espiritual"><i class="bi bi-heart-fill me-1"></i>Espiritual</button>
+                <button class="filter-chip" data-filter="social"><i class="bi bi-people-fill me-1"></i>Social</button>
+                <button class="filter-chip" data-filter="profesional"><i class="bi bi-briefcase-fill me-1"></i>Trabajo y excelencia</button>
+                <button class="filter-chip" data-filter="personal"><i class="bi bi-person-hearts me-1"></i>Personal</button>
+            </div>
+
+            <div class="row g-4" id="valuesGrid"></div>
+        </section>
+
+        <!-- ACORDEÓN DE COMPROMISO -->
+        <section class="pb-5 reveal">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-5">
+                    <h2 class="h3 fw-extrabold text-navy-primary mb-3">¿Qué significa esto para ti?</h2>
+                    <p class="text-muted">Nuestra misión, visión y valores se traducen en beneficios concretos para quienes participan en el CEIC.</p>
                 </div>
-                <div class="col-lg-4 text-center text-lg-end">
-                    <div class="p-4 rounded-4 bg-light border d-inline-block">
-                        <i class="bi bi-code-slash text-primary display-4"></i>
-                        <span class="d-block text-navy-brand fw-bold mt-2">IUNAV Tech</span>
+                <div class="col-lg-7">
+                    <div class="accordion" id="beneficios">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#b1"><i class="bi bi-tools me-2"></i> Aprendes habilidades útiles</button></h3>
+                            <div id="b1" class="accordion-collapse collapse show" data-bs-parent="#beneficios"><div class="accordion-body text-muted">Cursos de capacitación técnica, ocupacional y humana, prácticos y accesibles, pensados para fortalecer tus competencias para el trabajo.</div></div>
+                        </div>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b2"><i class="bi bi-lightbulb me-2"></i> Impulsas tu emprendimiento</button></h3>
+                            <div id="b2" class="accordion-collapse collapse" data-bs-parent="#beneficios"><div class="accordion-body text-muted">Promovemos la iniciativa, la productividad y la autonomía económica para que puedas generar oportunidades para ti y tu familia.</div></div>
+                        </div>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b3"><i class="bi bi-house-heart me-2"></i> Creces junto a tu comunidad</button></h3>
+                            <div id="b3" class="accordion-collapse collapse" data-bs-parent="#beneficios"><div class="accordion-body text-muted">Formación sustentada en principios cristianos que fortalece el servicio, la solidaridad y la sana convivencia, sin discriminación.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL DE VALOR -->
+    <div class="modal fade" id="valueModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-2 border-0 shadow-lg" style="border-radius: 1rem;">
+                <div class="modal-body p-4 text-center">
+                    <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <div class="icon-box mx-auto mb-3" id="mIcon" style="width:80px;height:80px;"></div>
+                    <span class="badge rounded-pill mb-2 px-3 py-2" id="mCat"></span>
+                    <h3 class="fw-bold text-navy-primary" id="mTitle"></h3>
+                    <p class="text-muted fs-6 mt-3" id="mDesc"></p>
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" id="mPrev"><i class="bi bi-arrow-left"></i> Anterior</button>
+                        <span class="small text-muted" id="mCount"></span>
+                        <button class="btn btn-nav-solid btn-sm rounded-pill px-3" id="mNext">Siguiente <i class="bi bi-arrow-right"></i></button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </main>
-
-    <!-- 7. PIE DE PÁGINA -->
+    <!-- FOOTER -->
     <footer class="footer-custom text-white pt-5 pb-3">
         <div class="container">
             <div class="row g-4 mb-4">
                 <div class="col-md-6">
-                    <h5 class="fw-bold mb-3" style="color: #f59e0b;">CEIC - IUNAV</h5>
-                    <p class="small text-white-50" style="max-width: 400px;">
-                        Centro Integral Comunitario respaldado por el Instituto Universitario Adventista de Venezuela.
-                    </p>
+                    <h5 class="fw-bold mb-3" style="color: var(--gold-accent);">CEIC - IUNAV</h5>
+                    <p class="small text-white-50" style="max-width: 400px;">Centro Integral Comunitario respaldado por el Instituto Universitario Adventista de Venezuela.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <h6 class="text-uppercase fw-bold mb-3" style="color: #f59e0b;">Ubicación</h6>
+                    <h6 class="text-uppercase fw-bold mb-3" style="color: var(--gold-accent);">Ubicación</h6>
                     <p class="small text-white-50 m-0"><i class="bi bi-geo-alt me-1"></i> Carretera Panamericana, Sector San José. Nirgua, Estado Yaracuy.</p>
                 </div>
             </div>
             <hr class="border-secondary opacity-25">
-            <div class="text-center small text-white-50">
-                © 2026 Instituto Universitario Adventista de Venezuela (IUNAV). Todos los derechos reservados.
-            </div>
+            <div class="text-center small text-white-50">© 2026 Instituto Universitario Adventista de Venezuela (IUNAV). Todos los derechos reservados.</div>
         </div>
     </footer>
 
+    <button id="toTop" aria-label="Volver arriba"><i class="bi bi-arrow-up"></i></button>
+
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script Externo -->
+    <script src="script.js"></script>
 </body>
 </html>

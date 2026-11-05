@@ -1,138 +1,320 @@
-        :root {
-            --bg-slate: #edf2f7;
-            --bg-card: #ffffff;
-            --text-main: #2d3748;
-            --text-muted: #64748b;
-            --navy-primary: #1e293b;
-            --navy-brand: #0f172a;
-            --accent-blue: #2563eb;
-            --accent-blue-light: #dbeafe;
-            --emerald-green: #059669;
-            --gold-accent: #d97706;
-            --border-color: #cbd5e1;
-        }
+:root {
+    --navy-primary: #041e42; /* Azul marino institucional idéntico a la referencia */
+    --navy-dark: #020f21;
+    --emerald-green: #10b981;
+    --gold-accent: #d97706;
+    --bg-light: #f8fafc;
+}
 
-        body {
-            background-color: var(--bg-slate);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text-main);
-        }
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: #334155;
+    margin: 0;
+    padding: 0;
+}
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Outfit', sans-serif;
-        }
+h1, h2, h3, h4, h5, h6, .navbar-brand, .nav-link {
+    font-family: 'Montserrat', sans-serif;
+}
 
-        /* Barra Superior */
-        .top-bar {
-            background-color: var(--navy-brand);
-            font-size: 0.875rem;
-        }
-        .social-link {
-            color: #94a3b8;
-            transition: color 0.2s ease;
-        }
-        .social-link:hover {
-            color: #ffffff;
-        }
+#scrollProgress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--emerald-green), var(--gold-accent));
+    z-index: 2000;
+    transition: width 0.1s ease;
+}
 
-        /* Header Logo */
-        .top-header {
-            background: #ffffff;
-            border-bottom: 1px solid var(--border-color);
-        }
+/* 1. BARRA SUPERIOR AZUL MARINO PROFUNDO */
+.top-bar {
+    background-color: var(--navy-dark);
+    font-size: 0.85rem;
+}
+.social-link {
+    color: #ffffff;
+    opacity: 0.85;
+    transition: opacity 0.2s, color 0.2s;
+}
+.social-link:hover {
+    opacity: 1;
+    color: #93c5fd;
+}
 
-        /* Navbar */
-        .navbar-custom {
-            background: #ffffff;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-        }
-        .nav-link-custom {
-            color: #475569;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 0.5rem 1.25rem !important;
-            border-radius: 50px;
-            transition: all 0.25s ease;
-        }
-        .nav-link-custom:hover {
-            color: var(--accent-blue);
-            background-color: var(--accent-blue-light);
-        }
-        .nav-link-custom.active {
-            color: #ffffff !important;
-            background-color: var(--navy-primary) !important;
-        }
+/* 2. HEADER SUPERIOR */
+.top-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
 
-        /* Banner Promocional */
-        .banner-status {
-            background: linear-gradient(90deg, #e0f2fe 0%, #e0e7ff 100%);
-            border-bottom: 1px solid #cbd5e1;
-        }
+/* 3. NAVEGACIÓN PRINCIPAL */
+.navbar-custom {
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(4, 30, 66, 0.08);
+    border-bottom: 1px solid #e2e8f0;
+    transition: box-shadow 0.3s ease;
+}
+.navbar-custom.scrolled {
+    box-shadow: 0 6px 20px rgba(4, 30, 66, 0.12);
+}
 
-        /* Hero Header */
-        .hero-section {
-            padding: 4rem 1rem 3rem 1rem;
-        }
+.nav-link-custom {
+    color: #1e293b !important;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.4px;
+    padding: 0.45rem 0.8rem !important;
+    border-radius: 50rem;
+    transition: all 0.2s ease-in-out;
+    text-transform: uppercase;
+}
+.nav-link-custom:hover {
+    color: var(--navy-primary) !important;
+    background-color: rgba(4, 30, 66, 0.06);
+}
+.nav-link-custom.active {
+    color: var(--navy-primary) !important;
+    background-color: #e2e8f0;
+}
 
-        /* Tarjetas de Diseño Personalizado */
-        .custom-card {
-            background: var(--bg-card);
-            border: 1px solid #e2e8f0;
-            border-radius: 1.25rem;
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .custom-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08);
-        }
+/* Botones de navegación */
+.btn-nav-outline {
+    border: 1.5px solid var(--navy-primary);
+    color: var(--navy-primary);
+    font-weight: 700;
+    font-size: 0.78rem;
+    border-radius: 50rem;
+    padding: 0.35rem 1rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+}
+.btn-nav-outline:hover {
+    background-color: rgba(4, 30, 66, 0.06);
+    color: var(--navy-primary);
+}
 
-        /* Contenedor de Iconos */
-        .icon-box {
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 1rem;
-        }
+.btn-nav-solid {
+    background-color: var(--navy-primary);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    border-radius: 50rem;
+    padding: 0.35rem 1.1rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+}
+.btn-nav-solid:hover {
+    background-color: var(--navy-dark);
+    color: #ffffff;
+}
 
-        .gold-divider {
-            height: 4px;
-            width: 70px;
-            background: linear-gradient(90deg, var(--gold-accent), #f59e0b);
-            border-radius: 2px;
-        }
+/* Banner de Estado */
+.banner-status {
+    background: #e6f4ea;
+    border-bottom: 1px solid #ceead6;
+}
 
-        /* Tarjetas de Recursos */
-        .resource-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 1.25rem;
-            background: #ffffff;
-            transition: all 0.3s ease;
-        }
-        .resource-card:hover {
-            border-color: var(--accent-blue);
-        }
-        .resource-img {
-            height: 200px;
-            object-fit: cover;
-        }
+/* Hero */
+.hero-section {
+    padding: 4rem 1rem 2rem 1rem;
+    background: radial-gradient(circle at center, #ffffff 0%, var(--bg-light) 100%);
+}
+.gold-divider {
+    height: 4px;
+    width: 80px;
+    background: var(--gold-accent);
+    border-radius: 2px;
+}
 
-        /* Botón Estilo Navy */
-        .btn-custom-navy {
-            background-color: var(--navy-primary);
-            color: #ffffff;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-custom-navy:hover {
-            background-color: var(--accent-blue);
-            color: #ffffff;
-        }
+/* Tarjetas */
+.custom-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.custom-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
 
-        /* Footer */
-        .footer-custom {
-            background-color: var(--navy-brand);
-            border-top: 4px solid var(--gold-accent);
-        }
+/* Icon Box */
+.icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tabs Misión / Visión */
+.mv-tabs {
+    display: inline-flex;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 50rem;
+    padding: 0.3rem;
+    position: relative;
+}
+.mv-tab {
+    border: 0;
+    background: transparent;
+    padding: 0.6rem 1.6rem;
+    border-radius: 50rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #64748b;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s;
+}
+.mv-tab.active {
+    color: var(--navy-primary);
+}
+.mv-pill {
+    position: absolute;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    left: 0.3rem;
+    border-radius: 50rem;
+    background: #e2e8f0;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s;
+}
+.mv-panel {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+.mv-panel.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Filtros de Valores */
+.filter-chip {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    padding: 0.4rem 1rem;
+    border-radius: 50rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+.filter-chip:hover {
+    border-color: var(--navy-primary);
+    color: var(--navy-primary);
+}
+.filter-chip.active {
+    background: var(--navy-primary);
+    color: #ffffff;
+    border-color: var(--navy-primary);
+}
+
+/* Tarjeta de Valores */
+.value-item.hide {
+    display: none;
+}
+.value-card {
+    cursor: pointer;
+    height: 100%;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    border-top: 4px solid var(--accent, var(--gold-accent));
+}
+.value-num {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 2.5rem;
+    opacity: 0.06;
+}
+.value-card .more {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1rem;
+    color: var(--accent);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: 0.25s;
+    font-size: 1.2rem;
+}
+.value-card:hover .more {
+    opacity: 1;
+    transform: none;
+}
+
+/* Acordeón */
+.accordion-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem !important;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+.accordion-button {
+    font-weight: 700;
+    color: var(--navy-primary);
+    background-color: #ffffff;
+}
+.accordion-button:not(.collapsed) {
+    background-color: #f1f5f9;
+    color: var(--navy-primary);
+    box-shadow: none;
+}
+
+/* Footer */
+.footer-custom {
+    background-color: var(--navy-dark);
+}
+
+/* Reveal Animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: none;
+}
+
+#toTop {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--navy-primary);
+    color: #fff;
+    font-size: 1.2rem;
+    z-index: 1500;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+#toTop.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+}
