@@ -787,3 +787,10 @@ DIRECTIVOS
     margin-top: 1rem !important;
     margin-bottom: 1rem !important; /* Línea divisoria más cercana al contenido */
 }
+/* ==========================================
+   TEXTO CEIC IUNAV MÁS GRUESO
+========================================== */
+#alt-logo-header,
+#alt-logo-nav {
+    font-weight: 800 !important; /* 700 es negrita normal, 800 o 900 las hace más gruesas */
+}
