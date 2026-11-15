@@ -764,6 +764,3 @@ DIRECTIVOS
     color: var(--navy-light) !important;
 }
 
-.navbar-nav .nav-link.active {
-    color: white !important; /* Mantiene el texto blanco en el botón activo si tiene fondo oscuro */
-}
