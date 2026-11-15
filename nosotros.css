@@ -98,14 +98,13 @@ h1,h2,h3,h4,h5,h6{
     backdrop-filter:blur(10px);
 }
 
-.logo-box{
-    animation:float 5s ease-in-out infinite; /* Borra o comenta esta línea */
+/* Forzar que el logotipo y el texto queden fijos sin movimiento */
+.logo-box {
+    animation: none !important;
 }
-
-.logo-box img{
-    transition:.4s;
+.logo-box img:hover {
+    transform: none !important;
 }
-
 .logo-box img:hover{
     transform:scale(1.05);
 }
