@@ -764,3 +764,26 @@ DIRECTIVOS
     color: var(--navy-light) !important;
 }
 
+/* ==========================================
+   FOOTER MÁS COMPACTO Y PEQUEÑO
+========================================== */
+.footer-custom {
+    padding-top: 1.5rem !important; /* Reduce el espacio superior (antes era pt-5) */
+    padding-bottom: 1rem !important; /* Reduce el espacio inferior (antes era pb-3) */
+}
+
+.footer-custom h5, 
+.footer-custom h6 {
+    font-size: 0.95rem !important; /* Títulos más pequeños */
+    margin-bottom: 0.5rem !important; /* Menos espacio debajo de los títulos */
+}
+
+.footer-custom p, 
+.footer-custom .small {
+    font-size: 0.8rem !important; /* Textos descriptivos y copyright más pequeños */
+}
+
+.footer-custom hr {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important; /* Línea divisoria más cercana al contenido */
+}
