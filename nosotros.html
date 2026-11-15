@@ -17,66 +17,79 @@
 <body>
     <div id="scrollProgress"></div>
 
-    <!-- 1. BARRA SUPERIOR -->
-    <div class="top-bar py-2 d-none d-md-block">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div class="d-flex gap-3">
-                <a href="https://www.instagram.com/ceic_iunav/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                <a href="https://wa.me/584121372484?text=Hola,%20deseo%20más%20información%20sobre%20las%20inscripciones%20del%20CEIC" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-                <a href="#" class="social-link" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
-            </div>
-            <span class="small text-white-50"><i class="bi bi-geo-alt-fill me-1"></i> Nirgua, Yaracuy</span>
-        </div>
+      <!-- 1. BARRA SUPERIOR DE REDES Y CONTACTO -->
+  <div class="top-bar py-1 d-none d-md-block" style="background-color: #2b5278;">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-3">
+        <a href="https://www.instagram.com/ceic_iunav/" target="_blank" class="text-white text-decoration-none">
+          <i class="bi bi-instagram me-1"></i>
+        </a>
+        <a href="#" class="text-white text-decoration-none">
+          <i class="bi bi-facebook me-1"></i>
+        </a>
+        <a href="https://wa.me/584121372484?text=Hola,%20deseo%20más%20información%20sobre%20las%20inscripciones%20del%20CEIC" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="text-white text-decoration-none">
+          <i class="bi bi-whatsapp me-1"></i>
+        </a>
+        <a href="#" class="text-white text-decoration-none">
+          <i class="bi bi-youtube me-1"></i>
+        </a>
+      </div>
     </div>
+  </div>
 
-        <header class="top-header py-3 bg-white border-bottom text-center">
-        <div class="container d-flex flex-column align-items-center">
-            <div class="logo-box mb-2">
-                <img src="Logoceic.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 90px;" onerror="this.style.display='none'; document.getElementById('alt-logo-header').style.display='block';">
-                <div id="alt-logo-header" class="fw-bold fs-2" style="color: #2b5278; display: none;">CEIC IUNAV</div>
-            </div>
-            <p class="slogan mb-0 fst-italic text-secondary small">Formando Valores para la Vida y la Eternidad</p>
-        </div>
-    </header>
+  <!-- 2. HEADER SUPERIOR CON LOGO PRINCIPAL -->
+  <header class="top-header py-3 bg-white border-bottom text-center">
+    <div class="container d-flex flex-column align-items-center">
+      <div class="logo-box mb-2">
+        <img src="Logoceic.jpeg" alt="Logo CEIC" class="img-fluid" style="max-height: 90px;" onerror="this.style.display='none'; document.getElementById('alt-logo-header').style.display='block';">
+        <div id="alt-logo-header" class="fw-bold fs-2" style="color: #2b5278; display: none;">CEIC IUNAV</div>
+      </div>
+      <p class="slogan mb-0 fst-italic text-secondary small">Formando Valores para la Vida y la Eternidad</p>
+    </div>
+  </header>
 
-    <!-- 3. BARRA DE NAVEGACIÓN PRINCIPAL -->
-    <nav class="navbar navbar-expand-lg sticky-top navbar-custom py-2" id="mainNav">
-        <div class="container">
-            <!-- LOGO PEQUEÑO DE NAVEGACIÓN -->
-            <a class="navbar-brand me-lg-3 d-flex align-items-center" href="index.html">
-                <img src="images.png" alt="Logo CEIC" class="img-fluid" style="max-height: 42px;" onerror="this.style.display='none'; document.getElementById('alt-logo-nav').style.display='block';">
-                <span id="alt-logo-nav" style="display:none;" class="fw-bold fs-5 text-dark">CEIC IUNAV</span>
-            </a>
+  <!-- 3. BARRA DE NAVEGACIÓN PRINCIPAL -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top border-bottom py-2">
+    <div class="container">
+      <!-- LOGO PEQUEÑO DE NAVEGACIÓN -->
+      <a class="navbar-brand me-auto d-flex align-items-center" href="index.html">
+        <img src="images.png" alt="Logo CEIC" class="img-fluid" style="max-height: 50px;" onerror="this.style.display='none'; document.getElementById('alt-logo-nav').style.display='block';">
+        <span id="alt-logo-nav" style="display:none;" class="fw-bold text-dark fs-5">CEIC IUNAV</span>
+      </a>
 
-            <!-- BOTÓN MENÚ MÓVIL -->
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Menú">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+      <!-- BOTÓN MENÚ MÓVIL -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-            <!-- ENLACES DE NAVEGACIÓN Y BOTONES -->
-            <div class="collapse navbar-collapse justify-content-between text-center" id="mainNavbar">
-                <ul class="navbar-nav mx-auto gap-1 align-items-center my-2 my-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" href="index.html"><i class="bi bi-house-door me-1"></i> INICIO</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom active" href="nosotros.html"><i class="bi bi-people-fill me-1"></i> CONOCENOS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" href="galeria.html"><i class="bi bi-images me-1"></i> GALERÍA</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" href="catalogo.html"><i class="bi bi-journal-bookmark me-1"></i> CURSOS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" href="https://www.instagram.com/ceic_iunav/" target="_blank" rel="noopener"><i class="bi bi-share me-1"></i> REDES SOCIALES</a>
-                    </li>
-                </ul>
-                
-            </div>
-        </div>
-    </nav>
+      <!-- ENLACES DE NAVEGACIÓN -->
+      <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
+        <ul class="navbar-nav gap-2 fw-bold align-items-center mx-auto my-2 my-lg-0">
+          <li class="nav-item">
+            <a class="nav-link px-3 rounded-pill" href="index.html"><i class="bi bi-house-door me-1"></i> INICIO</a>
+          </li>
+          
+           <li class="nav-item">
+            <a class="nav-link px-3 rounded-pill active" href="nosotros.html"><i class="bi bi-images me-1"></i> CONOCENOS</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link px-3 rounded-pill active" href="galeria.html"><i class="bi bi-images me-1"></i> GALERÍA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3 rounded-pill" href="catalogo.html"><i class="bi bi-journal-bookmark me-1"></i> CURSOS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3 rounded-pill" href="https://www.instagram.com/ceic_iunav/" target="_blank"><i class="bi bi-share me-1"></i> REDES SOCIALES</a>
+          </li>
+        </ul>
+          </div>
+    </div>
+  </nav>
+
 
     <!-- BANNER DE ESTADO -->
     <div class="banner-status py-2">
