@@ -99,7 +99,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .logo-box{
-    animation:float 5s ease-in-out infinite;
+    animation:float 5s ease-in-out infinite; /* Borra o comenta esta línea */
 }
 
 .logo-box img{
