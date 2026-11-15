@@ -751,3 +751,19 @@ DIRECTIVOS
     border-radius:50px;
     margin-bottom:15px;
 }
+/* ==========================================
+   ESTILOS PERSONALIZADOS PARA EL MENÚ
+========================================== */
+.navbar-nav .nav-link {
+    color: var(--navy) !important; /* Cambia a color azul (usa tu variable --navy o un código hexadecimal) */
+    font-size: 0.85rem !important; /* Reduce el tamaño de la letra (puedes probar 0.8rem o 0.9rem según prefieras) */
+}
+
+/* Opcional: Asegurar que cuando el enlace esté activo o en hover se vea bien */
+.navbar-nav .nav-link:hover {
+    color: var(--navy-light) !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: white !important; /* Mantiene el texto blanco en el botón activo si tiene fondo oscuro */
+}
